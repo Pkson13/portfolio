@@ -119,4 +119,12 @@
   body {
     @apply bg-background text-foreground;
   }
+  body::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+nav {
+  background-color: transparent;
+  backdrop-filter: blur(8px);
 }

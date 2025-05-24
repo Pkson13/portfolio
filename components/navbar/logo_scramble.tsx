@@ -1,8 +1,8 @@
 "use client";
 import gsap from "gsap";
-import { useEffect, useRef } from "react";
-import ScrambleTextPlugin from "gsap/ScrambleTextPlugin";
+import { useRef } from "react";
 import Link from "next/link";
+import { useGSAP } from "@gsap/react";
 
 const Logo_scramble = () => {
   const ref = useRef<gsap.core.Tween | null>(null);
@@ -12,9 +12,9 @@ const Logo_scramble = () => {
     console.log(ref.current);
   }
 
-  useEffect(() => {
+  useGSAP(() => {
     // gsap.to(".nav", { top: 0, duration: 1 });
-    gsap.registerPlugin(ScrambleTextPlugin);
+    // gsap.registerPlugin(ScrambleTextPlugin); moved to lib/gsap_setup.ts
     ref.current = gsap.to(logoRef.current, {
       duration: 2,
       scrambleText: {

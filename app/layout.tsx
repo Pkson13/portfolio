@@ -4,6 +4,8 @@ import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import Navbar from "@/components/navbar/Navbar";
 import ThemeColorMeta from "@/components/ThemeColorMeta";
+import "@/lib/gsap_setup";
+import ClientWrapper from "@/components/ClientWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,9 +44,12 @@ export default function RootLayout({
         className={`${geistSans.variable} ${bebasNeue.variable} w-screen max-w-screen overflow-x-hidden px-2 antialiased`}
       >
         <ThemeProvider attribute="class" enableColorScheme>
-          <ThemeColorMeta />
-          <Navbar />
-          {children}
+          <ClientWrapper>
+            <ThemeColorMeta />
+            <Navbar />
+
+            {children}
+          </ClientWrapper>
         </ThemeProvider>
       </body>
     </html>

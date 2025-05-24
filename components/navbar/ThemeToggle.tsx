@@ -14,11 +14,7 @@ export const ThemeToggle = () => {
     <>
       {theme == "light" ? (
         <Button asChild variant={"ghost"} className="p-0">
-          <Moon
-            onClick={() => setTheme("dark")}
-            className="size-8"
-            strokeWidth={1}
-          />
+          <Moon onClick={() => setTheme("dark")} strokeWidth={1} />
         </Button>
       ) : (
         <Button asChild variant={"ghost"} className="p-0">

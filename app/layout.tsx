@@ -48,7 +48,7 @@ export default function RootLayout({
           <ClientWrapper>
             <ThemeColorMeta />
             <Navbar />
-            <CursorFollower />
+            {/* <CursorFollower /> */}
 
             {children}
           </ClientWrapper>

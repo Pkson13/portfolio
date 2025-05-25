@@ -13,7 +13,7 @@ export default function Face() {
     const face = faceRef.current;
     const leftPupil = leftPupilRef.current;
     const rightPupil = rightPupilRef.current;
-    const mouth = mouthRef.current;
+    // const mouth = mouthRef.current;
     let lastElemment: "A" | "DIV" | undefined;
 
     // gsap.to([leftPupil, rightPupil, mouth], {
@@ -46,16 +46,12 @@ export default function Face() {
               morphSVG: "#right-squinted-eye",
             });
 
-            gsap.to("#mouth-outer", {
+            gsap.to("#mouth", {
               //   ease: "bounce.out",
               overwrite: "auto",
-              morphSVG: "#mouth-outer-excited",
+              morphSVG: "#happy-mouth",
             });
-            gsap.to("#mouth-inner", {
-              //   ease: "bounce.out",
-              overwrite: "auto",
-              morphSVG: "#mouth-inner-excited",
-            });
+
             // className="absolute flex size-2 h-0 w-0 items-center justify-center rounded-full border-y-[4px] border-r-[8px] border-y-transparent border-r-black"
             lastElemment = "A";
             break;
@@ -70,20 +66,14 @@ export default function Face() {
               morphSVG: "#normal-right-eye",
             });
 
-            gsap.to("#mouth-outer", {
+            gsap.to("#mouth", {
               height: 1,
               //   ease: "elastic.out",
               overwrite: "auto",
-              morphSVG: "#mouth-outer",
+              morphSVG: "#mouth",
               duration: 0.5,
             });
-            gsap.to("#mouth-inner", {
-              height: 1,
-              //   ease: "elastic.out",
-              overwrite: "auto",
-              morphSVG: "#mouth-inner",
-              duration: 0.5,
-            });
+
             lastElemment = "DIV";
             break;
         }
@@ -108,7 +98,7 @@ export default function Face() {
       const moveX = Math.min(maxMove, distance) * Math.cos(angle);
       const moveY = Math.min(maxMove, distance) * Math.sin(angle);
 
-      gsap.to([leftPupil, rightPupil, "#mouth-outer", "#mouth-inner"], {
+      gsap.to([leftPupil, rightPupil, "#mouth"], {
         x: moveX,
         y: moveY,
         duration: 0.5,
@@ -125,7 +115,7 @@ export default function Face() {
   }, []);
 
   return (
-    <div className="absolute mx-auto mt-40 flex size-20 flex-col items-center justify-center gap-4 rounded-md bg-foreground">
+    <div className="flex size-full flex-col items-center justify-center gap-4 rounded-md bg-foreground">
       <div className="flex gap-3">
         {/* <svg
           className="size-full"
@@ -177,20 +167,15 @@ export default function Face() {
             id="normal-right-eye"
             className="text-background"
           />
+
           <path
-            ref={mouthRef}
-            id="mouth-outer"
-            d="M48.4235 83.5349C45.4745 80.629 44 76.7663 44 71.9468C44 67.1274 45.4745 63.2647 48.4235 60.3588C51.4353 57.4529 55.2941 56 60 56C64.7059 56 68.5333 57.4529 71.4824 60.3588C74.4941 63.2647 76 67.1274 76 71.9468C76 76.7663 74.4941 80.629 71.4824 83.5349C68.5333 86.5116 64.7059 88 60 88C55.2941 88 51.4353 86.5116 48.4235 83.5349Z"
+            d="M59.9995 55.2556C65.2438 55.2556 69.9354 57.6225 73.064 61.3464C75.5543 64.3109 77.0541 68.1349 77.0542 72.3093C77.0542 77.0814 75.0948 81.3965 71.936 84.4919C68.8599 87.5062 64.6464 89.364 59.9995 89.364C55.3528 89.3639 51.14 87.5061 48.064 84.4919C46.3888 82.8504 45.0509 80.8657 44.1636 78.6521C43.3778 76.6916 42.9458 74.5505 42.9458 72.3093C42.9459 70.0683 43.3779 67.9279 44.1636 65.9675C44.8413 64.2766 45.7827 62.7193 46.936 61.3464C50.0645 57.6226 54.7554 55.2558 59.9995 55.2556ZM59.9995 62.6375C57.0257 62.6375 54.3655 63.9799 52.5913 66.0916C51.9373 66.8701 51.4034 67.7537 51.019 68.7126C50.5735 69.8244 50.3277 71.0384 50.3276 72.3093C50.3276 73.5803 50.5735 74.7942 51.019 75.906C51.5223 77.1614 52.2809 78.2875 53.231 79.2185C54.9754 80.9277 57.3644 81.9811 59.9995 81.9812C62.6348 81.9812 65.0245 80.9279 66.769 79.2185C68.5604 77.4631 69.6714 75.0157 69.6714 72.3093C69.6713 69.9419 68.821 67.7727 67.4087 66.0916C65.6345 63.9797 62.9735 62.6375 59.9995 62.6375Z"
             fill="currentColor"
             className="text-background"
-          />
-          <path
-            d="M71.1445 72.3357C70.9322 78.4897 65.7941 83.405 59.6401 83.1926C53.486 82.9803 48.6464 77.7207 48.8588 71.5666C49.0711 65.4126 54.2321 60.5959 60.3862 60.8083C66.5402 61.0206 71.3569 66.1816 71.1445 72.3357Z"
-            fill="currentColor"
-            id="mouth-inner"
-            className="text-foreground"
+            id="mouth"
             ref={mouthRef}
           />
+
           <g className="hidden">
             <g id="squinted-eyes">
               <path
@@ -232,6 +217,14 @@ export default function Face() {
                 id="mouth-inner-shocked"
               />
             </g>
+            <g id="happy">
+              <path
+                id="happy-mouth"
+                d="M70.5811 57.6348C71.3952 57.6349 72.078 58.1873 72.2803 58.9375H72.3428C72.3428 59.0557 72.3402 59.1736 72.3369 59.291C72.339 59.326 72.3428 59.361 72.3428 59.3965C72.3428 59.4868 72.3344 59.5755 72.3213 59.6621C72.1381 62.8266 70.7637 65.6714 68.6387 67.7539C66.4123 69.9355 63.3632 71.2803 60 71.2803C56.6369 71.2803 53.5877 69.9355 51.3613 67.7539C50.149 66.5658 49.1802 65.1294 48.5381 63.5273C48.0572 62.3274 47.762 61.0342 47.6816 59.6826C47.6664 59.5895 47.6572 59.4939 47.6572 59.3965C47.6572 59.3451 47.6598 59.2944 47.6641 59.2441C47.6616 59.1422 47.6572 59.04 47.6572 58.9375H47.7197C47.922 58.1873 48.6048 57.6349 49.4189 57.6348H70.5811ZM53.3613 61.1592C53.4044 61.288 53.4498 61.4156 53.5 61.541C53.8642 62.4494 54.4132 63.2638 55.1006 63.9375C56.3632 65.1747 58.0927 65.9375 60 65.9375C61.9073 65.9375 63.6368 65.1747 64.8994 63.9375C65.6816 63.1709 66.2824 62.2214 66.6377 61.1592H53.3613Z"
+                fill="black"
+              />
+            </g>
+
             {/* <path d="M50.0088 77.1949C47.3363 74.5615 46 71.0609 46 66.6932C46 62.3256 47.3363 58.8251 50.0088 56.1916C52.7382 53.5581 56.2353 55.0579 60.5 55.0579C64.7647 55.0579 68.2333 53.5581 70.9059 56.1916C73.6353 58.8251 75 62.3256 75 66.6932C75 71.0609 73.6353 74.5615 70.9059 77.1949C68.2333 79.8926 64.7647 81.2414 60.5 81.2414C56.2353 81.2414 52.7382 79.8926 50.0088 77.1949Z" fill="#222121"/>
 <path d="M68.7814 66.9298C68.6574 71.503 64.8671 75.1828 60.2939 75.0587C55.7208 74.9346 52.0965 71.0536 52.2206 66.4805C52.3446 61.9073 55.7207 61.399 60.2939 61.5231C64.867 61.6472 68.9055 62.3566 68.7814 66.9298Z" fill="#FFFAFA"/> */}
 

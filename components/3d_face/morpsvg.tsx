@@ -3,7 +3,7 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
-export default function Face() {
+export default function Son() {
   const faceRef = useRef<SVGSVGElement | null>(null);
   const leftPupilRef = useRef<null | SVGPathElement>(null);
   const rightPupilRef = useRef<null | SVGPathElement>(null);
@@ -115,7 +115,10 @@ export default function Face() {
   }, []);
 
   return (
-    <div className="flex size-full flex-col items-center justify-center gap-4 rounded-md bg-foreground">
+    <div
+      id="son"
+      className="flex size-full flex-col items-center justify-center gap-4 rounded-md bg-foreground"
+    >
       <div className="flex gap-3">
         {/* <svg
           className="size-full"

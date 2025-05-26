@@ -16,7 +16,8 @@ export default function Son() {
     const rightPupil = rightPupilRef.current;
     // const mouth = mouthRef.current;
     let lastElemment: "A" | "DIV" | undefined;
-
+    const sontl = gsap.timeline();
+    sontl.to("#son", { opacity: 1, delay: 2 });
     // gsap.to([leftPupil, rightPupil, mouth], {
     //   y: 4,
     //   yoyo: true,
@@ -47,8 +48,17 @@ export default function Son() {
             const morphMouthto =
               mouthmovements[Math.floor(Math.random() * mouthmovements.length)];
             // console.log(morphMouthto);
-            console.log(target.tagName);
+            // console.log(target.tagName);
+
+            gsap.to("#mouth", {
+              //   ease: "bounce.out",
+              overwrite: "auto",
+              morphSVG: morphMouthto,
+            });
             if (morphMouthto == "#mouthhappy-full") {
+              const squint = Math.floor(Math.random() * 2);
+              // console.log("squint", squint);
+              if (!squint) break;
               gsap.to("#normal-left-eye", {
                 morphSVG: "#left-squinted-eye",
                 //   ease: "elastic.out",
@@ -57,12 +67,6 @@ export default function Son() {
                 morphSVG: "#right-squinted-eye",
               });
             }
-
-            gsap.to("#mouth", {
-              //   ease: "bounce.out",
-              overwrite: "auto",
-              morphSVG: morphMouthto,
-            });
 
             // className="absolute flex size-2 h-0 w-0 items-center justify-center rounded-full border-y-[4px] border-r-[8px] border-y-transparent border-r-black"
             lastElemment = "A";
@@ -132,36 +136,9 @@ export default function Son() {
   return (
     <div
       id="son"
-      className="flex size-full flex-col items-center justify-center gap-4 rounded-md bg-foreground"
+      className="flex size-full flex-col items-center justify-center gap-4 rounded-md bg-foreground opacity-0"
     >
       <div className="flex gap-3">
-        {/* <svg
-          className="size-full"
-          //   width="49"
-          //   height="49"
-          viewBox="0 0 49 49"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            ref={leftPupilRef}
-            d="M20.5512 22.8665C20.5512 25.794 18.178 28.1672 15.2506 28.1672C12.3231 28.1672 9.93043 25.794 9.93043 22.8665C9.93043 19.9391 12.3231 17.5659 15.2506 17.5659C18.178 17.5659 20.5512 19.9391 20.5512 22.8665Z"
-            fill="currentColor"
-            className="text-background"
-          />
-          <path
-            ref={rightPupilRef}
-            d="M36.6877 22.8665C36.6877 25.794 34.3145 28.1672 31.387 28.1672C28.4596 28.1672 26.0669 25.794 26.0669 22.8665C26.0669 19.9391 28.4596 17.5659 31.387 17.5659C34.3145 17.5659 36.6877 19.9391 36.6877 22.8665Z"
-            fill="currentColor"
-            className="text-background"
-          />
-          <path
-            ref={mouthRef}
-            d="M30.0669 40.8557C30.0669 43.9975 26.7541 46.5443 22.6675 46.5443C18.5809 46.5443 15.2408 43.9975 15.2408 40.8557C15.2408 37.714 18.5809 35.1672 22.6675 35.1672C26.7541 35.1672 30.0669 37.714 30.0669 40.8557Z"
-            fill="currentColor"
-            className="text-background"
-          />
-        </svg> */}
         <svg
           ref={faceRef}
           width="100%"
@@ -175,7 +152,7 @@ export default function Son() {
             ref={leftPupilRef}
             d="M75 28C77.1525 28 79.078 28.9715 80.3621 30.5C81.3843 31.7168 82 33.2865 82 35C82 36.9587 81.1955 38.7295 79.899 40C78.6364 41.2372 76.9073 42 75 42C73.0927 42 71.3636 41.2372 70.101 40C69.4134 39.3262 68.8642 38.5117 68.5 37.6031C68.1775 36.7984 68 35.9199 68 35C68 34.0801 68.1775 33.2016 68.5 32.3969C68.7782 31.7028 69.1645 31.0635 69.6379 30.5C70.922 28.9715 72.8475 28 75 28Z"
             fill="currentColor"
-            className="text-background"
+            className="eye text-background"
             id="normal-left-eye"
           />
           <path
@@ -183,7 +160,7 @@ export default function Son() {
             d="M46 28C48.1525 28 50.078 28.9715 51.3621 30.5C52.3843 31.7168 53 33.2865 53 35C53 36.9587 52.1955 38.7295 50.899 40C49.6364 41.2372 47.9073 42 46 42C44.0927 42 42.3636 41.2372 41.101 40C40.4134 39.3262 39.8642 38.5117 39.5 37.6031C39.1775 36.7984 39 35.9199 39 35C39 34.0801 39.1775 33.2016 39.5 32.3969C39.7782 31.7028 40.1645 31.0635 40.6379 30.5C41.922 28.9715 43.8475 28 46 28Z"
             fill="currentColor"
             id="normal-right-eye"
-            className="text-background"
+            className="eye text-background"
           />
 
           <path

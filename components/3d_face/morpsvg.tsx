@@ -42,20 +42,26 @@ export default function Son() {
         switch (target.tagName) {
           case "A":
             if (lastElemment === "A") break;
-            console.log(target.tagName);
+            const mouthmovements = ["#mouthhappy-full", "#mouthhappy-semi"];
 
-            gsap.to("#normal-left-eye", {
-              morphSVG: "#left-squinted-eye",
-              //   ease: "elastic.out",
-            });
-            gsap.to("#normal-right-eye", {
-              morphSVG: "#right-squinted-eye",
-            });
+            const morphMouthto =
+              mouthmovements[Math.floor(Math.random() * mouthmovements.length)];
+            // console.log(morphMouthto);
+            console.log(target.tagName);
+            if (morphMouthto == "#mouthhappy-full") {
+              gsap.to("#normal-left-eye", {
+                morphSVG: "#left-squinted-eye",
+                //   ease: "elastic.out",
+              });
+              gsap.to("#normal-right-eye", {
+                morphSVG: "#right-squinted-eye",
+              });
+            }
 
             gsap.to("#mouth", {
               //   ease: "bounce.out",
               overwrite: "auto",
-              morphSVG: "#happy-mouth",
+              morphSVG: morphMouthto,
             });
 
             // className="absolute flex size-2 h-0 w-0 items-center justify-center rounded-full border-y-[4px] border-r-[8px] border-y-transparent border-r-black"
@@ -99,7 +105,9 @@ export default function Son() {
       const maxMove = 7;
 
       // normalize and clamp
+      //find the distance between the centre of the box and the cursor using pythogras theorem c² = a² +b²
       const distance = Math.sqrt(deltaX ** 2 + deltaY ** 2);
+      // The Math.atan2() static method returns the angle in the plane (in radians) between the positive x-axis and the ray from (0, 0) to the point (x, y), for Math.atan2(y, x).
       const angle = Math.atan2(deltaY, deltaX);
       const moveX = Math.min(maxMove, distance) * Math.cos(angle);
       const moveY = Math.min(maxMove, distance) * Math.sin(angle);
@@ -198,22 +206,12 @@ export default function Son() {
                 fill="#0E0E0E"
                 id="right-squinted-eye"
               />
-              <svg
-                width="120"
-                height="120"
-                viewBox="0 0 120 120"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M38.2653 42.889C38.1058 42.194 38.0608 39.2205 38.0332 38.4979C38.0124 37.9522 43.3199 37.7751 43.3729 37.2252C43.4159 36.7787 38.5545 34.7558 38.2831 35.5158C38.4999 34.4592 40.3441 31.5424 40.8269 30.5549C40.8269 30.5549 56.8551 36.0213 56.6586 37.2252C56.4622 38.4292 38.2653 42.889 38.2653 42.889Z"
-                  fill="#0E0E0E"
-                />
-                <path
-                  d="M84.5233 29.8649C84.7937 30.4189 85.3422 32.8482 85.4913 33.4371C85.604 33.8817 80.8648 35.7369 80.9078 36.1918C80.9078 36.1918 85.5027 37.6192 85.4913 37.9904C85.4642 38.875 85.7601 39.9685 84.5233 41.8062C84.5233 41.8062 67.961 37.1951 67.9436 36.1918C67.9263 35.1885 84.5233 29.8649 84.5233 29.8649Z"
-                  fill="#0E0E0E"
-                />
-              </svg>
+
+              <path
+                d="M60.5 55.0582C64.7647 55.0582 68.2336 53.5585 70.9062 56.192C73.6353 58.8253 74.9999 62.3257 75 66.6929C75 71.0605 73.6355 74.5614 70.9062 77.1949C68.2336 79.8925 64.7647 81.2418 60.5 81.2418C56.2353 81.2418 52.7382 79.8925 50.0088 77.1949C47.3363 74.5614 46 71.0606 46 66.6929C46.0001 62.3256 47.3364 58.8254 50.0088 56.192C52.7382 53.5585 56.2353 55.0582 60.5 55.0582ZM60.2939 61.523C55.7209 61.3989 52.345 61.9073 52.2207 66.48C52.0966 71.0532 55.7208 74.9351 60.2939 75.0591C64.8669 75.1832 68.6569 71.5032 68.7812 66.9302C68.9053 62.3571 64.8671 61.6471 60.2939 61.523Z"
+                fill="#222121"
+                id="mouthhappy-semi"
+              />
             </g>
             <g id="shocked-mouth">
               <path
@@ -229,7 +227,7 @@ export default function Son() {
             </g>
             <g id="happy">
               <path
-                id="happy-mouth"
+                id="mouthhappy-full"
                 d="M70.5811 57.6348C71.3952 57.6349 72.078 58.1873 72.2803 58.9375H72.3428C72.3428 59.0557 72.3402 59.1736 72.3369 59.291C72.339 59.326 72.3428 59.361 72.3428 59.3965C72.3428 59.4868 72.3344 59.5755 72.3213 59.6621C72.1381 62.8266 70.7637 65.6714 68.6387 67.7539C66.4123 69.9355 63.3632 71.2803 60 71.2803C56.6369 71.2803 53.5877 69.9355 51.3613 67.7539C50.149 66.5658 49.1802 65.1294 48.5381 63.5273C48.0572 62.3274 47.762 61.0342 47.6816 59.6826C47.6664 59.5895 47.6572 59.4939 47.6572 59.3965C47.6572 59.3451 47.6598 59.2944 47.6641 59.2441C47.6616 59.1422 47.6572 59.04 47.6572 58.9375H47.7197C47.922 58.1873 48.6048 57.6349 49.4189 57.6348H70.5811ZM53.3613 61.1592C53.4044 61.288 53.4498 61.4156 53.5 61.541C53.8642 62.4494 54.4132 63.2638 55.1006 63.9375C56.3632 65.1747 58.0927 65.9375 60 65.9375C61.9073 65.9375 63.6368 65.1747 64.8994 63.9375C65.6816 63.1709 66.2824 62.2214 66.6377 61.1592H53.3613Z"
                 fill="black"
               />

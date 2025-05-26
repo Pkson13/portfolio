@@ -9,7 +9,7 @@ export default function Son() {
   const rightPupilRef = useRef<null | SVGPathElement>(null);
   const mouthRef = useRef<null | SVGPathElement>(null);
 
-  useGSAP(() => {
+  useGSAP((context, contextsafe) => {
     const face = faceRef.current;
     const leftPupil = leftPupilRef.current;
     const rightPupil = rightPupilRef.current;
@@ -23,7 +23,12 @@ export default function Son() {
     //   duration: 2,
     //   ease: "circ.inOut",
     // });
-    const handleMouseMove = (e: MouseEvent) => {
+    if (!contextsafe) {
+      console.log("context safe funtion undefined", contextsafe);
+      return;
+    }
+    //contest safe verion of handle mouse move
+    const handleMouseMove = contextsafe((e: MouseEvent) => {
       const target = e.target;
 
       if (!face || !leftPupil || !rightPupil) return;
@@ -105,7 +110,7 @@ export default function Son() {
         ease: "power2.out",
         delay: 0.1,
       });
-    };
+    });
 
     document.body.addEventListener("mousemove", handleMouseMove);
 

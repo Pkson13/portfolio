@@ -1,7 +1,7 @@
 import gsap from "gsap";
 
 type movequicktoprpos = {
-  id: string | SVGPathElement;
+  id: string | SVGPathElement | Array<string | object>;
   moveX: number;
   moveY: number;
   duration?: number;
@@ -16,7 +16,7 @@ export const movequickto = ({
   moveX,
   moveY,
 }: movequicktoprpos) => {
-  //   console.log("type", typeof id);
+  console.log("type", typeof id);
 
   const moveXto = gsap.quickTo(id, "x", { duration, ease, delay });
   const moveYto = gsap.quickTo(id, "y", { duration, ease, delay });

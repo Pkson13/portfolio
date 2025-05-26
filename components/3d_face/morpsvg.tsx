@@ -104,21 +104,7 @@ export default function Son() {
       const moveX = Math.min(maxMove, distance) * Math.cos(angle);
       const moveY = Math.min(maxMove, distance) * Math.sin(angle);
 
-      // const mouthXto = gsap.quickTo("#mouth", "x", {
-      //   duration: 0.5,
-      //   ease: "power2.out",
-      //   delay: 0.1,
-      // });
-      // const mouthYto = gsap.quickTo("#mouth", "y", {
-      //   duration: 0.5,
-      //   ease: "power2.out",
-      //   delay: 0.1,
-      // });
-      // mouthXto(moveX);
-      // mouthYto(moveY);
-      movequickto({ id: "#mouth", moveX, moveY });
-      movequickto({ id: leftPupil, moveX, moveY });
-      movequickto({ id: rightPupil, moveX, moveY });
+      movequickto({ id: ["#mouth", leftPupil, rightPupil], moveX, moveY });
       // gsap.to([leftPupil, rightPupil], {
       //   x: moveX,
       //   y: moveY,

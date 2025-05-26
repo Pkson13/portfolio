@@ -2,6 +2,7 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { movequickto } from "@/lib/MoveQuickto";
 
 export default function Son() {
   const faceRef = useRef<SVGSVGElement | null>(null);
@@ -103,13 +104,28 @@ export default function Son() {
       const moveX = Math.min(maxMove, distance) * Math.cos(angle);
       const moveY = Math.min(maxMove, distance) * Math.sin(angle);
 
-      gsap.to([leftPupil, rightPupil, "#mouth"], {
-        x: moveX,
-        y: moveY,
-        duration: 0.5,
-        ease: "power2.out",
-        delay: 0.1,
-      });
+      // const mouthXto = gsap.quickTo("#mouth", "x", {
+      //   duration: 0.5,
+      //   ease: "power2.out",
+      //   delay: 0.1,
+      // });
+      // const mouthYto = gsap.quickTo("#mouth", "y", {
+      //   duration: 0.5,
+      //   ease: "power2.out",
+      //   delay: 0.1,
+      // });
+      // mouthXto(moveX);
+      // mouthYto(moveY);
+      movequickto({ id: "#mouth", moveX, moveY });
+      movequickto({ id: leftPupil, moveX, moveY });
+      movequickto({ id: rightPupil, moveX, moveY });
+      // gsap.to([leftPupil, rightPupil], {
+      //   x: moveX,
+      //   y: moveY,
+      //   duration: 0.5,
+      //   ease: "power2.out",
+      //   delay: 0.1,
+      // });
     });
 
     document.body.addEventListener("mousemove", handleMouseMove);

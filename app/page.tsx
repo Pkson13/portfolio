@@ -1,6 +1,8 @@
 // import Image from "next/image";
 // import type { Metadata } from "next";
 
+import Root3d from "@/components/threejs/Root3d";
+
 // export const metadata: Metadata = {
 //   themeColor: "#ffffff",
 // };
@@ -8,7 +10,8 @@
 export default function Home() {
   return (
     <>
-      <div className="h-[120vh]">Portfolio - test2</div>
+      <Root3d />
+      <div className="">Portfolio - test2</div>
     </>
   );
 }

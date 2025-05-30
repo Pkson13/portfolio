@@ -76,16 +76,17 @@ const Root3d = () => {
     }
     const curve = new THREE.CatmullRomCurve3(points, true);
 
-    const pointss = curve.getPoints(50);
-    const linegeometry = new THREE.TubeGeometry(curve, 222, 0.625, 16, true);
+    // const pointss = curve.getPoints(50);
+    const tubegeo = new THREE.TubeGeometry(curve, 222, 0.625, 16, true);
+    const tubelinesgeo = new THREE.EdgesGeometry(tubegeo);
 
     const linematerial = new THREE.MeshBasicMaterial({
       color: 0xff0000,
-      wireframe: true,
+      // wireframe: true,
     });
 
     // Create the final object to add to the scene
-    const curveObject = new THREE.Mesh(linegeometry, linematerial);
+    const curveObject = new THREE.LineSegments(tubelinesgeo, linematerial);
     // console.log(points);
     scene.add(curveObject);
 

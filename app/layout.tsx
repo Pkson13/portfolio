@@ -42,7 +42,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${bebasNeue.variable} w-screen max-w-screen overflow-x-hidden px-2 antialiased`}
+        className={`${geistSans.variable} ${bebasNeue.variable} w-screen max-w-screen overflow-x-hidden antialiased`}
       >
         <ThemeProvider attribute="class" enableColorScheme>
           <ClientWrapper>

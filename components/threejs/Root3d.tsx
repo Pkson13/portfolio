@@ -6,7 +6,22 @@ import {
 } from "@/lib/three_setup";
 import { useTheme } from "next-themes";
 import React, { useEffect, useRef } from "react";
-import * as THREE from "three";
+import {
+  AxesHelper,
+  BoxGeometry,
+  CatmullRomCurve3,
+  Color,
+  EdgesGeometry,
+  Fog,
+  LineSegments,
+  Mesh,
+  MeshBasicMaterial,
+  PerspectiveCamera,
+  Scene,
+  TubeGeometry,
+  Vector3,
+  WebGLRenderer,
+} from "three";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
 
 const Root3d = () => {
@@ -53,37 +68,45 @@ const Root3d = () => {
   const { theme } = useTheme();
 
   useEffect(() => {
-    const scene = new THREE.Scene();
+    const scene = new Scene();
     const handleDarkMode = () => changeSceneToDarkMode(scene);
     const handleLightMode = () => changeSceneToLightMode(scene);
     document.body.addEventListener("darkmode", handleDarkMode);
     document.body.addEventListener("lightmode", handleLightMode);
     let backgroundColor;
     if (theme == "light") {
-      backgroundColor = new THREE.Color("white");
+      backgroundColor = new Color("white");
+      scene.fog = new Fog("white", 10, 15);
     } else {
-      backgroundColor = new THREE.Color("black");
+      scene.fog = new Fog("black", 10, 15);
+      backgroundColor = new Color("black");
     }
     if (!backgroundColor) return;
     scene.background = backgroundColor;
     if (!sceneref.current?.clientWidth) return;
     const sceneELement = sceneref.current;
-    const camera = new THREE.PerspectiveCamera(
+    const camera = new PerspectiveCamera(
       75,
       sceneELement?.clientWidth / sceneELement.clientHeight,
       0.1,
       1000,
     );
 
-    const renderer = new THREE.WebGLRenderer({
+    const renderer = new WebGLRenderer({
       antialias: true,
       // canvas: canvasref.current,
     });
-    const axesHelper = new THREE.AxesHelper(10);
+    const axesHelper = new AxesHelper(10);
     scene.add(axesHelper);
 
     create3dText({ scene, textinput: "Hello I'm Peterson" });
-    new OrbitControls(camera, renderer.domElement);
+    const controls = new OrbitControls(camera, renderer.domElement);
+    // controls.autoRotate = true;
+    controls.enableDamping = true;
+    controls.enablePan = false;
+    controls.enableZoom = false;
+    controls.minPolarAngle = Math.PI / 3; // 45° on the y-axis
+    controls.maxPolarAngle = Math.PI / 2; // 90°
     renderer.setSize(sceneELement?.clientWidth, sceneELement.clientHeight);
     // const handleResize = (e: UIEvent) => {
     //   console.log(e);
@@ -112,28 +135,28 @@ const Root3d = () => {
     const len = curvePath.length;
     for (let p = 0; p < len; p += 3) {
       points.push(
-        new THREE.Vector3(curvePath[p], curvePath[p + 1], curvePath[p + 2]),
+        new Vector3(curvePath[p], curvePath[p + 1], curvePath[p + 2]),
       );
     }
-    const curve = new THREE.CatmullRomCurve3(points, true);
+    const curve = new CatmullRomCurve3(points, true);
 
     // const pointss = curve.getPoints(50);
-    const tubegeo = new THREE.TubeGeometry(curve, 222, 0.625, 16, true);
-    const tubelinesgeo = new THREE.EdgesGeometry(tubegeo);
+    const tubegeo = new TubeGeometry(curve, 222, 0.625, 16, true);
+    const tubelinesgeo = new EdgesGeometry(tubegeo);
 
-    const linematerial = new THREE.MeshBasicMaterial({
+    const linematerial = new MeshBasicMaterial({
       color: 0xff0000,
       // wireframe: true,
     });
 
     // Create the final object to add to the scene
-    const curveObject = new THREE.LineSegments(tubelinesgeo, linematerial);
+    const curveObject = new LineSegments(tubelinesgeo, linematerial);
     // console.log(points);
     scene.add(curveObject);
 
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-    const cube = new THREE.Mesh(geometry, material);
+    const geometry = new BoxGeometry(1, 1, 1);
+    const material = new MeshBasicMaterial({ color: 0x00ff00 });
+    const cube = new Mesh(geometry, material);
     scene.add(cube);
 
     camera.position.z = 5;
@@ -141,6 +164,7 @@ const Root3d = () => {
     function animate() {
       // cube.rotation.x += 0.01;
       // cube.rotation.y += 0.01;
+      controls.update();
       renderer.render(scene, camera);
     }
 
@@ -153,9 +177,7 @@ const Root3d = () => {
   }, []);
   return (
     <>
-      <div ref={sceneref} className="h-screen">
-        Root3d
-      </div>
+      <div ref={sceneref} className="h-screen"></div>
       {/* <canvas ref={canvasref}></canvas> */}
     </>
   );

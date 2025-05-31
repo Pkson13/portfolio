@@ -14,7 +14,7 @@ const CursorFollower = () => {
       duration: 0.5,
       delay: 0.1,
       ease: "circ",
-      opacity: 1,
+      opacity: 0.9,
     });
   };
 
@@ -41,7 +41,7 @@ const CursorFollower = () => {
     <span
       ref={cursofollower}
       id="cursor-follower"
-      className="pointer-events-none absolute top-0 left-0 z-20 size-20 -translate-x-1/2 -translate-y-1/2 rounded-full bg-foreground opacity-0"
+      className="pointer-events-none absolute top-0 left-0 z-20 hidden size-20 -translate-x-1/2 -translate-y-1/2 rounded-full bg-foreground opacity-0 md:block"
     ></span>
   );
 };

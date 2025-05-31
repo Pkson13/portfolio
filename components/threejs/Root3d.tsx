@@ -1,11 +1,13 @@
 "use client";
-import React, { UIEvent, useEffect, useRef } from "react";
-import * as THREE from "three";
 import {
-  FontLoader,
-  OrbitControls,
-  TextGeometry,
-} from "three/examples/jsm/Addons.js";
+  changeSceneToDarkMode,
+  changeSceneToLightMode,
+  create3dText,
+} from "@/lib/three_setup";
+import { useTheme } from "next-themes";
+import React, { useEffect, useRef } from "react";
+import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/Addons.js";
 
 const Root3d = () => {
   const sceneref = useRef<HTMLDivElement | null>(null);
@@ -48,9 +50,22 @@ const Root3d = () => {
     11.288646925965876, -1.374508746897471, 11.926359497447137,
     10.136184463414924, -1.374508746897471, 10.384881573913269,
   ];
+  const { theme } = useTheme();
 
   useEffect(() => {
     const scene = new THREE.Scene();
+    const handleDarkMode = () => changeSceneToDarkMode(scene);
+    const handleLightMode = () => changeSceneToLightMode(scene);
+    document.body.addEventListener("darkmode", handleDarkMode);
+    document.body.addEventListener("lightmode", handleLightMode);
+    let backgroundColor;
+    if (theme == "light") {
+      backgroundColor = new THREE.Color("white");
+    } else {
+      backgroundColor = new THREE.Color("black");
+    }
+    if (!backgroundColor) return;
+    scene.background = backgroundColor;
     if (!sceneref.current?.clientWidth) return;
     const sceneELement = sceneref.current;
     const camera = new THREE.PerspectiveCamera(
@@ -67,28 +82,7 @@ const Root3d = () => {
     const axesHelper = new THREE.AxesHelper(10);
     scene.add(axesHelper);
 
-    const loader = new FontLoader();
-    loader.load(
-      "/fonts/Bebas Neue_Regular.json",
-      (font) => {
-        console.log(font);
-        const text = new TextGeometry("Hi I'm Peterson", {
-          font,
-          size: 0.51,
-          depth: 0,
-        });
-        const testmat = new THREE.MeshBasicMaterial({ color: "green" });
-        const mesh = new THREE.Mesh(text, testmat);
-        mesh.position.set(-5, 0, 0);
-        scene.add(mesh);
-      },
-      function (xhr) {
-        console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
-      },
-      () => {
-        console.log("error while loading font");
-      },
-    );
+    create3dText({ scene, textinput: "Hello I'm Peterson" });
     new OrbitControls(camera, renderer.domElement);
     renderer.setSize(sceneELement?.clientWidth, sceneELement.clientHeight);
     // const handleResize = (e: UIEvent) => {
@@ -153,6 +147,8 @@ const Root3d = () => {
     return () => {
       if (!sceneELement) return;
       observer.unobserve(sceneELement);
+      document.body.removeEventListener("darkmode", handleLightMode);
+      document.body.removeEventListener("lightmode", handleDarkMode);
     };
   }, []);
   return (

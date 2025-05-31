@@ -11,9 +11,10 @@ const CursorFollower = () => {
     gsap.to(cursofollower.current, {
       x: e.clientX,
       y: e.clientY,
-      duration: 1,
-      delay: 0.2,
+      duration: 0.5,
+      delay: 0.1,
       ease: "circ",
+      opacity: 1,
     });
   };
 
@@ -24,7 +25,7 @@ const CursorFollower = () => {
     const interactive = document.querySelectorAll("a, button");
     interactive.forEach((el) => {
       el.addEventListener("mouseenter", () => {
-        gsap.to(cursofollower.current, { scale: 0.5 });
+        gsap.to(cursofollower.current, { scale: 0.7 });
       });
       el.addEventListener("mouseleave", () => {
         gsap.to(cursofollower.current, { scale: 1 });
@@ -39,7 +40,8 @@ const CursorFollower = () => {
   return (
     <span
       ref={cursofollower}
-      className="absolute top-0 left-0 -z-20 size-15 -translate-x-1/2 -translate-y-1/2 rounded-full bg-foreground"
+      id="cursor-follower"
+      className="pointer-events-none absolute top-0 left-0 z-20 size-16 -translate-x-1/2 -translate-y-1/2 rounded-full bg-foreground opacity-0"
     ></span>
   );
 };

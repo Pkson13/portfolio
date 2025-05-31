@@ -1,11 +1,14 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { UIEvent, useEffect, useRef } from "react";
 import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/Addons.js";
+import {
+  FontLoader,
+  OrbitControls,
+  TextGeometry,
+} from "three/examples/jsm/Addons.js";
 
 const Root3d = () => {
   const sceneref = useRef<HTMLDivElement | null>(null);
-  const canvasref = useRef<HTMLCanvasElement | null>(null);
   const curvePath = [
     10.136184463414924, -1.374508746897471, 10.384881573913269,
     9.1152593889854714, -1.374508746897471, 8.5846792797570011,
@@ -49,9 +52,10 @@ const Root3d = () => {
   useEffect(() => {
     const scene = new THREE.Scene();
     if (!sceneref.current?.clientWidth) return;
+    const sceneELement = sceneref.current;
     const camera = new THREE.PerspectiveCamera(
       75,
-      sceneref.current?.clientWidth / sceneref.current.clientHeight,
+      sceneELement?.clientWidth / sceneELement.clientHeight,
       0.1,
       1000,
     );
@@ -60,13 +64,56 @@ const Root3d = () => {
       antialias: true,
       // canvas: canvasref.current,
     });
-    new OrbitControls(camera, renderer.domElement);
-    renderer.setSize(
-      sceneref.current?.clientWidth,
-      sceneref.current.clientHeight,
+    const axesHelper = new THREE.AxesHelper(10);
+    scene.add(axesHelper);
+
+    const loader = new FontLoader();
+    loader.load(
+      "/fonts/Bebas Neue_Regular.json",
+      (font) => {
+        console.log(font);
+        const text = new TextGeometry("Hi I'm Peterson", {
+          font,
+          size: 0.51,
+          depth: 0,
+        });
+        const testmat = new THREE.MeshBasicMaterial({ color: "green" });
+        const mesh = new THREE.Mesh(text, testmat);
+        mesh.position.set(-5, 0, 0);
+        scene.add(mesh);
+      },
+      function (xhr) {
+        console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+      },
+      () => {
+        console.log("error while loading font");
+      },
     );
+    new OrbitControls(camera, renderer.domElement);
+    renderer.setSize(sceneELement?.clientWidth, sceneELement.clientHeight);
+    // const handleResize = (e: UIEvent) => {
+    //   console.log(e);
+    // };
+
+    // sceneELement.addEventListener("resize", handleResize);
+    const observer = new ResizeObserver((entries) => {
+      // console.log("entries", entries);
+      for (const entry of entries) {
+        // console.log(entry);
+        const height = entry.contentRect.height;
+        const width = entry.contentRect.width;
+        renderer.setSize(width, height);
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+      }
+    });
+    window.addEventListener("error", (e) => {
+      console.error(e.message);
+    });
+
+    observer.observe(sceneELement);
     renderer.setAnimationLoop(animate);
-    sceneref.current?.appendChild(renderer.domElement);
+    sceneELement?.appendChild(renderer.domElement);
     const points = [];
     const len = curvePath.length;
     for (let p = 0; p < len; p += 3) {
@@ -102,13 +149,18 @@ const Root3d = () => {
       // cube.rotation.y += 0.01;
       renderer.render(scene, camera);
     }
+
+    return () => {
+      if (!sceneELement) return;
+      observer.unobserve(sceneELement);
+    };
   }, []);
   return (
     <>
       <div ref={sceneref} className="h-screen">
         Root3d
       </div>
-      <canvas ref={canvasref}></canvas>
+      {/* <canvas ref={canvasref}></canvas> */}
     </>
   );
 };

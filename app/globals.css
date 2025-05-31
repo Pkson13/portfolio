@@ -128,3 +128,8 @@ nav {
   background-color: transparent;
   backdrop-filter: blur(8px);
 }
+
+#cursor-follower {
+  backdrop-filter: invert(1) grayscale(1);
+  background-color: rgba(255, 255, 255, 0.1);
+}

@@ -12,7 +12,9 @@ const Navbar = () => {
   return (
     <nav className="nav sticky top-0 left-0 flex w-full items-center gap-3 rounded-2xl bg-background p-2 font-(family-name:--font-bebas-neue) font-medium tracking-wider sm:p-2">
       <Logo_scramble />
-      <span className="size-9">{/* <Son /> */}</span>
+      <span className="size-9">
+        <Son />
+      </span>
       {/* <Face></Face> */}
       <div className="ml-auto hidden items-center gap-8 sm:flex">
         <Link href={"about"} className="">

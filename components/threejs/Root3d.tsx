@@ -9,10 +9,13 @@ import React, { useEffect, useRef } from "react";
 import {
   AxesHelper,
   BoxGeometry,
+  BufferGeometry,
   CatmullRomCurve3,
   Color,
   EdgesGeometry,
   Fog,
+  Line,
+  LineBasicMaterial,
   LineSegments,
   Mesh,
   MeshBasicMaterial,
@@ -22,7 +25,7 @@ import {
   Vector3,
   WebGLRenderer,
 } from "three";
-import { OrbitControls } from "three/examples/jsm/Addons.js";
+import { GLTFLoader, OrbitControls } from "three/examples/jsm/Addons.js";
 
 const Root3d = () => {
   const sceneref = useRef<HTMLDivElement | null>(null);
@@ -99,7 +102,7 @@ const Root3d = () => {
     const axesHelper = new AxesHelper(10);
     scene.add(axesHelper);
 
-    create3dText({ scene, textinput: "Hello I'm Peterson" });
+    // create3dText({ scene, textinput: "Hello I'm Peterson" });
     const controls = new OrbitControls(camera, renderer.domElement);
     // controls.autoRotate = true;
     controls.enableDamping = true;
@@ -119,9 +122,9 @@ const Root3d = () => {
         // console.log(entry);
         const height = entry.contentRect.height;
         const width = entry.contentRect.width;
-        renderer.setSize(width, height);
         camera.aspect = width / height;
         camera.updateProjectionMatrix();
+        renderer.setSize(width, height);
       }
     });
     window.addEventListener("error", (e) => {
@@ -138,6 +141,23 @@ const Root3d = () => {
         new Vector3(curvePath[p], curvePath[p + 1], curvePath[p + 2]),
       );
     }
+
+    const threelinematerial = new LineBasicMaterial({});
+    const points1 = [] as Vector3[];
+    points1.push(new Vector3(-3, 0, 0));
+    points1.push(new Vector3(0, 3, 0));
+    points1.push(new Vector3(3, 0, 0));
+
+    const linegeometry = new BufferGeometry().setFromPoints(points1);
+    const line = new Line(linegeometry, threelinematerial);
+    scene.add(line);
+
+    const glftLoader = new GLTFLoader();
+    glftLoader.load("/test1.glb", (data) => {
+      console.log("loaded glb file", data);
+      scene.add(data.scene);
+    });
+
     const curve = new CatmullRomCurve3(points, true);
 
     // const pointss = curve.getPoints(50);
@@ -152,12 +172,12 @@ const Root3d = () => {
     // Create the final object to add to the scene
     const curveObject = new LineSegments(tubelinesgeo, linematerial);
     // console.log(points);
-    scene.add(curveObject);
+    // scene.add(curveObject);
 
     const geometry = new BoxGeometry(1, 1, 1);
     const material = new MeshBasicMaterial({ color: 0x00ff00 });
     const cube = new Mesh(geometry, material);
-    scene.add(cube);
+    // scene.add(cube);
 
     camera.position.z = 5;
 

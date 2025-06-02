@@ -1,14 +1,22 @@
-import { Color, Fog, Mesh, MeshBasicMaterial, Scene } from "three";
+import {
+  Color,
+  // Fog,
+  Mesh,
+  MeshBasicMaterial,
+  Object3D,
+  Object3DEventMap,
+  Scene,
+} from "three";
 import { FontLoader, TextGeometry } from "three/examples/jsm/Addons.js";
 
 type changesceneFuncProps = Scene;
 
 export const changeSceneToDarkMode = (scene: changesceneFuncProps) => {
   scene.background = new Color("black");
-  scene.fog = new Fog("black", 10, 15);
+  // scene.fog = new Fog("black", 10, 15);
 };
 export const changeSceneToLightMode = (scene: changesceneFuncProps) => {
-  scene.fog = new Fog("white", 10, 15);
+  // scene.fog = new Fog("white", 10, 15);
   scene.background = new Color("white");
 };
 
@@ -41,3 +49,22 @@ export const create3dText = ({ textinput, scene }: create3dTextprops) => {
     },
   );
 };
+
+export function dumpObject(
+  obj: Object3D<Object3DEventMap>,
+  lines = [] as string[],
+  isLast = true,
+  prefix = "",
+) {
+  const localPrefix = isLast ? "└─" : "├─";
+  lines.push(
+    `${prefix}${prefix ? localPrefix : ""}${obj.name || "*no-name*"} [${obj.type}]`,
+  );
+  const newPrefix = prefix + (isLast ? "  " : "│ ");
+  const lastNdx = obj.children.length - 1;
+  obj.children.forEach((child, ndx) => {
+    const isLast = ndx === lastNdx;
+    dumpObject(child, lines, isLast, newPrefix);
+  });
+  return lines;
+}

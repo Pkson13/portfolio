@@ -6,7 +6,7 @@ import Navbar from "@/components/navbar/Navbar";
 import ThemeColorMeta from "@/components/ThemeColorMeta";
 import "@/lib/gsap_setup";
 import ClientWrapper from "@/components/ClientWrapper";
-import CursorFollower from "@/components/cursor_follower/CursorFollower";
+// import CursorFollower from "@/components/cursor_follower/CursorFollower";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -49,7 +49,7 @@ export default function RootLayout({
             <ThemeColorMeta />
             <Navbar />
             {/* <Morpsvg /> */}
-            <CursorFollower />
+            {/* <CursorFollower /> */}
 
             {children}
           </ClientWrapper>

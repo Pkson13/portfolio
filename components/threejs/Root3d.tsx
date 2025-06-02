@@ -2,7 +2,7 @@
 import {
   changeSceneToDarkMode,
   changeSceneToLightMode,
-  create3dText,
+  dumpObject,
 } from "@/lib/three_setup";
 import { useTheme } from "next-themes";
 import React, { useEffect, useRef } from "react";
@@ -13,12 +13,14 @@ import {
   CatmullRomCurve3,
   Color,
   EdgesGeometry,
-  Fog,
+  // Fog,
   Line,
   LineBasicMaterial,
   LineSegments,
   Mesh,
   MeshBasicMaterial,
+  Object3D,
+  Object3DEventMap,
   PerspectiveCamera,
   Scene,
   TubeGeometry,
@@ -79,11 +81,13 @@ const Root3d = () => {
     let backgroundColor;
     if (theme == "light") {
       backgroundColor = new Color("white");
-      scene.fog = new Fog("white", 10, 15);
+      // scene.fog = new Fog("white", 10, 15);
     } else {
-      scene.fog = new Fog("black", 10, 15);
+      // scene.fog = new Fog("black", 10, 15);
       backgroundColor = new Color("black");
     }
+    console.log("fog", scene.fog);
+    scene.fog = null;
     if (!backgroundColor) return;
     scene.background = backgroundColor;
     if (!sceneref.current?.clientWidth) return;
@@ -92,14 +96,14 @@ const Root3d = () => {
       75,
       sceneELement?.clientWidth / sceneELement.clientHeight,
       0.1,
-      1000,
+      10000,
     );
 
     const renderer = new WebGLRenderer({
       antialias: true,
       // canvas: canvasref.current,
     });
-    const axesHelper = new AxesHelper(10);
+    const axesHelper = new AxesHelper(100);
     scene.add(axesHelper);
 
     // create3dText({ scene, textinput: "Hello I'm Peterson" });
@@ -107,7 +111,7 @@ const Root3d = () => {
     // controls.autoRotate = true;
     controls.enableDamping = true;
     controls.enablePan = false;
-    controls.enableZoom = false;
+    // controls.enableZoom = false;
     controls.minPolarAngle = Math.PI / 3; // 45° on the y-axis
     controls.maxPolarAngle = Math.PI / 2; // 90°
     renderer.setSize(sceneELement?.clientWidth, sceneELement.clientHeight);
@@ -151,11 +155,16 @@ const Root3d = () => {
     const linegeometry = new BufferGeometry().setFromPoints(points1);
     const line = new Line(linegeometry, threelinematerial);
     scene.add(line);
+    let monkey: Object3D<Object3DEventMap>;
 
     const glftLoader = new GLTFLoader();
-    glftLoader.load("/test1.glb", (data) => {
+    glftLoader.load("/cartoon_lowpoly_small_city_free_pack.glb", (data) => {
       console.log("loaded glb file", data);
       scene.add(data.scene);
+      console.log(dumpObject(data.scene).join("\n"));
+      console.log(data.scene);
+      monkey = data.scene.children[1];
+      // monkey.rotateZ(Math.PI / 2);
     });
 
     const curve = new CatmullRomCurve3(points, true);
@@ -179,9 +188,13 @@ const Root3d = () => {
     const cube = new Mesh(geometry, material);
     // scene.add(cube);
 
-    camera.position.z = 5;
+    camera.position.z = 0.3;
 
     function animate() {
+      // if (monkey) {
+      //   console.log("rotating monkey");
+      //   monkey.rotation.x += 0.01;
+      // }
       // cube.rotation.x += 0.01;
       // cube.rotation.y += 0.01;
       controls.update();

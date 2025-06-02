@@ -158,14 +158,17 @@ const Root3d = () => {
     let monkey: Object3D<Object3DEventMap>;
 
     const glftLoader = new GLTFLoader();
-    glftLoader.load("/cartoon_lowpoly_small_city_free_pack.glb", (data) => {
-      console.log("loaded glb file", data);
-      scene.add(data.scene);
-      console.log(dumpObject(data.scene).join("\n"));
-      console.log(data.scene);
-      monkey = data.scene.children[1];
-      // monkey.rotateZ(Math.PI / 2);
-    });
+    glftLoader.load(
+      "lambo/source/2023_lamborghini_urus_performante.glb",
+      (data) => {
+        console.log("loaded glb file", data);
+        scene.add(data.scene);
+        console.log(dumpObject(data.scene).join("\n"));
+        console.log(data.scene);
+        monkey = data.scene.children[1];
+        // monkey.rotateZ(Math.PI / 2);
+      },
+    );
 
     const curve = new CatmullRomCurve3(points, true);
 

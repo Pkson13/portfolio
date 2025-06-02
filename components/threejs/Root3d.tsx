@@ -7,12 +7,15 @@ import {
 import { useTheme } from "next-themes";
 import React, { useEffect, useRef } from "react";
 import {
+  AmbientLight,
   AxesHelper,
   BoxGeometry,
   BufferGeometry,
   CatmullRomCurve3,
   Color,
+  DirectionalLight,
   EdgesGeometry,
+  Euler,
   // Fog,
   Line,
   LineBasicMaterial,
@@ -31,6 +34,8 @@ import { GLTFLoader, OrbitControls } from "three/examples/jsm/Addons.js";
 
 const Root3d = () => {
   const sceneref = useRef<HTMLDivElement | null>(null);
+  const getworldpositionref = useRef<HTMLButtonElement | null>(null);
+
   const curvePath = [
     10.136184463414924, -1.374508746897471, 10.384881573913269,
     9.1152593889854714, -1.374508746897471, 8.5846792797570011,
@@ -95,9 +100,18 @@ const Root3d = () => {
     const camera = new PerspectiveCamera(
       75,
       sceneELement?.clientWidth / sceneELement.clientHeight,
-      0.1,
+      0.001,
       10000,
     );
+
+    // camera.position.z = 5;
+    if (getworldpositionref.current) {
+      getworldpositionref.current.onclick = function getworldposition() {
+        const worldposyion = new Vector3();
+        camera.getWorldPosition(worldposyion);
+        console.log(worldposyion, "\nrotation\n", camera.rotation.clone());
+      };
+    }
 
     const renderer = new WebGLRenderer({
       antialias: true,
@@ -110,10 +124,10 @@ const Root3d = () => {
     const controls = new OrbitControls(camera, renderer.domElement);
     // controls.autoRotate = true;
     controls.enableDamping = true;
-    controls.enablePan = false;
+    // controls.enablePan = false;
     // controls.enableZoom = false;
-    controls.minPolarAngle = Math.PI / 3; // 45° on the y-axis
-    controls.maxPolarAngle = Math.PI / 2; // 90°
+    // controls.minPolarAngle = Math.PI / 3; // 45° on the y-axis
+    // controls.maxPolarAngle = Math.PI / 2; // 90°
     renderer.setSize(sceneELement?.clientWidth, sceneELement.clientHeight);
     // const handleResize = (e: UIEvent) => {
     //   console.log(e);
@@ -155,20 +169,52 @@ const Root3d = () => {
     const linegeometry = new BufferGeometry().setFromPoints(points1);
     const line = new Line(linegeometry, threelinematerial);
     scene.add(line);
-    let monkey: Object3D<Object3DEventMap>;
+    let lambo: Object3D<Object3DEventMap>;
 
     const glftLoader = new GLTFLoader();
-    glftLoader.load(
-      "lambo/source/2023_lamborghini_urus_performante.glb",
-      (data) => {
-        console.log("loaded glb file", data);
-        scene.add(data.scene);
-        console.log(dumpObject(data.scene).join("\n"));
-        console.log(data.scene);
-        monkey = data.scene.children[1];
-        // monkey.rotateZ(Math.PI / 2);
-      },
-    );
+    glftLoader.load("/lambo/2023_lamborghini_urus_performante.glb", (data) => {
+      console.log("loaded glb file", data);
+      scene.add(data.scene);
+      console.log(dumpObject(data.scene).join("\n"));
+      console.log(data.scene);
+      lambo = data.scene.children[0];
+      // const worldposyion = new Vector3();
+      // const scale = new Vector3();
+      lambo.scale.addScalar(3);
+
+      const rotation = new Euler(
+        -2.7873476512665047,
+        0.0569282830620787,
+        3.120552396435505,
+        "XYZ",
+      );
+
+      const rotationv = new Vector3(
+        0.011047342658908069,
+        0.04610816152938482,
+        0.02517805811831965,
+      );
+
+      // camera.setRotationFromEuler(rotation);
+      // camera.lookAt(rotationv);
+      // camera.localToWorld(rotationv);
+      controls.target = rotationv;
+      // camera.rotateZ();
+
+      camera.position.set(
+        0.01531510433955193,
+        0.05452040575021429,
+        -0.008268512154731802,
+      );
+      // camera.updateProjectionMatrix();
+    });
+    const light = new AmbientLight("white", 10); // soft white light
+    scene.add(light);
+    // const directionalLightpos = new Vector3(3, 5, 7);
+
+    const directionalLight = new DirectionalLight("white", 20);
+    directionalLight.position.set(3, 5, 7);
+    scene.add(directionalLight);
 
     const curve = new CatmullRomCurve3(points, true);
 
@@ -191,8 +237,6 @@ const Root3d = () => {
     const cube = new Mesh(geometry, material);
     // scene.add(cube);
 
-    camera.position.z = 0.3;
-
     function animate() {
       // if (monkey) {
       //   console.log("rotating monkey");
@@ -200,6 +244,7 @@ const Root3d = () => {
       // }
       // cube.rotation.x += 0.01;
       // cube.rotation.y += 0.01;
+
       controls.update();
       renderer.render(scene, camera);
     }
@@ -211,9 +256,13 @@ const Root3d = () => {
       document.body.removeEventListener("lightmode", handleDarkMode);
     };
   }, []);
+
   return (
     <>
       <div ref={sceneref} className="h-screen"></div>
+      <div>
+        <button ref={getworldpositionref}>cam worldposition</button>
+      </div>
       {/* <canvas ref={canvasref}></canvas> */}
     </>
   );

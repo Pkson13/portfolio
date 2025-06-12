@@ -4,6 +4,7 @@ import {
   changeSceneToLightMode,
   dumpObject,
 } from "@/lib/three_setup";
+import gsap from "gsap";
 import { useTheme } from "next-themes";
 import React, { useEffect, useRef } from "react";
 import {
@@ -25,6 +26,7 @@ import {
   Object3D,
   Object3DEventMap,
   PerspectiveCamera,
+  Quaternion,
   Scene,
   TubeGeometry,
   Vector3,
@@ -104,7 +106,7 @@ const Root3d = () => {
       10000,
     );
 
-    // camera.position.z = 5;
+    camera.position.z = 5;
     if (getworldpositionref.current) {
       getworldpositionref.current.onclick = function getworldposition() {
         const worldposyion = new Vector3();
@@ -122,8 +124,8 @@ const Root3d = () => {
 
     // create3dText({ scene, textinput: "Hello I'm Peterson" });
     const controls = new OrbitControls(camera, renderer.domElement);
-    // controls.autoRotate = true;
-    controls.enableDamping = true;
+    // // controls.autoRotate = true;
+    // controls.enableDamping = true;
     // controls.enablePan = false;
     // controls.enableZoom = false;
     // controls.minPolarAngle = Math.PI / 3; // 45° on the y-axis
@@ -172,49 +174,62 @@ const Root3d = () => {
     let lambo: Object3D<Object3DEventMap>;
 
     const glftLoader = new GLTFLoader();
-    glftLoader.load("/lambo/2023_lamborghini_urus_performante.glb", (data) => {
+    glftLoader.load("moby_dock_docker_whale.glb", async (data) => {
       console.log("loaded glb file", data);
       scene.add(data.scene);
       console.log(dumpObject(data.scene).join("\n"));
-      console.log(data.scene);
       lambo = data.scene.children[0];
-      // const worldposyion = new Vector3();
-      // const scale = new Vector3();
-      lambo.scale.addScalar(3);
+      console.log(lambo);
 
-      const rotation = new Euler(
-        -2.7873476512665047,
-        0.0569282830620787,
-        3.120552396435505,
-        "XYZ",
-      );
+      const quaternion = new Quaternion();
+      quaternion.setFromAxisAngle(new Vector3(0, 1, 0), Math.PI / 2);
+      // camera.applyQuaternion(quaternion);
+      // camera.rotation.x = Math.PI /2
+      await new Promise((res) => {
+        // gsap.to(lambo.rotation, {
+        //   x: Math.PI / 2,
+        //   // y: 100,
+        //   // duration: 30,
+        //   delay: 5,
+        //   ease: "none",
+        //   onComplete: res, // resolve when animation finishes
+        // });
+        // const targetEuler = new Euler(2 * Math.PI, 0, 0, "XYZ");
+        // const targetQuat = new Quaternion().setFromEuler(targetEuler);
+        // gsap.to(camera.quaternion, {
+        //   x: targetQuat.x,
+        //   y: targetQuat.y,
+        //   z: targetQuat.z,
+        //   w: targetQuat.w,
+        //   duration: 5,
+        // });
+        // controls.disconnect();\
+        console.log(Math.PI / 4 / 2);
+        controls.enabled = false;
 
-      const rotationv = new Vector3(
-        0.011047342658908069,
-        0.04610816152938482,
-        0.02517805811831965,
-      );
-
-      // camera.setRotationFromEuler(rotation);
-      // camera.lookAt(rotationv);
-      // camera.localToWorld(rotationv);
-      controls.target = rotationv;
-      // camera.rotateZ();
-
-      camera.position.set(
-        0.01531510433955193,
-        0.05452040575021429,
-        -0.008268512154731802,
-      );
-      // camera.updateProjectionMatrix();
+        gsap.to(camera.rotation, {
+          // y: -Math.PI / 2, // 90 degrees
+          x: Math.PI / 4 / 2,
+          // x: 200,
+          duration: 5,
+          onUpdate: () => {
+            camera.updateMatrixWorld();
+          },
+          onComplete: () => {
+            controls.enabled = true;
+            // controls.connect(document.body);
+          },
+          ease: "none",
+        });
+      });
     });
-    const light = new AmbientLight("white", 10); // soft white light
-    scene.add(light);
-    // const directionalLightpos = new Vector3(3, 5, 7);
+    // const light = new AmbientLight("white", 10); // soft white light
+    // scene.add(light);
+    // // const directionalLightpos = new Vector3(3, 5, 7);
 
-    const directionalLight = new DirectionalLight("white", 20);
-    directionalLight.position.set(3, 5, 7);
-    scene.add(directionalLight);
+    // const directionalLight = new DirectionalLight("white", 20);
+    // directionalLight.position.set(3, 5, 7);
+    // scene.add(directionalLight);
 
     const curve = new CatmullRomCurve3(points, true);
 
@@ -238,14 +253,13 @@ const Root3d = () => {
     // scene.add(cube);
 
     function animate() {
-      // if (monkey) {
-      //   console.log("rotating monkey");
-      //   monkey.rotation.x += 0.01;
-      // }
+      if (lambo) {
+        // console.log("rotating monkey");
+        // lambo.position.x += 0.01;
+      }
       // cube.rotation.x += 0.01;
       // cube.rotation.y += 0.01;
-
-      controls.update();
+      if (controls.enabled) controls.update();
       renderer.render(scene, camera);
     }
 

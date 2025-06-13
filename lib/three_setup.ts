@@ -4,7 +4,6 @@ import {
   Mesh,
   MeshBasicMaterial,
   Object3D,
-  Object3DEventMap,
   Scene,
 } from "three";
 import { FontLoader, TextGeometry } from "three/examples/jsm/Addons.js";
@@ -51,7 +50,7 @@ export const create3dText = ({ textinput, scene }: create3dTextprops) => {
 };
 
 export function dumpObject(
-  obj: Object3D<Object3DEventMap>,
+  obj: Object3D,
   lines = [] as string[],
   isLast = true,
   prefix = "",
@@ -60,6 +59,21 @@ export function dumpObject(
   lines.push(
     `${prefix}${prefix ? localPrefix : ""}${obj.name || "*no-name*"} [${obj.type}]`,
   );
+  if (obj.name === "Cube002") {
+    console.log("cubeoo2");
+    obj.position.set(1, 2, 3);
+    console.log(obj);
+    // const mesh = obj.children[0];
+    // mesh.material?.color.set("#ff0000"); //still works don't know what's the problem
+    obj.children.forEach((child) => {
+      console.log("child", child);
+      if (child instanceof Mesh) {
+        child.material.color.set("green");
+      }
+      // child.material.map = null;
+      // obj.remove(child);
+    });
+  }
   const newPrefix = prefix + (isLast ? "  " : "│ ");
   const lastNdx = obj.children.length - 1;
   obj.children.forEach((child, ndx) => {

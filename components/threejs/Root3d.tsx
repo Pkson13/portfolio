@@ -8,15 +8,12 @@ import gsap from "gsap";
 import { useTheme } from "next-themes";
 import React, { useEffect, useRef } from "react";
 import {
-  AmbientLight,
   AxesHelper,
   BoxGeometry,
   BufferGeometry,
   CatmullRomCurve3,
   Color,
-  DirectionalLight,
   EdgesGeometry,
-  Euler,
   // Fog,
   Line,
   LineBasicMaterial,
@@ -177,6 +174,14 @@ const Root3d = () => {
     glftLoader.load("moby_dock_docker_whale.glb", async (data) => {
       console.log("loaded glb file", data);
       scene.add(data.scene);
+      // data.scene.traverse((obj) => {
+      //   console.log("t ", obj.name, "\n");
+      //   if (obj.name === "Cube002_0") {
+      //     console.log("remove obj");
+      //     // obj.parent?.remove(obj);
+      //     // obj.material.color.set("green");
+      //   }
+      // });
       console.log(dumpObject(data.scene).join("\n"));
       lambo = data.scene.children[0];
       console.log(lambo);
@@ -273,7 +278,10 @@ const Root3d = () => {
 
   return (
     <>
-      <div ref={sceneref} className="h-screen"></div>
+      <div
+        ref={sceneref}
+        className="fixed top-0 left-0 -z-20 h-screen w-screen"
+      ></div>
       <div>
         <button ref={getworldpositionref}>cam worldposition</button>
       </div>

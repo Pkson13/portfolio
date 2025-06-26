@@ -28,7 +28,7 @@ const Logo_scramble = () => {
   return (
     <Link
       id="logo"
-      className="text-xl"
+      className="font-(family-name:--font-bebas-neue) text-xl font-medium tracking-wider"
       href={"/"}
       onClick={handleclick}
       ref={logoRef}

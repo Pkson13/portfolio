@@ -38,11 +38,13 @@ const CursorFollower = () => {
   }, []);
 
   return (
-    <span
-      ref={cursofollower}
-      id="cursor-follower"
-      className="pointer-events-none absolute top-0 left-0 z-20 hidden size-20 -translate-x-1/2 -translate-y-1/2 rounded-full bg-foreground opacity-0 md:block"
-    ></span>
+    <div className="pointer-events-none fixed top-0 left-0 z-20 h-screen w-screen">
+      <span
+        ref={cursofollower}
+        id="cursor-follower"
+        className="pointer-events-none absolute top-0 left-0 hidden size-20 -translate-x-1/2 -translate-y-1/2 rounded-full bg-foreground opacity-0 md:block"
+      ></span>
+    </div>
   );
 };
 

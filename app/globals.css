@@ -123,6 +123,9 @@
     display: none;
   }
 }
+html {
+  scroll-behavior: smooth;
+}
 
 nav {
   background-color: transparent;

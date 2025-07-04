@@ -11,12 +11,12 @@ import { FontLoader, TextGeometry } from "three/examples/jsm/Addons.js";
 type changesceneFuncProps = Scene;
 
 export const changeSceneToDarkMode = (scene: changesceneFuncProps) => {
-  scene.background = new Color("black");
+  scene.background = new Color("white");
   // scene.fog = new Fog("black", 10, 15);
 };
 export const changeSceneToLightMode = (scene: changesceneFuncProps) => {
   // scene.fog = new Fog("white", 10, 15);
-  scene.background = new Color("white");
+  scene.background = new Color("black");
 };
 
 type create3dTextprops = {

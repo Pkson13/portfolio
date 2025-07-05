@@ -40,14 +40,14 @@ const Logo_scramble = () => {
       },
       // "+=0.5",
     );
-    ScrollSmoother.create({
-      wrapper: "#smooth-wrapper",
-      content: "#smooth-content",
-      smooth: 1,
-      effects: true,
-      speed: 0.5,
-      normalizeScroll: true,
-    });
+    // ScrollSmoother.create({
+    //   wrapper: "#smooth-wrapper",
+    //   content: "#smooth-content",
+    //   smooth: 1,
+    //   effects: true,
+    //   speed: 0.5,
+    //   normalizeScroll: true,
+    // });
     // smoother.scrollTo("#projects", true, "center center");
 
     // skillstl.to(

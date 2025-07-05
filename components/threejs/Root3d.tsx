@@ -1,18 +1,19 @@
 "use client";
 import {
-  changeSceneToDarkMode,
-  changeSceneToLightMode,
   dumpObject,
+  getworldposition,
+  handlescenetheme,
+  setupSkyAndWater,
 } from "@/lib/three_setup";
 import gsap from "gsap";
 import { useTheme } from "next-themes";
 import React, { useEffect, useRef } from "react";
 import {
+  ArrowHelper,
   AxesHelper,
   BoxGeometry,
   BufferGeometry,
   CatmullRomCurve3,
-  Color,
   EdgesGeometry,
   // Fog,
   Line,
@@ -30,6 +31,7 @@ import {
   WebGLRenderer,
 } from "three";
 import { GLTFLoader, OrbitControls } from "three/examples/jsm/Addons.js";
+import Stats from "three/examples/jsm/libs/stats.module.js";
 
 const Root3d = () => {
   const sceneref = useRef<HTMLDivElement | null>(null);
@@ -78,22 +80,7 @@ const Root3d = () => {
       10.136184463414924, -1.374508746897471, 10.384881573913269,
     ];
     const scene = new Scene();
-    const handleDarkMode = () => changeSceneToDarkMode(scene);
-    const handleLightMode = () => changeSceneToLightMode(scene);
-    document.body.addEventListener("darkmode", handleDarkMode);
-    document.body.addEventListener("lightmode", handleLightMode);
-    let backgroundColor;
-    if (theme == "light") {
-      backgroundColor = new Color("black");
-      // scene.fog = new Fog("white", 10, 15);
-    } else {
-      // scene.fog = new Fog("black", 10, 15);
-      backgroundColor = new Color("white");
-    }
-    console.log("fog", scene.fog);
-    scene.fog = null;
-    if (!backgroundColor) return;
-    scene.background = backgroundColor;
+    handlescenetheme(scene, theme);
     if (!sceneref.current?.clientWidth) return;
     const sceneELement = sceneref.current;
     const camera = new PerspectiveCamera(
@@ -103,30 +90,57 @@ const Root3d = () => {
       10000,
     );
 
-    camera.position.z = 5;
+    camera.position.z = 10;
+    camera.position.y = 3;
     if (getworldpositionref.current) {
-      getworldpositionref.current.onclick = function getworldposition() {
-        const worldposyion = new Vector3();
-        camera.getWorldPosition(worldposyion);
-        console.log(worldposyion, "\nrotation\n", camera.rotation.clone());
+      getworldpositionref.current.onclick = () => {
+        getworldposition(camera);
       };
     }
 
     const renderer = new WebGLRenderer({
       antialias: true,
+      // alpha: true,
+      // premultipliedAlpha: false,
       // canvas: canvasref.current,
     });
-    // const axesHelper = new AxesHelper(100);
-    // scene.add(axesHelper);
+    const axesHelper = new AxesHelper(100);
+    scene.add(axesHelper);
+
+    const dir = new Vector3(1, 3, 0);
+
+    //normalize the direction vector (convert to vector of length 1/ convert the vector to a unit vector)
+    dir.normalize();
+
+    const origin = new Vector3(0, 0, 0);
+    const length = 2;
+    const hex = 0xffff00;
+
+    // new TextureLoader().load("2k_stars.jpg", (texture) => {
+    //   scene.background = texture;
+    // });
+
+    const water = setupSkyAndWater(scene, renderer, camera);
+
+    const arrowHelper = new ArrowHelper(dir, origin, length, hex);
+    scene.add(arrowHelper);
 
     // create3dText({ scene, textinput: "Hello I'm Peterson" });
     const controls = new OrbitControls(camera, renderer.domElement);
     // // controls.autoRotate = true;
     controls.enableDamping = true;
     controls.enablePan = false;
-    controls.enableZoom = false;
+    // controls.enableZoom = false;
     // controls.minPolarAngle = Math.PI / 3; // 45° on the y-axis
     // controls.maxPolarAngle = Math.PI / 2; // 90°
+    controls.maxPolarAngle = Math.PI * 0.495;
+    // controls.maxPolarAngle = Math.PI / 2.3;
+    // controls.minDistance = 10.0;
+    controls.maxDistance = 10.0;
+    controls.update();
+
+    const stats = new Stats();
+    document.body.appendChild(stats.dom);
     renderer.setSize(sceneELement?.clientWidth, sceneELement.clientHeight);
     // const handleResize = (e: UIEvent) => {
     //   console.log(e);
@@ -176,8 +190,12 @@ const Root3d = () => {
     const glftLoader = new GLTFLoader();
     glftLoader.load("moby_dock_docker_whale.glb", async (data) => {
       console.log("loaded glb file", data);
-      data.scene.matrixAutoUpdate = false;
+      console.log("model scale", data.scene.scale);
+      // data.scene.matrixAutoUpdate = false;
       // data.scene.updateMatrix();
+      // data.scene.scale.setScalar(2);
+      controls.target = data.scene.position;
+
       scene.add(data.scene);
       // data.scene.traverse((obj) => {
       //   console.log("t ", obj.name, "\n");
@@ -189,7 +207,7 @@ const Root3d = () => {
       // });
       console.log(dumpObject(data.scene).join("\n"));
       lambo = data.scene.children[0];
-      console.log(lambo);
+      console.log("scene", lambo);
 
       const quaternion = new Quaternion();
       quaternion.setFromAxisAngle(new Vector3(0, 1, 0), Math.PI / 2);
@@ -215,11 +233,26 @@ const Root3d = () => {
         // });
         // controls.disconnect();\
         console.log(Math.PI / 4 / 2);
-        controls.enabled = false;
+        // controls.enabled = false;
 
-        gsap.to(camera.rotation, {
+        // gsap.to(camera.rotation, {
+        //   // y: -Math.PI / 2, // 90 degrees
+        //   x: Math.PI / 4 / 2,
+        //   // x: 200,
+        //   duration: 5,
+        //   onUpdate: () => {
+        //     camera.updateMatrixWorld();
+        //   },
+        //   onComplete: () => {
+        //     controls.enabled = true;
+        //     // controls.connect(document.body);
+        //   },
+        //   ease: "none",
+        // });
+        gsap.to(data.scene.position, {
           // y: -Math.PI / 2, // 90 degrees
-          x: Math.PI / 4 / 2,
+          x: 20,
+          y: 1,
           // x: 200,
           duration: 5,
           onUpdate: () => {
@@ -228,10 +261,11 @@ const Root3d = () => {
           onComplete: () => {
             controls.enabled = true;
             // controls.connect(document.body);
+            res("done");
           },
           ease: "none",
         });
-      });
+      }).then((result) => console.log("promise done", result));
     });
     // const light = new AmbientLight("white", 10); // soft white light
     // scene.add(light);
@@ -270,6 +304,10 @@ const Root3d = () => {
       // cube.rotation.x += 0.01;
       // cube.rotation.y += 0.01;
       if (controls.enabled) controls.update();
+      // water.material.uniforms.time.value += 0.3 / 60.0;
+      water.material.uniforms["time"].value += 0.2 / 60.0;
+
+      stats.update();
       renderer.render(scene, camera);
     }
 
@@ -290,7 +328,7 @@ const Root3d = () => {
       <div>
         <button ref={getworldpositionref}>cam worldposition</button>
       </div>
-      {/* <canvas ref={canvasref}></canvas> */}
+      <canvas className="w-50"></canvas>
     </>
   );
 };

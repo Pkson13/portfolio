@@ -3,6 +3,7 @@ import {
   dumpObject,
   getworldposition,
   handlescenetheme,
+  loadaudio,
   setupSkyAndWater,
 } from "@/lib/three_setup";
 import gsap from "gsap";
@@ -80,7 +81,7 @@ const Root3d = () => {
       10.136184463414924, -1.374508746897471, 10.384881573913269,
     ];
     const scene = new Scene();
-    handlescenetheme(scene, theme);
+    // handlescenetheme(scene, theme);
     if (!sceneref.current?.clientWidth) return;
     const sceneELement = sceneref.current;
     const camera = new PerspectiveCamera(
@@ -95,6 +96,8 @@ const Root3d = () => {
     if (getworldpositionref.current) {
       getworldpositionref.current.onclick = () => {
         getworldposition(camera);
+        loadaudio(camera);
+        controls.target = new Vector3(3, 2, 0);
       };
     }
 
@@ -195,6 +198,12 @@ const Root3d = () => {
       // data.scene.updateMatrix();
       // data.scene.scale.setScalar(2);
       controls.target = data.scene.position;
+      data.scene.position.set(20, 1, 0);
+      camera.position.set(
+        15.405193262355265,
+        1.7046355310666237,
+        8.853882753462061,
+      );
 
       scene.add(data.scene);
       // data.scene.traverse((obj) => {

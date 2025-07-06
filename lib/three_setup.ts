@@ -1,4 +1,7 @@
 import {
+  Audio,
+  AudioListener,
+  AudioLoader,
   Camera,
   Color,
   MathUtils,
@@ -198,3 +201,21 @@ export const setupSkyAndWater = (
   scene.add(water);
   return water;
 };
+
+export function loadaudio(camera: Camera) {
+  const listener = new AudioListener();
+  // camera.add(listener);
+
+  // create a global audio source
+  const sound = new Audio(listener);
+  sound.autoplay = true;
+
+  // load a sound and set it as the Audio object's buffer
+  const audioLoader = new AudioLoader();
+  audioLoader.load("audio/ocean sounds.mp3", function (buffer) {
+    sound.setBuffer(buffer);
+    sound.setLoop(true);
+    sound.setVolume(0.5);
+    sound.play();
+  });
+}

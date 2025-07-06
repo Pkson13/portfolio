@@ -89,8 +89,10 @@ const Skills = () => {
       .to(
         "#skill-container",
         {
-          rotateZ: 10,
-          scale: 2,
+          rotateZ: 7,
+          width: "200vw",
+          height: "200vh",
+          scale: 1.5,
           padding: 0,
           ease: "power2.inOut",
         },

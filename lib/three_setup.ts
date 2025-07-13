@@ -304,10 +304,11 @@ export const loadDockerModel = ({
       ArrowLeft?: boolean;
       ArrowRight?: boolean;
       ArrowDown?: boolean;
+      Shift?: boolean;
     };
 
     const keysPressed: gamekeys = {};
-    const speed = 0.2;
+    let speed = 0.2;
 
     document.body.addEventListener("keydown", (ev) => {
       console.log("pressed", ev.key);
@@ -315,6 +316,11 @@ export const loadDockerModel = ({
       // ev.preventDefault();
 
       switch (ev.key) {
+        case "Shift":
+          if (speed == 0.2) {
+            speed += 0.3;
+          }
+          break;
         case "ArrowUp":
           keysPressed[ev.key] = true;
 
@@ -340,6 +346,12 @@ export const loadDockerModel = ({
       console.log("keyup", ev.key);
 
       switch (ev.key) {
+        case "Shift":
+          if (speed == 0.5) {
+            speed -= 0.3;
+          }
+
+          break;
         case "ArrowUp":
           keysPressed[ev.key] = false;
 

@@ -320,6 +320,24 @@ const Root3d = () => {
     <>
       <div ref={sceneref} className="relative m-0 mx-auto h-full w-full p-0">
         <div
+          id="speed-meter"
+          style={{
+            position: "fixed",
+            bottom: "1rem",
+            left: "1rem",
+            padding: "0.5rem 1rem",
+            background: "rgba(0,0,0,0.7)",
+            color: "lime",
+            fontFamily: "monospace",
+            borderRadius: "6px",
+            fontSize: "1rem",
+            zIndex: 9999,
+          }}
+        >
+          Speed: 0%
+        </div>
+
+        <div
           className="pointer-events-none absolute top-1/4 left-1/2 z-[99] mx-2 -translate-x-1/2 font-(family-name:--font-bebas-neue)"
           id="absolute-stuff"
         >

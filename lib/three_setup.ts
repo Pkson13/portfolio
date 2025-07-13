@@ -271,23 +271,23 @@ export const loadDockerModel = ({
       1.7046355310666237,
       8.853882753462061,
     );
-    // let x_r = 0;
-    // let z_r = 0;
+    let x_r = 0;
+    let z_r = 0;
 
-    // gsap.to(
-    //   {},
-    //   {
-    //     repeat: -1,
-    //     duration: 0.016, // roughly 60fps
-    //     onUpdate: () => {
-    //       x_r += 0.02; // adjust to control rocking speed
-    //       z_r += 0.015;
+    gsap.to(
+      {},
+      {
+        repeat: -1,
+        duration: 0.016, // roughly 60fps
+        onUpdate: () => {
+          x_r += 0.02; // adjust to control rocking speed
+          z_r += 0.015;
 
-    //       data.scene.rotation.x = Math.sin(x_r) * 0.05; // pitch
-    //       data.scene.rotation.z = Math.sin(z_r) * 0.03; // yaw/roll
-    //     },
-    //   },
-    // );
+          data.scene.rotation.x = Math.sin(x_r) * 0.05; // pitch
+          data.scene.rotation.z = Math.sin(z_r) * 0.03; // yaw/roll
+        },
+      },
+    );
 
     // for (let i = 0; i < 100; i++) {
     //   // i = degToRad(i);
@@ -299,100 +299,237 @@ export const loadDockerModel = ({
     data.scene.add(axesHelper);
     camera.lookAt(new Vector3(10, 10, 0));
 
-    type gamekeys = {
-      ArrowUp?: boolean;
-      ArrowLeft?: boolean;
-      ArrowRight?: boolean;
-      ArrowDown?: boolean;
-      Shift?: boolean;
-    };
+    const keysPressed: Record<string, boolean> = {};
+    let speed = 0;
+    let targetSpeed = 0;
+    const baseMaxSpeed = 0.2;
+    const boostedMaxSpeed = 0.5;
+    let maxSpeed = baseMaxSpeed;
 
-    const keysPressed: gamekeys = {};
-    let speed = 0.2;
+    const acceleration = 0.001;
+    const deceleration = 0.001;
+    const brakeDeceleration = 0.01;
+
+    let boosting = false;
+    let braking = false;
+
+    const speedMeter = document.getElementById("speed-meter");
 
     document.body.addEventListener("keydown", (ev) => {
-      console.log("pressed", ev.key);
-      // ev.stopPropagation();
-      // ev.preventDefault();
+      keysPressed[ev.key] = true;
 
       switch (ev.key) {
-        case "Shift":
-          if (speed == 0.2) {
-            speed += 0.3;
-          }
-          break;
         case "ArrowUp":
-          keysPressed[ev.key] = true;
-
+          targetSpeed = maxSpeed;
           break;
         case "ArrowDown":
-          keysPressed[ev.key] = true;
-
+          targetSpeed = -maxSpeed;
           break;
-        case "ArrowRight":
-          keysPressed[ev.key] = true;
-
-          // data.scene.translateZ(0.1);
+        case "Shift":
+          boosting = true;
+          maxSpeed = boostedMaxSpeed;
+          if (keysPressed["ArrowUp"]) targetSpeed = maxSpeed;
+          if (keysPressed["ArrowDown"]) targetSpeed = -maxSpeed;
           break;
-        case "ArrowLeft":
-          keysPressed[ev.key] = true;
-
-          // data.scene.translateZ(-0.1);
+        case " ":
+          braking = true;
           break;
       }
     });
 
     document.body.addEventListener("keyup", (ev) => {
-      console.log("keyup", ev.key);
+      keysPressed[ev.key] = false;
 
       switch (ev.key) {
-        case "Shift":
-          if (speed == 0.5) {
-            speed -= 0.3;
-          }
-
-          break;
         case "ArrowUp":
-          keysPressed[ev.key] = false;
-
-          break;
         case "ArrowDown":
-          keysPressed[ev.key] = false;
+          targetSpeed = 0;
           break;
-        case "ArrowRight":
-          keysPressed[ev.key] = false;
-
+        case "Shift":
+          boosting = false;
+          maxSpeed = baseMaxSpeed;
+          if (keysPressed["ArrowUp"]) targetSpeed = maxSpeed;
+          if (keysPressed["ArrowDown"]) targetSpeed = -maxSpeed;
           break;
-        case "ArrowLeft":
-          keysPressed[ev.key] = false;
-
+        case " ":
+          braking = false;
           break;
       }
     });
 
     const gameConrolsLoop = () => {
       const angle = data.scene.rotation.y;
-      console.log("gamecontrolsLoop");
-      if (keysPressed["ArrowUp"] == true) {
-        // console.log(`angle in radians ${angle}, deg ${radToDeg(angle)}`);
+
+      // Braking
+      if (braking) {
+        if (speed > 0) {
+          speed = Math.max(speed - brakeDeceleration, 0);
+        } else if (speed < 0) {
+          speed = Math.min(speed + brakeDeceleration, 0);
+        }
+      } else {
+        // Normal acceleration/deceleration
+        if (speed < targetSpeed) {
+          speed = Math.min(speed + acceleration, targetSpeed);
+        } else if (speed > targetSpeed) {
+          speed = Math.max(speed - deceleration, targetSpeed);
+        }
+      }
+
+      // Move scene
+      if (Math.abs(speed) > 0.001) {
         data.scene.position.x -= Math.cos(-angle) * speed;
         data.scene.position.z -= Math.sin(-angle) * speed;
-        // data.scene.translateX(-0.1);
       }
-      if (keysPressed["ArrowDown"]) {
-        data.scene.position.x += Math.cos(-angle) * speed;
-        data.scene.position.z += Math.sin(-angle) * speed;
-        // data.scene.translateX(0.1);
-      }
+
       if (keysPressed["ArrowRight"]) {
-        data.scene.rotation.y -= degToRad(3);
+        data.scene.rotation.y -= degToRad(1);
       }
       if (keysPressed["ArrowLeft"]) {
-        data.scene.rotation.y += degToRad(3);
+        data.scene.rotation.y += degToRad(1);
       }
+
+      // Update speed meter
+      if (speedMeter) {
+        const percentage = Math.round(
+          (Math.abs(speed) / boostedMaxSpeed) * 100,
+        );
+        speedMeter.innerText = `Speed: ${percentage}knots`;
+      }
+
       requestAnimationFrame(gameConrolsLoop);
     };
+
     gameConrolsLoop();
+
+    //there is overlap of the timeout in the gamloop below
+    //  type gamekeys = {
+    //       ArrowUp?: boolean;
+    //       ArrowLeft?: boolean;
+    //       ArrowRight?: boolean;
+    //       ArrowDown?: boolean;
+    //       Shift?: boolean;
+    //     };
+    // const keysPressed: gamekeys = {};
+    // let speed = 0;
+    // let is_accelerating: boolean;
+
+    // document.body.addEventListener("keydown", async (ev) => {
+    //   console.log("pressed", ev.key);
+    //   // ev.stopPropagation();
+    //   // ev.preventDefault();
+
+    //   switch (ev.key) {
+    //     case "Shift":
+    //       // if (speed == 0.2) {
+    //       // speed += 0.3;
+    //       // }
+    //       break;
+    //     case "ArrowUp":
+    //       keysPressed[ev.key] = true;
+    //       is_accelerating = true;
+    //       for (speed; speed < 0.2; speed += 0.01) {
+    //         if (!is_accelerating) break;
+    //         console.log("Accelerating", speed);
+    //         await new Promise<void>((resolve, reject) => {
+    //           setTimeout(resolve, 0.001);
+    //         });
+    //       }
+
+    //       break;
+    //     case "ArrowDown":
+    //       keysPressed[ev.key] = true;
+    //       for (speed; speed > -0.2; speed -= 0.01) {
+    //         console.log("reversing", speed);
+    //         await new Promise<void>((resolve, reject) => {
+    //           setTimeout(resolve, 0.001);
+    //         });
+    //       }
+
+    //       break;
+    //     case "ArrowRight":
+    //       keysPressed[ev.key] = true;
+
+    //       // data.scene.translateZ(0.1);
+    //       break;
+    //     case "ArrowLeft":
+    //       keysPressed[ev.key] = true;
+
+    //       // data.scene.translateZ(-0.1);
+    //       break;
+    //   }
+    // });
+
+    // document.body.addEventListener("keyup", async (ev) => {
+    //   console.log("keyup", ev.key);
+
+    //   switch (ev.key) {
+    //     case "Shift":
+    //       // if (speed == 0.5) {
+    //       speed -= 0.3;
+    //       // }
+
+    //       break;
+    //     case "ArrowUp":
+    //       is_accelerating = false;
+    //       for (speed; speed > 0; speed -= 0.01) {
+    //         // data.scene.translateX(-i);
+    //         if (is_accelerating) break;
+    //         console.log("decelerating", speed);
+
+    //         await new Promise<void>((resolve, reject) => {
+    //           setTimeout(resolve, 0.001);
+    //         });
+    //       }
+
+    //       keysPressed[ev.key] = false;
+
+    //       break;
+    //     case "ArrowDown":
+    //       for (speed; speed < 0; speed += 0.01) {
+    //         // data.scene.translateX(-i);
+    //         console.log("stoping reverse", speed);
+    //         await new Promise<void>((resolve, reject) => {
+    //           setTimeout(resolve, 0.001);
+    //         });
+    //       }
+    //       keysPressed[ev.key] = false;
+    //       break;
+    //     case "ArrowRight":
+    //       keysPressed[ev.key] = false;
+
+    //       break;
+    //     case "ArrowLeft":
+    //       keysPressed[ev.key] = false;
+
+    //       break;
+    //   }
+    // });
+
+    // const gameConrolsLoop = () => {
+    //   const angle = data.scene.rotation.y;
+    //   console.log("gamecontrolsLoop");
+    //   if (keysPressed["ArrowUp"] == true) {
+    //     console.log("current speed", speed);
+    //     // console.log(`angle in radians ${angle}, deg ${radToDeg(angle)}`);
+    //     data.scene.position.x -= Math.cos(-angle) * speed;
+    //     data.scene.position.z -= Math.sin(-angle) * speed;
+    //     // data.scene.translateX(-0.1);
+    //   }
+    //   if (keysPressed["ArrowDown"]) {
+    //     data.scene.position.x += Math.cos(-angle) * Math.abs(speed);
+    //     data.scene.position.z += Math.sin(-angle) * Math.abs(speed);
+    //     // data.scene.translateX(0.1);
+    //   }
+    //   if (keysPressed["ArrowRight"]) {
+    //     data.scene.rotation.y -= degToRad(1);
+    //   }
+    //   if (keysPressed["ArrowLeft"]) {
+    //     data.scene.rotation.y += degToRad(1);
+    //   }
+    //   requestAnimationFrame(gameConrolsLoop);
+    // };
+    // gameConrolsLoop();
 
     scene.add(data.scene);
     // data.scene.traverse((obj) => {

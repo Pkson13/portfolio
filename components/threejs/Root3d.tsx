@@ -4,15 +4,21 @@ import {
   getworldposition,
   handlescenetheme,
   loadaudio,
+  loadDockerModel,
+  loadIslandModel,
+  loadIslands,
   setupSkyAndWater,
 } from "@/lib/three_setup";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useTheme } from "next-themes";
 import React, { useEffect, useRef } from "react";
 import {
+  AmbientLight,
   ArrowHelper,
   AxesHelper,
   BoxGeometry,
+  BufferAttribute,
   BufferGeometry,
   CatmullRomCurve3,
   EdgesGeometry,
@@ -20,6 +26,7 @@ import {
   Line,
   LineBasicMaterial,
   LineSegments,
+  MathUtils,
   Mesh,
   MeshBasicMaterial,
   Object3D,
@@ -37,6 +44,7 @@ import Stats from "three/examples/jsm/libs/stats.module.js";
 const Root3d = () => {
   const sceneref = useRef<HTMLDivElement | null>(null);
   const getworldpositionref = useRef<HTMLButtonElement | null>(null);
+  const lookatref = useRef<HTMLButtonElement | null>(null);
 
   const { theme } = useTheme();
 
@@ -81,6 +89,9 @@ const Root3d = () => {
       10.136184463414924, -1.374508746897471, 10.384881573913269,
     ];
     const scene = new Scene();
+    // scene.rotateZ(401.07);
+    // scene.rotation.z = MathUtils.degToRad(7);
+
     // handlescenetheme(scene, theme);
     if (!sceneref.current?.clientWidth) return;
     const sceneELement = sceneref.current;
@@ -92,7 +103,7 @@ const Root3d = () => {
     );
 
     camera.position.z = 10;
-    camera.position.y = 3;
+    camera.position.y = 1;
     if (getworldpositionref.current) {
       getworldpositionref.current.onclick = () => {
         getworldposition(camera);
@@ -107,6 +118,7 @@ const Root3d = () => {
       // premultipliedAlpha: false,
       // canvas: canvasref.current,
     });
+
     const axesHelper = new AxesHelper(100);
     scene.add(axesHelper);
 
@@ -132,15 +144,16 @@ const Root3d = () => {
     const controls = new OrbitControls(camera, renderer.domElement);
     // // controls.autoRotate = true;
     controls.enableDamping = true;
-    controls.enablePan = false;
+    // controls.enabled = false;
+    // controls.enablePan = false;
     // controls.enableZoom = false;
     // controls.minPolarAngle = Math.PI / 3; // 45° on the y-axis
     // controls.maxPolarAngle = Math.PI / 2; // 90°
-    controls.maxPolarAngle = Math.PI * 0.495;
-    // controls.maxPolarAngle = Math.PI / 2.3;
-    // controls.minDistance = 10.0;
-    controls.maxDistance = 10.0;
-    controls.update();
+    // controls.maxPolarAngle = Math.PI * 0.495;
+    controls.maxPolarAngle = Math.PI / 3;
+    controls.minDistance = 3.0;
+    controls.maxDistance = 8.0;
+    // controls.update();
 
     const stats = new Stats();
     document.body.appendChild(stats.dom);
@@ -188,94 +201,41 @@ const Root3d = () => {
     const linegeometry = new BufferGeometry().setFromPoints(points1);
     const line = new Line(linegeometry, threelinematerial);
     // scene.add(line);
-    let lambo: Object3D<Object3DEventMap>;
+    let lambo = null as Object3D<Object3DEventMap> | null;
 
     const glftLoader = new GLTFLoader();
-    glftLoader.load("moby_dock_docker_whale.glb", async (data) => {
-      console.log("loaded glb file", data);
-      console.log("model scale", data.scene.scale);
-      // data.scene.matrixAutoUpdate = false;
-      // data.scene.updateMatrix();
-      // data.scene.scale.setScalar(2);
-      controls.target = data.scene.position;
-      data.scene.position.set(20, 1, 0);
-      camera.position.set(
-        15.405193262355265,
-        1.7046355310666237,
-        8.853882753462061,
-      );
-
-      scene.add(data.scene);
-      // data.scene.traverse((obj) => {
-      //   console.log("t ", obj.name, "\n");
-      //   if (obj.name === "Cube002_0") {
-      //     console.log("remove obj");
-      //     // obj.parent?.remove(obj);
-      //     // obj.material.color.set("green");
-      //   }
-      // });
-      console.log(dumpObject(data.scene).join("\n"));
-      lambo = data.scene.children[0];
-      console.log("scene", lambo);
-
-      const quaternion = new Quaternion();
-      quaternion.setFromAxisAngle(new Vector3(0, 1, 0), Math.PI / 2);
-      // camera.applyQuaternion(quaternion);
-      // camera.rotation.x = Math.PI /2
-      await new Promise((res) => {
-        // gsap.to(lambo.rotation, {
-        //   x: Math.PI / 2,
-        //   // y: 100,
-        //   // duration: 30,
-        //   delay: 5,
-        //   ease: "none",
-        //   onComplete: res, // resolve when animation finishes
-        // });
-        // const targetEuler = new Euler(2 * Math.PI, 0, 0, "XYZ");
-        // const targetQuat = new Quaternion().setFromEuler(targetEuler);
-        // gsap.to(camera.quaternion, {
-        //   x: targetQuat.x,
-        //   y: targetQuat.y,
-        //   z: targetQuat.z,
-        //   w: targetQuat.w,
-        //   duration: 5,
-        // });
-        // controls.disconnect();\
-        console.log(Math.PI / 4 / 2);
-        // controls.enabled = false;
-
-        // gsap.to(camera.rotation, {
-        //   // y: -Math.PI / 2, // 90 degrees
-        //   x: Math.PI / 4 / 2,
-        //   // x: 200,
-        //   duration: 5,
-        //   onUpdate: () => {
-        //     camera.updateMatrixWorld();
-        //   },
-        //   onComplete: () => {
-        //     controls.enabled = true;
-        //     // controls.connect(document.body);
-        //   },
-        //   ease: "none",
-        // });
-        gsap.to(data.scene.position, {
-          // y: -Math.PI / 2, // 90 degrees
-          x: 20,
-          y: 1,
-          // x: 200,
-          duration: 5,
-          onUpdate: () => {
-            camera.updateMatrixWorld();
-          },
-          onComplete: () => {
-            controls.enabled = true;
-            // controls.connect(document.body);
-            res("done");
-          },
-          ease: "none",
-        });
-      }).then((result) => console.log("promise done", result));
+    const light = new AmbientLight();
+    scene.add(light);
+    loadDockerModel({ loader: glftLoader, controls, camera, lambo, scene });
+    loadIslandModel({ loader: glftLoader, controls, camera, lambo, scene });
+    loadIslands({
+      name: "desert_road",
+      loader: glftLoader,
+      controls,
+      camera,
+      scene,
     });
+    loadIslands({
+      name: "autumnal_forest",
+      loader: glftLoader,
+      controls,
+      camera,
+      scene,
+    });
+
+    if (!lookatref.current) return;
+
+    lookatref.current.onclick = () => {
+      console.log("looking");
+      camera.lookAt(
+        new Vector3(
+          Math.random() * (20 - 1) + 1,
+          6,
+          Math.random() * (20 - 1) + 1,
+        ),
+      );
+    };
+
     // const light = new AmbientLight("white", 10); // soft white light
     // scene.add(light);
     // // const directionalLightpos = new Vector3(3, 5, 7);
@@ -283,6 +243,31 @@ const Root3d = () => {
     // const directionalLight = new DirectionalLight("white", 20);
     // directionalLight.position.set(3, 5, 7);
     // scene.add(directionalLight);
+    // gsap.to(
+    //   "#scene-words",
+    //   {
+    //     y: 0,
+    //     // rotate: 360,
+    //     // duration: 2,
+    //     stagger: 0.2,
+    //     // padding: "initial", // or your default value
+    //     ease: "power3.out",
+    //   },
+    //   // ">", // run after previous animation
+    // );
+    // gsap.to(
+    //   "#scene-words",
+    //   {
+    //     y: 100,
+    //     // rotate: 360,
+    //     // duration: 2,
+    //     stagger: 0.2,
+    //     // padding: "initial", // or your default value
+    //     ease: "back.in",
+    //     // delay: 3,
+    //   },
+    //   // ">", // run after previous animation
+    // );
 
     const curve = new CatmullRomCurve3(points, true);
 
@@ -326,16 +311,68 @@ const Root3d = () => {
       // controls.dispose();
       // renderer.dispose();
       observer.unobserve(sceneELement);
-      document.body.removeEventListener("darkmode", handleLightMode);
-      document.body.removeEventListener("lightmode", handleDarkMode);
+      // document.body.removeEventListener("darkmode", handleLightMode);
+      // document.body.removeEventListener("lightmode", handleDarkMode);
     };
   }, []);
 
   return (
     <>
-      <div ref={sceneref} className="m-0 h-full w-full p-0"></div>
+      <div ref={sceneref} className="relative m-0 mx-auto h-full w-full p-0">
+        <div
+          className="pointer-events-none absolute top-1/4 left-1/2 z-[99] mx-2 -translate-x-1/2 font-(family-name:--font-bebas-neue)"
+          id="absolute-stuff"
+        >
+          <div className="overflow-hidden pt-3">
+            {/* give it height, or use h-[20px] */}
+            <div className="flex text-3xl font-semibold tracking-wide text-balance text-gray-100 md:text-7xl">
+              <span className="mr-2 block -translate-y-80" id="scene-words">
+                STEP{" "}
+              </span>
+              <span className="mr-2 block -translate-y-80" id="scene-words">
+                INTO{" "}
+              </span>
+              <span className="mr-2 block -translate-y-80" id="scene-words">
+                A{" "}
+              </span>
+              <span className="mr-2 block -translate-y-80" id="scene-words">
+                NEW{" "}
+              </span>
+              {/* <span className="block -translate-y-full" id="scene-words">
+              test
+            </span> */}
+            </div>
+          </div>
+        </div>
+        <div
+          className="pointer-events-none absolute top-2/4 left-1/2 z-[99] -translate-x-1/2 font-(family-name:--font-bebas-neue)"
+          id="absolute-stuff"
+        >
+          <div className="overflow-hidden pt-3">
+            {/* give it height, or use h-[20px] */}
+            <div className="test-balance flex text-3xl font-semibold tracking-wide text-balance text-gray-100 md:text-7xl">
+              <span className="mr-2 block translate-y-80" id="scene-words">
+                WORLD{" "}
+              </span>
+              <span className="mr-2 block translate-y-80" id="scene-words">
+                INTO{" "}
+              </span>
+              <span className="mr-2 block translate-y-80" id="scene-words">
+                A{" "}
+              </span>
+              <span className="mr-2 block translate-y-80" id="scene-words">
+                NEW{" "}
+              </span>
+              {/* <span className="block -translate-y-full" id="scene-words">
+              test
+            </span> */}
+            </div>
+          </div>
+        </div>
+      </div>
       <div>
         <button ref={getworldpositionref}>cam worldposition</button>
+        <button ref={lookatref}>look at</button>
       </div>
       <canvas className="w-50"></canvas>
     </>

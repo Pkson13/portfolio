@@ -4,6 +4,7 @@ import Root3d from "./threejs/Root3d";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { Poppins } from "next/font/google";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const poppins = Poppins({ weight: "600" });
 
@@ -70,33 +71,44 @@ const Skills = () => {
     //   },
     // });
     const skillstl = gsap.timeline({
-      scrollTrigger: {
-        trigger: "#scene-wrapper",
-        start: "top 35%",
-        end: "bottom 60%",
-        scrub: 2,
-        // pin: true,
-        // markers: true,
-      },
+      paused: true,
+      // scrollTrigger: {
+      //   trigger: "#scene-wrapper",
+      //   start: "top 35%",
+      //   end: "bottom 60%",
+      //   scrub: 0.5,
+      //   // pin: true,
+      //   markers: true,
+
+      // },
     });
 
     skillstl
-      .to("#scene-wrapper", {
-        width: "100vw",
-        height: "100vh",
-        ease: "power2.inOut",
-      })
       .to(
         "#skill-container",
         {
-          rotateZ: 7,
+          rotateZ: 10,
           width: "200vw",
           height: "200vh",
           scale: 1.5,
           padding: 0,
-          ease: "power2.inOut",
+          ease: "power2.out",
+          duration: 3,
         },
-        "<", // run at the same time
+        // "<", // run at the same time
+      )
+      .to(
+        "#scene-wrapper",
+        {
+          width: "100vw",
+          height: "100vh",
+          ease: "power2.out",
+          duration: 3,
+          // top: 0,
+          // left: 0,
+          // position: "fixed",
+        },
+        "<",
       )
       .to(
         "#skill-container",
@@ -104,10 +116,127 @@ const Skills = () => {
           rotateZ: 0,
           scale: 1.1,
           padding: "initial", // or your default value
-          ease: "power2.inOut",
+          ease: "power.in",
+          duration: 2,
         },
         ">", // run after previous animation
+      )
+      .to(
+        "#scene-words",
+        {
+          y: 0,
+          // rotate: 360,
+          duration: 2,
+          stagger: 0.2,
+          // padding: "initial", // or your default value
+          ease: "power3.out",
+        },
+        // ">", // run after previous animation
+      )
+      .to(
+        "#scene-words",
+        {
+          y: 100,
+          // rotate: 360,
+          duration: 2,
+          stagger: 0.2,
+          // padding: "initial", // or your default value
+          ease: "back.in",
+          // delay: 3,
+        },
+        // ">", // run after previous animation
       );
+
+    // ScrollTrigger to update scrollProgress
+    ScrollTrigger.create({
+      trigger: "#scene-wrapper",
+      start: "top 35%",
+      end: "bottom 60%",
+      // end: "+=1000",
+      // scrub: 0.5,
+      // pin: true,
+      markers: true,
+      scrub: true, // this makes scrollProgress update smoothly
+      //  onEnter: () => skillstl.play(),
+      // onLeaveBack: () => skillstl.reverse(),
+      onUpdate: (self) => {
+        // console.log("direction", self.progress);
+        // scrollProgress = self.progress;
+        if (self.direction > 0) {
+          //user scrolling dowm
+          skillstl.timeScale(1);
+          skillstl.play();
+        } else {
+          //user scrolling up
+          skillstl.timeScale(2);
+          skillstl.reverse();
+        }
+      },
+    });
+
+    // const abs_words = gsap.timeline({
+    //   paused: true,
+    //   // scrollTrigger: {
+    //   //   trigger: "#scene-wrapper",
+    //   //   start: "top 0%",
+    //   //   // scrub: true,
+    //   // },
+    // });
+    // abs_words.to(
+    //   "#scene-words",
+    //   {
+    //     y: 0,
+    //     // rotate: 360,
+    //     duration: 2,
+    //     stagger: 0.2,
+    //     // padding: "initial", // or your default value
+    //     ease: "power3.out",
+    //   },
+    //   // ">", // run after previous animation
+    // );
+    // abs_words.to(
+    //   "#scene-words",
+    //   {
+    //     y: 100,
+    //     // rotate: 360,
+    //     duration: 2,
+    //     stagger: 0.2,
+    //     // padding: "initial", // or your default value
+    //     ease: "back.in",
+    //     delay: 3,
+    //   },
+    //   // ">", // run after previous animation
+    // );
+    // ScrollTrigger.create({
+    //   trigger: "#scene-wrapper",
+    //   start: "top 10%",
+    //   // end: "bottom 60%",
+    //   // scrub: 0.5,
+    //   // pin: true,
+    //   markers: true,
+    //   scrub: true, // this makes scrollProgress update smoothly
+    //   onUpdate: (self) => {
+    //     // console.log("direction", self.progress);
+    //     // scrollProgress = self.progress;
+    //     if (self.direction > 0) {
+    //       //user scrolling dowm
+    //       abs_words.play();
+    //     } else {
+    //       //user scrolling up
+    //       abs_words.reverse();
+    //     }
+    //   },
+    // });
+    // gsap.to("#scene-wrapper", {
+    //   scrollTrigger: {
+    //     trigger: "#skill-container",
+    //     pin: true,
+    //     start: "top -10%",
+
+    //     end: "bottom 60%",
+    //     markers: true,
+    //   },
+    // });
   });
   return (
     <div className="px-4 py-12 sm:px-6" id="skill-container">
@@ -115,7 +244,7 @@ const Skills = () => {
         Skills
       </div>
       <div
-        className="mb-5 flex flex-col-reverse gap-12 sm:gap-16 md:grid md:grid-cols-2 md:gap-20"
+        className="mb-5 flex flex-col-reverse gap-12 sm:gap-16 md:grid md:grid-cols-2 md:items-center"
         id="scale"
       >
         <div
@@ -125,27 +254,22 @@ const Skills = () => {
         >
           <Root3d />
         </div>
-        <div
-          className="col-start-2 self-center justify-self-center"
-          id="Docker"
-        >
+        <div className="col-start-2" id="Docker">
           <div className="">
-            <span
-              className={`text-2xl leading-tight text-gray-900 antialiased dark:text-gray-100 ${poppins.className}`}
-            >
-              Docker
-            </span>
+            <span className={`secondary-header`}>Docker</span>
           </div>
-          <p className="mt-2 text-sm leading-7 text-gray-700 dark:text-gray-300">
+          <p
+            className={`mt-2 leading-7 text-balance text-gray-600 dark:text-gray-300`}
+          >
             Docker, a powerful containerization tool that allows me to package
             applications and their dependencies into lightweight, portable
-            containers. This ensures consistency across development, testing,
-            and production environments, eliminating the “it works on my
-            machine” problem.
+            containers, ensuring consistency across development, testing, and
+            production environments, eliminating the “it works on my machine”
+            problem.
           </p>
         </div>
       </div>
-      <div className="h-screen sm:h-40"></div>
+      <div className="h-[300vh]"></div>
     </div>
   );
 };

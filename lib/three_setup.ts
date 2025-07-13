@@ -299,35 +299,88 @@ export const loadDockerModel = ({
     data.scene.add(axesHelper);
     camera.lookAt(new Vector3(10, 10, 0));
 
+    type gamekeys = {
+      ArrowUp?: boolean;
+      ArrowLeft?: boolean;
+      ArrowRight?: boolean;
+      ArrowDown?: boolean;
+    };
+
+    const keysPressed: gamekeys = {};
+    const speed = 0.2;
+
     document.body.addEventListener("keydown", (ev) => {
       console.log("pressed", ev.key);
       // ev.stopPropagation();
       // ev.preventDefault();
-      const speed = 0.1;
-      const angle = data.scene.rotation.y;
 
       switch (ev.key) {
         case "ArrowUp":
-          // console.log(`angle in radians ${angle}, deg ${radToDeg(angle)}`);
-          data.scene.position.x -= Math.cos(-angle) * speed;
-          data.scene.position.z -= Math.sin(-angle) * speed;
-          // data.scene.translateX(-0.1);
+          keysPressed[ev.key] = true;
+
           break;
         case "ArrowDown":
-          data.scene.position.x += Math.cos(-angle) * speed;
-          data.scene.position.z += Math.sin(-angle) * speed;
-          // data.scene.translateX(0.1);
+          keysPressed[ev.key] = true;
+
           break;
         case "ArrowRight":
+          keysPressed[ev.key] = true;
+
           // data.scene.translateZ(0.1);
-          data.scene.rotation.y -= degToRad(5);
           break;
         case "ArrowLeft":
+          keysPressed[ev.key] = true;
+
           // data.scene.translateZ(-0.1);
-          data.scene.rotation.y += degToRad(5);
           break;
       }
     });
+
+    document.body.addEventListener("keyup", (ev) => {
+      console.log("keyup", ev.key);
+
+      switch (ev.key) {
+        case "ArrowUp":
+          keysPressed[ev.key] = false;
+
+          break;
+        case "ArrowDown":
+          keysPressed[ev.key] = false;
+          break;
+        case "ArrowRight":
+          keysPressed[ev.key] = false;
+
+          break;
+        case "ArrowLeft":
+          keysPressed[ev.key] = false;
+
+          break;
+      }
+    });
+
+    const gameConrolsLoop = () => {
+      const angle = data.scene.rotation.y;
+      console.log("gamecontrolsLoop");
+      if (keysPressed["ArrowUp"] == true) {
+        // console.log(`angle in radians ${angle}, deg ${radToDeg(angle)}`);
+        data.scene.position.x -= Math.cos(-angle) * speed;
+        data.scene.position.z -= Math.sin(-angle) * speed;
+        // data.scene.translateX(-0.1);
+      }
+      if (keysPressed["ArrowDown"]) {
+        data.scene.position.x += Math.cos(-angle) * speed;
+        data.scene.position.z += Math.sin(-angle) * speed;
+        // data.scene.translateX(0.1);
+      }
+      if (keysPressed["ArrowRight"]) {
+        data.scene.rotation.y -= degToRad(3);
+      }
+      if (keysPressed["ArrowLeft"]) {
+        data.scene.rotation.y += degToRad(3);
+      }
+      requestAnimationFrame(gameConrolsLoop);
+    };
+    gameConrolsLoop();
 
     scene.add(data.scene);
     // data.scene.traverse((obj) => {

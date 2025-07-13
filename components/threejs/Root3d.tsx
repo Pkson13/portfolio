@@ -150,7 +150,7 @@ const Root3d = () => {
     // controls.minPolarAngle = Math.PI / 3; // 45° on the y-axis
     // controls.maxPolarAngle = Math.PI / 2; // 90°
     // controls.maxPolarAngle = Math.PI * 0.495;
-    controls.maxPolarAngle = Math.PI / 3;
+    controls.maxPolarAngle = Math.PI / 2.25;
     controls.minDistance = 3.0;
     controls.maxDistance = 8.0;
     // controls.update();

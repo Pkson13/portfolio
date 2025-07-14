@@ -1,10 +1,35 @@
 "use client";
 
-import React from "react";
 import "@/lib/gsap_setup";
+import { ScrollSmoother } from "gsap/ScrollSmoother";
+import { createContext, useEffect, useState } from "react";
+export const ScrollSmotherContext = createContext<ScrollSmoother | null>(null);
 
 const ClientWrapper = ({ children }: { children: React.ReactNode }) => {
-  return <> {children}</>;
+  const [scrollSmoother, setScrollSmoother] = useState<ScrollSmoother | null>(
+    null,
+  );
+
+  useEffect(() => {
+    const smoother = ScrollSmoother.create({
+      wrapper: "#smooth-wrapper",
+      content: "#smooth-content",
+      smooth: 1,
+      effects: true,
+      smoothTouch: 0.1,
+    });
+
+    setScrollSmoother(smoother);
+  }, []);
+
+  // smoother.scrollTo("#projects", true, "center center");
+  return (
+    <>
+      <ScrollSmotherContext.Provider value={scrollSmoother}>
+        {children}
+      </ScrollSmotherContext.Provider>
+    </>
+  );
 };
 
 export default ClientWrapper;

@@ -3,7 +3,7 @@ import gsap from "gsap";
 import { useRef } from "react";
 import Link from "next/link";
 import { useGSAP } from "@gsap/react";
-import { ScrollSmoother } from "gsap/ScrollSmoother";
+// import { ScrollSmoother } from "gsap/ScrollSmoother";
 
 const Logo_scramble = () => {
   const ref = useRef<gsap.core.Tween | null>(null);
@@ -40,14 +40,7 @@ const Logo_scramble = () => {
       },
       // "+=0.5",
     );
-    // ScrollSmoother.create({
-    //   wrapper: "#smooth-wrapper",
-    //   content: "#smooth-content",
-    //   smooth: 1,
-    //   effects: true,
-    //   speed: 0.5,
-    //   normalizeScroll: true,
-    // });
+
     // smoother.scrollTo("#projects", true, "center center");
 
     // skillstl.to(

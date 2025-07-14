@@ -306,9 +306,9 @@ export const loadDockerModel = ({
     const boostedMaxSpeed = 0.5;
     let maxSpeed = baseMaxSpeed;
 
-    const acceleration = 0.001;
-    const deceleration = 0.001;
-    const brakeDeceleration = 0.01;
+    const acceleration = 0.01;
+    const deceleration = 0.01;
+    const brakeDeceleration = 0.5;
 
     let boosting = false;
     let braking = false;

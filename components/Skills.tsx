@@ -1,14 +1,16 @@
 "use client";
-import React from "react";
+import React, { useContext } from "react";
 import Root3d from "./threejs/Root3d";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { Poppins } from "next/font/google";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ScrollSmotherContext } from "./ClientWrapper";
 
 const poppins = Poppins({ weight: "600" });
 
 const Skills = () => {
+  const scrollSmother = useContext(ScrollSmotherContext);
   useGSAP(() => {
     // const skillstl = gsap.timeline();
     // skillstl.to("#scene-wrapper", {
@@ -70,6 +72,22 @@ const Skills = () => {
     //     scrub: 2,
     //   },
     // });
+    let offsetTop;
+    let offsetLeft;
+
+    const sceneWrapper = document.getElementById("scene-wrapper");
+    const parent = document.getElementById("to-pin");
+
+    if (sceneWrapper && parent) {
+      const sceneRect = sceneWrapper.getBoundingClientRect();
+      const parentRect = parent.getBoundingClientRect();
+
+      offsetTop = sceneRect.top - parentRect.top;
+      offsetLeft = sceneRect.left - parentRect.left;
+
+      console.log("Top distance to parent:", offsetTop);
+      console.log("Left distance to parent:", offsetLeft);
+    }
     const skillstl = gsap.timeline({
       paused: true,
       // scrollTrigger: {
@@ -87,26 +105,24 @@ const Skills = () => {
       .to(
         "#skill-container",
         {
-          rotateZ: 10,
           width: "200vw",
+          rotateZ: 10,
           height: "200vh",
           scale: 1.5,
           padding: 0,
-          ease: "power2.out",
-          duration: 3,
+          ease: "power3.out",
+          duration: 2,
         },
         // "<", // run at the same time
       )
+
       .to(
         "#scene-wrapper",
         {
           width: "100vw",
           height: "100vh",
-          ease: "power2.out",
-          duration: 3,
-          // top: 0,
-          // left: 0,
-          // position: "fixed",
+          ease: "power3.out",
+          duration: 2,
         },
         "<",
       )
@@ -114,13 +130,46 @@ const Skills = () => {
         "#skill-container",
         {
           rotateZ: 0,
-          scale: 1.1,
-          padding: "initial", // or your default value
+          scale: 1,
+          // padding: "initial", // or your default value
           ease: "power.in",
           duration: 2,
         },
-        ">", // run after previous animation
+        // ">", // run after previous animation
       )
+      .to("#skill-container", {
+        // top: 0,
+        // left: 0,
+        // padding: 0,
+
+        scrollTrigger: {
+          trigger: "#to-pin",
+          pin: true,
+          // pinType: "fixed",
+          start: `top+=${offsetTop}px top`,
+          // start: `top+=${offsetTop}px top`,
+          id: "pin",
+          // pinReparent: true,
+          // scrub: true,
+          end: "bottom -50%",
+          markers: true,
+          // preventOverlaps: "true",
+        },
+      });
+    const wordstl = gsap.timeline({
+      paused: true,
+      // scrollTrigger: {
+      //   trigger: "#scene-wrapper",
+      //   start: "top -10%",
+      //   end: "top -30%",
+      //   // end: "+=1000",
+      //   // scrub: true,
+
+      //   // pin: true,
+      //   // pinType: "fixed",
+      // },
+    });
+    wordstl
       .to(
         "#scene-words",
         {
@@ -143,6 +192,7 @@ const Skills = () => {
           // padding: "initial", // or your default value
           ease: "back.in",
           // delay: 3,
+          onComplete: () => {},
         },
         // ">", // run after previous animation
       );
@@ -150,27 +200,43 @@ const Skills = () => {
     // ScrollTrigger to update scrollProgress
     ScrollTrigger.create({
       trigger: "#scene-wrapper",
-      start: "top 35%",
-      end: "bottom 60%",
+      start: "top 25%",
+      end: "top -100%",
       // end: "+=1000",
       // scrub: 0.5,
       // pin: true,
+      // pinType: "fixed",
+      snap: {
+        snapTo: [0, 1], // snap to the closest label in the timeline
+        duration: 3, // the snap animation should be at least 0.2 seconds, but no more than 3 seconds (determined by velocity)
+        // delay: 0.2, // wait 0.2 seconds from the last scroll event before doing the snapping
+        ease: "none", // the ease of the snap animation ("power3" by default)
+      },
       markers: true,
+      // toggleClass: "sticky",
       scrub: true, // this makes scrollProgress update smoothly
       //  onEnter: () => skillstl.play(),
-      // onLeaveBack: () => skillstl.reverse(),
+      onLeave: ({ progress, direction, isActive }) => {
+        console.log("srollsmother scrolling");
+        // if (scrollSmother.) {
+        // scrollSmother.scrollTo("#scene-wrapper", true);
+        // }
+        wordstl.play();
+      },
       onUpdate: (self) => {
         // console.log("direction", self.progress);
         // scrollProgress = self.progress;
-        if (self.direction > 0) {
-          //user scrolling dowm
-          skillstl.timeScale(1);
-          skillstl.play();
-        } else {
-          //user scrolling up
-          skillstl.timeScale(2);
-          skillstl.reverse();
-        }
+        // if (self.direction > 0) {
+        //   //user scrolling dowm
+        //   skillstl.timeScale(1);
+        //   skillstl.play();
+        // } else {
+        //   //user scrolling up
+        //   skillstl.timeScale(2);
+        //   skillstl.reverse();
+        //   // skillstl.revert();
+        // }
+        skillstl.progress(self.progress);
       },
     });
 
@@ -227,49 +293,42 @@ const Skills = () => {
     //     }
     //   },
     // });
-    // gsap.to("#scene-wrapper", {
-    //   scrollTrigger: {
-    //     trigger: "#skill-container",
-    //     pin: true,
-    //     start: "top -10%",
-
-    //     end: "bottom 60%",
-    //     markers: true,
-    //   },
-    // });
   });
   return (
-    <div className="px-4 py-12 sm:px-6" id="skill-container">
-      <div className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text pb-6 text-center text-4xl leading-tight font-semibold text-transparent md:text-5xl">
-        Skills
-      </div>
-      <div
-        className="mb-5 flex flex-col-reverse gap-12 sm:gap-16 md:grid md:grid-cols-2 md:items-center"
-        id="scale"
-      >
+    <div id="to-pin">
+      <div className="" id="skill-container">
+        <div className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text pb-6 text-center text-4xl leading-tight font-semibold text-transparent md:text-5xl">
+          Skills
+        </div>
         <div
-          className="z-30 col-span-1 aspect-video size-full overflow-hidden rounded-lg"
-          id="scene-wrapper"
-          // data-speed="auto"
+          className="mb-5 flex flex-col-reverse gap-12 sm:gap-16 md:grid md:grid-cols-2 md:items-center"
+          id="scale"
         >
-          <Root3d />
-        </div>
-        <div className="col-start-2" id="Docker">
-          <div className="">
-            <span className={`secondary-header`}>Docker</span>
-          </div>
-          <p
-            className={`mt-2 leading-7 text-balance text-gray-600 dark:text-gray-300`}
+          <div
+            className="z-9 col-span-1 aspect-video size-full overflow-visible rounded-lg"
+            id="scene-wrapper"
+            // data-speed="auto"
           >
-            Docker, a powerful containerization tool that allows me to package
-            applications and their dependencies into lightweight, portable
-            containers, ensuring consistency across development, testing, and
-            production environments, eliminating the “it works on my machine”
-            problem.
-          </p>
+            <Root3d />
+          </div>
+
+          <div className="col-start-2" id="Docker">
+            <div className="">
+              <span className={`secondary-header`}>Docker</span>
+            </div>
+            <p
+              className={`mt-2 leading-7 text-balance text-gray-600 dark:text-gray-300`}
+            >
+              Docker, a powerful containerization tool that allows me to package
+              applications and their dependencies into lightweight, portable
+              containers, ensuring consistency across development, testing, and
+              production environments, eliminating the “it works on my machine”
+              problem.
+            </p>
+          </div>
         </div>
+        <div className="h-[300vh]"></div>
       </div>
-      <div className="h-[300vh]"></div>
     </div>
   );
 };

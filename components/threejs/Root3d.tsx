@@ -317,83 +317,89 @@ const Root3d = () => {
   }, []);
 
   return (
-    <>
-      <div ref={sceneref} className="relative m-0 mx-auto h-full w-full p-0">
+    <div id="outer-scene-wrapper" className="size-full">
+      <div id="inner-scene-wrapper" className="size-full">
         <div
-          id="speed-meter"
-          style={{
-            position: "fixed",
-            bottom: "1rem",
-            left: "1rem",
-            padding: "0.5rem 1rem",
-            background: "rgba(0,0,0,0.7)",
-            color: "lime",
-            fontFamily: "monospace",
-            borderRadius: "6px",
-            fontSize: "1rem",
-            zIndex: 9999,
-          }}
+          ref={sceneref}
+          className="relative m-0 mx-auto h-full w-full overflow-hidden rounded-lg p-0"
         >
-          Speed: 0%
-        </div>
+          <div
+            className="m-2"
+            id="speed-meter"
+            style={{
+              position: "absolute",
+              bottom: "1rem",
+              left: "1rem",
+              padding: "0.5rem 1rem",
+              background: "rgba(0,0,0,0.7)",
+              color: "lime",
+              fontFamily: "monospace",
+              borderRadius: "6px",
+              fontSize: "1rem",
+              zIndex: 9999,
+            }}
+          >
+            Speed: 0%
+          </div>
 
-        <div
-          className="pointer-events-none absolute top-1/4 left-1/2 z-[99] mx-2 -translate-x-1/2 font-(family-name:--font-bebas-neue)"
-          id="absolute-stuff"
-        >
-          <div className="overflow-hidden pt-3">
-            {/* give it height, or use h-[20px] */}
-            <div className="flex text-3xl font-semibold tracking-wide text-balance text-gray-100 md:text-7xl">
-              <span className="mr-2 block -translate-y-80" id="scene-words">
-                STEP{" "}
-              </span>
-              <span className="mr-2 block -translate-y-80" id="scene-words">
-                INTO{" "}
-              </span>
-              <span className="mr-2 block -translate-y-80" id="scene-words">
-                A{" "}
-              </span>
-              <span className="mr-2 block -translate-y-80" id="scene-words">
-                NEW{" "}
-              </span>
-              {/* <span className="block -translate-y-full" id="scene-words">
+          <div
+            className="pointer-events-none absolute top-1/4 left-1/2 z-[99] mx-2 -translate-x-1/2 font-(family-name:--font-bebas-neue)"
+            id="absolute-stuff"
+          >
+            <div className="overflow-hidden pt-3">
+              {/* give it height, or use h-[20px] */}
+              <div className="flex text-3xl font-semibold tracking-wide text-balance text-gray-100 md:text-7xl">
+                <span className="mr-2 block -translate-y-80" id="scene-words">
+                  STEP{" "}
+                </span>
+                <span className="mr-2 block -translate-y-80" id="scene-words">
+                  INTO{" "}
+                </span>
+                <span className="mr-2 block -translate-y-80" id="scene-words">
+                  A{" "}
+                </span>
+                <span className="mr-2 block -translate-y-80" id="scene-words">
+                  NEW{" "}
+                </span>
+                {/* <span className="block -translate-y-full" id="scene-words">
               test
             </span> */}
+              </div>
+            </div>
+          </div>
+          <div
+            className="pointer-events-none absolute top-2/4 left-1/2 z-[99] -translate-x-1/2 font-(family-name:--font-bebas-neue)"
+            id="absolute-stuff"
+          >
+            <div className="overflow-hidden pt-3">
+              {/* give it height, or use h-[20px] */}
+              <div className="test-balance flex text-3xl font-semibold tracking-wide text-balance text-gray-100 md:text-7xl">
+                <span className="mr-2 block translate-y-80" id="scene-words">
+                  WORLD{" "}
+                </span>
+                <span className="mr-2 block translate-y-80" id="scene-words">
+                  INTO{" "}
+                </span>
+                <span className="mr-2 block translate-y-80" id="scene-words">
+                  A{" "}
+                </span>
+                <span className="mr-2 block translate-y-80" id="scene-words">
+                  NEW{" "}
+                </span>
+                {/* <span className="block -translate-y-full" id="scene-words">
+              test
+            </span> */}
+              </div>
             </div>
           </div>
         </div>
-        <div
-          className="pointer-events-none absolute top-2/4 left-1/2 z-[99] -translate-x-1/2 font-(family-name:--font-bebas-neue)"
-          id="absolute-stuff"
-        >
-          <div className="overflow-hidden pt-3">
-            {/* give it height, or use h-[20px] */}
-            <div className="test-balance flex text-3xl font-semibold tracking-wide text-balance text-gray-100 md:text-7xl">
-              <span className="mr-2 block translate-y-80" id="scene-words">
-                WORLD{" "}
-              </span>
-              <span className="mr-2 block translate-y-80" id="scene-words">
-                INTO{" "}
-              </span>
-              <span className="mr-2 block translate-y-80" id="scene-words">
-                A{" "}
-              </span>
-              <span className="mr-2 block translate-y-80" id="scene-words">
-                NEW{" "}
-              </span>
-              {/* <span className="block -translate-y-full" id="scene-words">
-              test
-            </span> */}
-            </div>
-          </div>
+        <div>
+          <button ref={getworldpositionref}>cam worldposition</button>
+          <button ref={lookatref}>look at</button>
         </div>
+        <canvas className="w-50"></canvas>
       </div>
-      <div>
-        <button ref={getworldpositionref}>cam worldposition</button>
-        <button ref={lookatref}>look at</button>
-      </div>
-      <canvas className="w-50"></canvas>
-    </>
+    </div>
   );
 };
 

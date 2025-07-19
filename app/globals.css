@@ -141,3 +141,6 @@ nav {
 .secondary-header {
   @apply font-(family-name:--font-bebas-neue) text-2xl font-bold tracking-wide text-gray-900 dark:text-white;
 }
+.bw-img {
+  filter: grayscale(100%) contrast(200%);
+}

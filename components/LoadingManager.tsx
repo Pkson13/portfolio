@@ -1,15 +1,28 @@
 "use client";
 
 import gsap from "gsap";
+import Image from "next/image";
 import { ReactNode, useEffect, useRef } from "react";
 import { DefaultLoadingManager } from "three";
+import { Button } from "./ui/button";
 
 const LoadingManager = ({ children }: { children: ReactNode }) => {
   const progressDisplay = useRef<HTMLDivElement | null>(null);
   const loadingScreen = useRef<HTMLDivElement | null>(null);
   const reveal = useRef<HTMLDivElement | null>(null);
+  const startButtonref = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
+    const loadingDots = gsap.to(".loading-dot", {
+      opacity: 0,
+      repeat: -1,
+      yoyo: true,
+      stagger: {
+        each: 0.5,
+        from: "end",
+        ease: "none",
+      },
+    });
     DefaultLoadingManager.onStart = function (url, itemsLoaded, itemsTotal) {
       console.log(
         "Started loading file: " +
@@ -24,8 +37,51 @@ const LoadingManager = ({ children }: { children: ReactNode }) => {
 
     DefaultLoadingManager.onLoad = function () {
       console.log("Loading Complete!");
-      if (!reveal.current) return;
+      loadingDots.revert();
+      loadingDots.kill();
 
+      if (!reveal.current) return;
+      if (!startButtonref.current) return;
+      startButtonref.current.disabled = false;
+      gsap.to(startButtonref.current, {
+        opacity: 1,
+      });
+      startButtonref.current.onclick = () => {
+        playanimations();
+      };
+    };
+
+    DefaultLoadingManager.onProgress = function (url, itemsLoaded, itemsTotal) {
+      console.log(
+        "Loading file: " +
+          url +
+          ".\nLoaded " +
+          itemsLoaded +
+          " of " +
+          itemsTotal +
+          " files.",
+      );
+
+      if (progressDisplay.current) {
+        // progressDisplay.current.innerText = `${itemsLoaded} of ${itemsTotal} loaded`;
+        const percent = (itemsLoaded / itemsTotal) * 100;
+        const width = progressDisplay.current.offsetWidth;
+        const parentwidth = progressDisplay.current.parentElement?.offsetWidth;
+        if (!parentwidth) return;
+        const currentPercentage = (width / parentwidth) * 100;
+        if (percent <= currentPercentage + 2) return;
+        gsap.to(progressDisplay.current, {
+          width: `${percent}%`,
+          ease: "none",
+        });
+      }
+    };
+
+    DefaultLoadingManager.onError = function (url) {
+      console.log("There was an error loading " + url);
+    };
+
+    function playanimations() {
       const reveltl = gsap.timeline();
 
       reveltl
@@ -33,6 +89,7 @@ const LoadingManager = ({ children }: { children: ReactNode }) => {
           scale: 2,
           duration: 3,
           rotate: 30,
+          backgroundColor: "white",
           // scaleY: 10,
           // transformOrigin: "centre",
           ease: "power3.inOut",
@@ -77,47 +134,63 @@ const LoadingManager = ({ children }: { children: ReactNode }) => {
           },
           ease: "none",
         });
-    };
-
-    DefaultLoadingManager.onProgress = function (url, itemsLoaded, itemsTotal) {
-      console.log(
-        "Loading file: " +
-          url +
-          ".\nLoaded " +
-          itemsLoaded +
-          " of " +
-          itemsTotal +
-          " files.",
-      );
-      if (progressDisplay.current) {
-        progressDisplay.current.innerText = `${itemsLoaded} of ${itemsTotal} loaded`;
-        const percent = (itemsLoaded / itemsTotal) * 100;
-        gsap.to(progressDisplay.current, {
-          width: percent,
-          ease: "none",
-        });
-      }
-    };
-
-    DefaultLoadingManager.onError = function (url) {
-      console.log("There was an error loading " + url);
-    };
+    }
   });
   return (
     <>
       <div
         ref={loadingScreen}
-        className="fixed top-0 left-0 z-30 flex h-screen w-screen items-center justify-center overflow-hidden bg-black"
+        className="fixed top-0 left-0 z-30 flex h-screen w-screen flex-col items-center justify-center gap-8 overflow-hidden bg-[#1b1b1b]"
       >
-        <div className="h-8 w-24 bg-gray-700">
+        {/* <div className="text-4xl text-white">Hi, i'm Peterson</div> */}
+        <div className="relative flex items-end justify-center">
           <div
-            ref={progressDisplay}
-            className="my-auto h-full w-1/10 bg-white"
+            className="absolute z-10 h-full w-full mix-blend-color"
+            id=""
           ></div>
+          <div className="flex flex-col items-center justify-center">
+            <div className="relative flex h-1/2 w-fit items-end sm:h-3/5">
+              <div className="absolute bottom-0 left-0 h-fit w-full -rotate-90 font-(family-name:--font-bebas-neue) text-6xl tracking-wide text-gray-400">
+                LOADING
+                <span id="loading-dots">
+                  <span className="loading-dot">.</span>
+                  <span className="loading-dot">.</span>
+                  <span className="loading-dot">.</span>
+                </span>
+              </div>
+            </div>
+            <div className="h-4 w-12 border-2 border-gray-400 p-0.5">
+              <div
+                ref={progressDisplay}
+                className="my-auto h-full w-1/10 bg-gray-400"
+              ></div>
+            </div>
+          </div>
+          <div className="">
+            <Image
+              src={"/loading_central_cee.png"}
+              alt="loading"
+              className="size-full contrast-100 grayscale"
+              width={200}
+              height={600}
+            />
+          </div>
+        </div>
+        <div className="text-4xl text-white">
+          <Button
+            id="start-button"
+            ref={startButtonref}
+            disabled={true}
+            size={"lg"}
+            variant={"outline"}
+            className="bg-black text-white opacity-0"
+          >
+            Start
+          </Button>
         </div>
         <div
           ref={reveal}
-          className="absolute top-0 left-0 z-50 h-screen w-screen origin-center scale-0 bg-white"
+          className="absolute top-0 left-0 z-50 h-screen w-screen origin-center scale-0 bg-[#6e6e6e]"
         ></div>
       </div>
 

@@ -12,7 +12,7 @@ import {
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useTheme } from "next-themes";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   AmbientLight,
   ArrowHelper,
@@ -45,6 +45,7 @@ const Root3d = () => {
   const sceneref = useRef<HTMLDivElement | null>(null);
   const getworldpositionref = useRef<HTMLButtonElement | null>(null);
   const lookatref = useRef<HTMLButtonElement | null>(null);
+  const [loaded, setloaded] = useState(false);
 
   const { theme } = useTheme();
 
@@ -88,6 +89,7 @@ const Root3d = () => {
       11.288646925965876, -1.374508746897471, 11.926359497447137,
       10.136184463414924, -1.374508746897471, 10.384881573913269,
     ];
+
     const scene = new Scene();
     // scene.rotateZ(401.07);
     // scene.rotation.z = MathUtils.degToRad(7);
@@ -144,19 +146,19 @@ const Root3d = () => {
     const controls = new OrbitControls(camera, renderer.domElement);
     // // controls.autoRotate = true;
     controls.enableDamping = true;
-    // controls.enabled = false;
-    // controls.enablePan = false;
-    // controls.enableZoom = false;
+    controls.enabled = true;
+    // controls.enablePan = true;
+    // controls.enableZoom = true;
     // controls.minPolarAngle = Math.PI / 3; // 45° on the y-axis
     // controls.maxPolarAngle = Math.PI / 2; // 90°
     // controls.maxPolarAngle = Math.PI * 0.495;
-    controls.maxPolarAngle = Math.PI / 2.25;
-    controls.minDistance = 3.0;
-    controls.maxDistance = 8.0;
+    // controls.maxPolarAngle = Math.PI / 2.25;
+    controls.minDistance = 2.0;
+    controls.maxDistance = 40;
     // controls.update();
 
     const stats = new Stats();
-    document.body.appendChild(stats.dom);
+    // document.body.appendChild(stats.dom);
     renderer.setSize(sceneELement?.clientWidth, sceneELement.clientHeight);
     // const handleResize = (e: UIEvent) => {
     //   console.log(e);
@@ -204,10 +206,10 @@ const Root3d = () => {
     let lambo = null as Object3D<Object3DEventMap> | null;
 
     const glftLoader = new GLTFLoader();
-    const light = new AmbientLight();
+    const light = new AmbientLight(0xffffff, 2);
     scene.add(light);
-    loadDockerModel({ loader: glftLoader, controls, camera, lambo, scene });
     loadIslandModel({ loader: glftLoader, controls, camera, lambo, scene });
+    //docker model will be loaded inide the next funtion
     loadIslands({
       name: "desert_road",
       loader: glftLoader,
@@ -222,6 +224,8 @@ const Root3d = () => {
       camera,
       scene,
     });
+    // if (loaded) {
+    // }
 
     if (!lookatref.current) return;
 
@@ -314,7 +318,7 @@ const Root3d = () => {
       // document.body.removeEventListener("darkmode", handleLightMode);
       // document.body.removeEventListener("lightmode", handleDarkMode);
     };
-  }, []);
+  }, [loaded]);
 
   return (
     <div id="outer-scene-wrapper" className="size-full">
@@ -339,20 +343,20 @@ const Root3d = () => {
               zIndex: 9999,
             }}
           >
-            Speed: 0%
+            Speed: 0 knots
           </div>
-
-          <div
-            className="pointer-events-none absolute top-1/4 left-1/2 z-[99] mx-2 -translate-x-1/2 font-(family-name:--font-bebas-neue)"
-            id="absolute-stuff"
-          >
-            <div className="overflow-hidden pt-3">
-              {/* give it height, or use h-[20px] */}
-              <div className="flex text-3xl font-semibold tracking-wide text-balance text-gray-100 md:text-7xl">
-                <span className="mr-2 block -translate-y-80" id="scene-words">
-                  STEP{" "}
-                </span>
-                <span className="mr-2 block -translate-y-80" id="scene-words">
+          <div className="fixed top-0 left-0 h-screen max-h-screen w-screen max-w-screen bg-transparent p-4">
+            <div
+              className="pointer-events-none absolute top-3/4 left-1/2 z-[99] m-2 mx-2 -translate-x-1/2"
+              id="absolute-stuff"
+            >
+              <div className="z-[100] overflow-hidden pt-3">
+                {/* give it height, or use h-[20px] */}
+                <div className="flex text-3xl font-semibold tracking-wide text-balance text-gray-100 md:text-7xl">
+                  <span className="mr-2 block -translate-y-80" id="scene-words">
+                    Docker{" "}
+                  </span>
+                  {/* <span className="mr-2 block -translate-y-80" id="scene-words">
                   INTO{" "}
                 </span>
                 <span className="mr-2 block -translate-y-80" id="scene-words">
@@ -360,43 +364,66 @@ const Root3d = () => {
                 </span>
                 <span className="mr-2 block -translate-y-80" id="scene-words">
                   NEW{" "}
-                </span>
-                {/* <span className="block -translate-y-full" id="scene-words">
-              test
-            </span> */}
+                </span> */}
+                </div>
+              </div>
+              <div className="z-[101] overflow-hidden pt-3">
+                {/* give it height, or use h-[20px] */}
+                <div className="flex text-3xl font-semibold tracking-wide text-balance text-gray-100 md:text-6xl">
+                  <span className="block -translate-y-80" id="k8s-words">
+                    KUBERNETES
+                  </span>
+                </div>
+              </div>
+              <div className="z-[102] overflow-hidden pt-3">
+                {/* give it height, or use h-[20px] */}
+                <div className="flex text-3xl font-semibold tracking-wide text-balance text-gray-100 md:text-6xl">
+                  <span className="block -translate-y-80" id="linux-words">
+                    LINUX
+                  </span>
+                </div>
+              </div>
+              <div className="z-[102] overflow-hidden pt-3">
+                {/* give it height, or use h-[20px] */}
+                <div className="flex text-3xl font-semibold tracking-wide text-balance text-gray-100 md:text-6xl">
+                  <span className="block -translate-y-80" id="linux-words">
+                    NEXTJS
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
-          <div
-            className="pointer-events-none absolute top-2/4 left-1/2 z-[99] -translate-x-1/2 font-(family-name:--font-bebas-neue)"
-            id="absolute-stuff"
-          >
-            <div className="overflow-hidden pt-3">
-              {/* give it height, or use h-[20px] */}
-              <div className="test-balance flex text-3xl font-semibold tracking-wide text-balance text-gray-100 md:text-7xl">
-                <span className="mr-2 block translate-y-80" id="scene-words">
-                  WORLD{" "}
-                </span>
-                <span className="mr-2 block translate-y-80" id="scene-words">
-                  INTO{" "}
-                </span>
-                <span className="mr-2 block translate-y-80" id="scene-words">
-                  A{" "}
-                </span>
-                <span className="mr-2 block translate-y-80" id="scene-words">
-                  NEW{" "}
-                </span>
-                {/* <span className="block -translate-y-full" id="scene-words">
+
+            <div
+              className="pointer-events-none absolute top-2/4 left-1/2 z-[99] -translate-x-1/2"
+              id="absolute-stuff"
+            >
+              <div className="overflow-hidden pt-3">
+                {/* give it height, or use h-[20px] */}
+                <div className="test-balance flex text-3xl font-semibold tracking-wide text-balance text-gray-100 md:text-7xl">
+                  <span className="mr-2 block translate-y-80" id="scene-words">
+                    TO{" "}
+                  </span>
+                  <span className="mr-2 block translate-y-80" id="scene-words">
+                    CONTAINERIZE{" "}
+                  </span>
+                  <span className="mr-2 block translate-y-80" id="scene-words">
+                    MY{" "}
+                  </span>
+                  <span className="mr-2 block translate-y-80" id="scene-words">
+                    APPS{" "}
+                  </span>
+                  {/* <span className="block -translate-y-full" id="scene-words">
               test
             </span> */}
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <div>
+        {/* <div>
           <button ref={getworldpositionref}>cam worldposition</button>
           <button ref={lookatref}>look at</button>
-        </div>
+        </div> */}
         <canvas className="w-50"></canvas>
       </div>
     </div>

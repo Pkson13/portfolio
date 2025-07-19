@@ -3,6 +3,7 @@
 
 // import Root3d from "@/components/threejs/Root3d";
 import Blinker from "@/components/blinker";
+import LoadingManager from "@/components/LoadingManager";
 import Skills from "@/components/Skills";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -31,16 +32,20 @@ export default function Home() {
   // });
   return (
     <>
-      {/* <Root3d /> */}
+      <LoadingManager>
+        {/* <Root3d /> */}
 
-      {/* <div className="relative m-20 h-5 w-40 overflow-hidden"> */}
-      {/* <span ref={couroselref} className="absolute m-0 translate-x-[160%] p-0">
+        {/* <div className="relative m-20 h-5 w-40 overflow-hidden"> */}
+        {/* <span ref={couroselref} className="absolute m-0 translate-x-[160%] p-0">
           words words
         </span> */}
-      {/* </div> */}
-      <div id="smooth-wrapper" className="h-screen overflow-hidden">
-        <div id="smooth-content">
-          <section className="relative overflow-hidden px-4 py-20 sm:px-6 lg:px-8">
+        {/* </div> */}
+        {/* <div id="smooth-wrapper" className="h-screen overflow-hidden"> */}
+        <div id="smooth-content " className="overflow-hidden">
+          <section
+            id="hero"
+            className="relative scale-[2] -rotate-10 overflow-hidden px-4 py-20 sm:px-6 lg:px-8"
+          >
             {/* Background Pattern */}
             <div className="absolute inset-0">
               <div className="absolute top-20 left-10 h-16 w-16 rotate-12 overflow-clip rounded-lg border border-purple-900">
@@ -347,7 +352,8 @@ export default function Home() {
           </section>
           <Skills />
         </div>
-      </div>
+        {/* </div> */}
+      </LoadingManager>
     </>
   );
 }

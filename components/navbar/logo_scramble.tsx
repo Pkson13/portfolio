@@ -70,15 +70,15 @@ const Logo_scramble = () => {
 
     // gsap.to(".nav", { top: 0, duration: 1 });
     // gsap.registerPlugin(ScrambleTextPlugin); moved to lib/gsap_setup.ts
-    ref.current = gsap.to(logoRef.current, {
-      duration: 2,
-      scrambleText: {
-        text: "TOP G", // final desired text
-        revealDelay: 0, // delay before final letters start appearing
-        speed: 1, // speed of scrambling
-      },
-      ease: "none",
-    });
+    // ref.current = gsap.to(logoRef.current, {
+    //   duration: 2,
+    //   scrambleText: {
+    //     text: "TOP G", // final desired text
+    //     revealDelay: 3, // delay before final letters start appearing
+    //     speed: 1, // speed of scrambling
+    //   },
+    //   ease: "none",
+    // });
   }, []);
   return (
     <Link
@@ -87,7 +87,9 @@ const Logo_scramble = () => {
       href={"/"}
       onClick={handleclick}
       ref={logoRef}
-    ></Link>
+    >
+      Peterson
+    </Link>
   );
 };
 

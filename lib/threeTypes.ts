@@ -6,7 +6,7 @@ export type loaderFuncProps = {
   controls: OrbitControls;
   camera: PerspectiveCamera;
   scene: Scene;
-  lambo: Object3D<Object3DEventMap>;
+  lambo?: Object3D<Object3DEventMap>;
 };
 export type loadIsland = {
   name: string;

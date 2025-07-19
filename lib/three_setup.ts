@@ -5,12 +5,15 @@ import {
   AxesHelper,
   Camera,
   Color,
+  Group,
   Material,
   MathUtils,
   // Fog,
   Mesh,
   MeshBasicMaterial,
+  MeshStandardMaterial,
   Object3D,
+  Object3DEventMap,
   PlaneGeometry,
   Quaternion,
   RepeatWrapping,
@@ -24,6 +27,8 @@ import {
 } from "three";
 import {
   FontLoader,
+  GLTF,
+  OrbitControls,
   Sky,
   TextGeometry,
   Water,
@@ -33,6 +38,7 @@ import { loaderFuncProps, loadIsland } from "./threeTypes";
 import gsap from "gsap";
 import { Meh } from "lucide-react";
 import { degToRad, radToDeg } from "three/src/math/MathUtils.js";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 type changesceneFuncProps = Scene;
 
@@ -256,12 +262,49 @@ export const loadDockerModel = ({
   controls,
   camera,
   scene,
-  lambo,
+  // lambo,
 }: loaderFuncProps) => {
   glftLoader.load("/models/moby_dock_docker_whale.glb", async (data) => {
     console.log("loaded glb file", data);
     console.log("model scale", data.scene.scale);
+    await new Promise<void>((resolve, reject) => {
+      glftLoader.load("/models/ships_wheel.glb", (wheel_data) => {
+        data.scene.add(wheel_data.scene);
+
+        wheel_data.scene.name = "wheel";
+        wheel_data.scene.scale.setScalar(0.005);
+        const cube9 = data.scene.getObjectByName("Cube009");
+        if (cube9) {
+          const child = cube9.children[0] as Mesh;
+          child.geometry.dispose();
+          child.material.dispose();
+          // cube9.remove(child.children[0]);
+
+          console.log("cude9 pos", cube9.position);
+          cube9.position.set(1, -30, 3);
+
+          console.log("found cube9", cube9);
+          // cube9.disp
+          // wheel_data.scene.children[0].children[0].children[0].material.color =
+          // cube1.children[0].material;
+          // new Color("#fff");
+          // new MeshStandardMaterial({ color: "white" });
+        }
+        wheel_data.scene.position.set(-1.5, 0.1, -0.3);
+        const target = new Vector3();
+        wheel_data.scene.getWorldPosition(target);
+        console.log("wheel global pos before animation", target);
+        // controls.target = target;
+        // wheel_data.scene.rotation.y = -degToRad(90);
+        // wheel_data.scene.rotation.z = -degToRad(90);
+        wheel_data.scene.rotation.set(0, degToRad(90), 0, "XYZ");
+        console.log("wheel_data.scene", wheel_data.scene);
+        // controls.target = wheel_data.scene.position;
+        resolve();
+      });
+    });
     // data.scene.matrixAutoUpdate = false;
+    // controls.autoRotate = true;
     // data.scene.updateMatrix();
     // data.scene.scale.setScalar(2);
     controls.target = data.scene.position;
@@ -271,23 +314,8 @@ export const loadDockerModel = ({
       1.7046355310666237,
       8.853882753462061,
     );
-    let x_r = 0;
-    let z_r = 0;
 
-    gsap.to(
-      {},
-      {
-        repeat: -1,
-        duration: 0.016, // roughly 60fps
-        onUpdate: () => {
-          x_r += 0.02; // adjust to control rocking speed
-          z_r += 0.015;
-
-          data.scene.rotation.x = Math.sin(x_r) * 0.05; // pitch
-          data.scene.rotation.z = Math.sin(z_r) * 0.03; // yaw/roll
-        },
-      },
-    );
+    ModelAnimations(data, camera, controls, scene);
 
     // for (let i = 0; i < 100; i++) {
     //   // i = degToRad(i);
@@ -297,7 +325,7 @@ export const loadDockerModel = ({
     // }
     const axesHelper = new AxesHelper(20);
     data.scene.add(axesHelper);
-    camera.lookAt(new Vector3(10, 10, 0));
+    // camera.lookAt(new Vector3(10, 10, 0));
 
     const keysPressed: Record<string, boolean> = {};
     let speed = 0;
@@ -390,12 +418,12 @@ export const loadDockerModel = ({
       }
 
       // Update speed meter
-      if (speedMeter) {
-        const percentage = Math.round(
-          (Math.abs(speed) / boostedMaxSpeed) * 100,
-        );
-        speedMeter.innerText = `Speed: ${percentage}knots`;
-      }
+      // if (speedMeter) {
+      //   const percentage = Math.round(
+      //     (Math.abs(speed) / boostedMaxSpeed) * 100,
+      //   );
+      //   speedMeter.innerText = `Speed: ${percentage}knots`;
+      // }
 
       requestAnimationFrame(gameConrolsLoop);
     };
@@ -541,8 +569,8 @@ export const loadDockerModel = ({
     //   }
     // });
     console.log(dumpObject(data.scene).join("\n"));
-    lambo = data.scene.children[0];
-    console.log("scene", lambo);
+    // lambo = data.scene.children[0];
+    // console.log("scene", lambo);
 
     // const geometry = new BufferGeometry();
 
@@ -631,6 +659,268 @@ export const loadDockerModel = ({
     }).then((result) => console.log("promise done", result));
   });
 };
+
+function ModelAnimations(
+  data: GLTF,
+  camera: Camera,
+  controls: OrbitControls,
+  scene: Scene,
+) {
+  controls.enablePan = false;
+  controls.enableZoom = false;
+  let x_r = 0;
+  let z_r = 0;
+  gsap.to(
+    {},
+    {
+      repeat: -1,
+      duration: 0.016, // roughly 60fps
+      onUpdate: () => {
+        x_r += 0.02; // adjust to control rocking speed
+        z_r += 0.015;
+
+        data.scene.rotation.x = Math.sin(x_r) * 0.05; // pitch
+        data.scene.rotation.z = Math.sin(z_r) * 0.03;
+      },
+    },
+  );
+  const k8sWheel = data.scene.getObjectByName("wheel");
+  if (!k8sWheel) {
+    console.error("wheel not found");
+    return;
+  }
+
+  const target = new Vector3();
+  k8sWheel.getWorldPosition(target);
+  const controlsTarget = {
+    x_v: data.scene.position.x,
+    y_v: data.scene.position.y,
+    z_v: data.scene.position.z,
+  };
+  // target.y += 2;
+
+  // console.log("wheel pos", k8sWheel.position);
+  // controls.target = target;
+
+  const skillstl = gsap.timeline({
+    // paused: true,
+    scrollTrigger: {
+      trigger: "#scene-wrapper",
+      start: "top -20%",
+      snap: {
+        snapTo: "labels",
+        duration: 2,
+        ease: "none",
+        inertia: false,
+        directional: false,
+      },
+      // onUpdate: (self) => {
+      //   if (self.direction > 0) {
+      //     skillstl.play();
+      //   } else {
+      //     skillstl.reverse();
+      //   }
+      // },
+      // scrub: true,
+      // onEnter: () => (controls.enabled = false),
+      // onLeave: () => (controls.enabled = true),
+      // onEnterBack: () => (controls.enabled = false),
+      // onLeaveBack: () => (controls.enabled = true),
+    },
+  });
+  skillstl.addLabel("docker");
+
+  skillstl.to(camera.position, {
+    x: data.scene.position.x,
+    y: data.scene.position.y,
+    z: data.scene.position.z + 4,
+    ease: "none",
+    duration: 2,
+
+    // delay: 2,
+  });
+  skillstl
+    .addLabel("kubernetes")
+    .to(camera.position, {
+      x: data.scene.position.x,
+      y: data.scene.position.y + 1,
+      z: data.scene.position.z - 2,
+      ease: "none",
+      duration: 2,
+
+      delay: 2,
+    })
+    .to(
+      controlsTarget,
+      {
+        x_v: target.x,
+        y_v: target.y,
+        z_v: target.z,
+        ease: "none",
+        duration: 2,
+
+        onUpdate: () => {
+          // k8sWheel.getWorldPosition(target);
+          controls.target = new Vector3(
+            controlsTarget.x_v,
+            controlsTarget.y_v,
+            controlsTarget.z_v,
+          );
+          console.log(controlsTarget);
+          // controls.update();
+        },
+
+        // delay: 2,
+      },
+
+      "<",
+    )
+    .to(
+      "#k8s-words",
+      {
+        y: 0,
+        duration: 1.5,
+        stagger: 0.2,
+        ease: "power3.out",
+      },
+      // "<",
+    )
+    .to(
+      "#k8s-words",
+      {
+        y: 100,
+        duration: 2,
+        stagger: 0.2,
+        ease: "back.in",
+      },
+      // "<",
+    );
+
+  const DesertRoad = scene.getObjectByName("desert_road");
+  if (!DesertRoad) {
+    console.log("linux model not found");
+    return;
+  }
+  const LinuxModel = DesertRoad.getObjectByName("linux model");
+  if (!LinuxModel) {
+    console.log("not found");
+    return;
+  }
+  const linuxtarget = new Vector3();
+  const controlsTarget2 = {
+    x_v: target.x,
+    y_v: target.y,
+    z_v: target.z,
+  };
+  LinuxModel.getWorldPosition(linuxtarget);
+  // skillstl.addLabel("linux model");
+  skillstl
+    .to(
+      camera.position,
+      {
+        x: 15,
+        y: 3,
+        z: -10,
+        ease: "none",
+        duration: 2,
+        // onComplete: () => {
+        //   controls.target = linuxtarget;
+        // },
+
+        // delay: 2,
+      },
+      // "linux model",
+      // ">",
+    )
+    .to(
+      controlsTarget2,
+      {
+        x_v: 15.405193262355265,
+        y_v: 0,
+        z_v: -16.853882753462061,
+        ease: "none",
+        duration: 2,
+
+        onUpdate: () => {
+          // k8sWheel.getWorldPosition(target);
+          controls.target = new Vector3(
+            controlsTarget2.x_v,
+            controlsTarget2.y_v,
+            controlsTarget2.z_v,
+          );
+          console.log(controlsTarget);
+          // controls.update();
+        },
+
+        // delay: 2,
+      },
+
+      // "linux model",
+      "<",
+    )
+    .to(
+      "#linux-words",
+      {
+        y: 0,
+        duration: 2,
+        stagger: 0.2,
+        ease: "power3.out",
+      },
+      // "<",
+    )
+    .to(
+      "#linux-words",
+      {
+        y: 100,
+        duration: 2,
+        stagger: 0.2,
+        ease: "back.in",
+      },
+      // "<",
+    );
+
+  // ScrollTrigger.create({
+  //   trigger: "#scene-wrapper",
+  //   start: "top -20%",
+  //   snap: {
+  //     snapTo: "labels",
+  //     duration: 2,
+  //     ease: "none",
+  //   },
+  //   onEnter: () => skillstl.play(),
+  //   // onLeave: () => (controls.enabled = true),
+  //   // onEnterBack: () => (controls.enabled = false),
+  //   // onLeaveBack: () => (controls.enabled = true),
+  // });
+  // .to();
+  // .to(camera.rotation, {
+  //   x: degToRad(30),
+  //   ease: "none",
+  //   onStart: () => {
+  //     controls.enabled = false;
+  //   },
+  //   // onComplete: () => {
+  //   //   controls.enabled = true;
+  //   // },
+  //   // y: data.scene.position.y + 2,
+  //   // z: data.scene.position.z + 3,
+  //   duration: 2,
+  // })
+
+  // .to(camera.rotation, {
+  //   x: degToRad(0),
+  //   ease: "none",
+  //   onStart: () => {
+  //     controls.enabled = false;
+  //   },
+  //   onComplete: () => {
+  //     controls.enabled = true;
+  //   },
+  //   // y: data.scene.position.y + 2,
+  //   // z: data.scene.position.z + 3,
+  //   duration: 2,
+  // });
+}
 export const loadIslandModel = ({
   loader: glftLoader,
   controls,
@@ -768,16 +1058,37 @@ export const loadIslands = ({
   glftLoader.load(`/models/${name}.glb`, async (data) => {
     console.log("loaded " + name, data);
     console.log("model scale", data.scene.scale);
+    data.scene.name = name;
     // data.scene.matrixAutoUpdate = false;
     // data.scene.updateMatrix();
     // data.scene.scale.setScalar(2);
     // controls.target = data.scene.position;
     // data.scene.position.set(20, 1, 0);
+    const axes = new AxesHelper(60);
+    data.scene.add(axes);
     if (name == "autumnal_forest") {
       const mesh = await create3dText("Next js");
       scene.add(mesh);
       data.scene.position.set(30.405193262355265, -4, 25.853882753462061);
     } else if (name == "desert_road") {
+      await new Promise<void>((resolve, reject) => {
+        glftLoader.load("/models/linux-char.glb", (linuxModel) => {
+          data.scene.add(linuxModel.scene);
+          console.log("linux-model", linuxModel.scene);
+          linuxModel.scene.name = "linux model";
+          linuxModel.scene.scale.setScalar(3);
+          linuxModel.scene.position.set(5, 0.6, 5);
+          loadDockerModel({
+            loader: glftLoader,
+            controls,
+            camera,
+            // lambo,
+            scene,
+          });
+
+          resolve();
+        });
+      });
       const map = new TextureLoader().load("icons8-next.js-240.png");
       const spriteMaterial = new SpriteMaterial({ map: map });
 

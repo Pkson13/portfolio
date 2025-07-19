@@ -1,16 +1,17 @@
 "use client";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import Root3d from "./threejs/Root3d";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { Poppins } from "next/font/google";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmotherContext } from "./ClientWrapper";
+import { DefaultLoadingManager } from "three";
 
 const poppins = Poppins({ weight: "600" });
 
 const Skills = () => {
-  const scrollSmother = useContext(ScrollSmotherContext);
+  // const scrollSmother = useContext(ScrollSmotherContext);
   useGSAP(() => {
     // const skillstl = gsap.timeline();
     // skillstl.to("#scene-wrapper", {
@@ -106,9 +107,9 @@ const Skills = () => {
         "#skill-container",
         {
           width: "200vw",
-          rotateZ: 10,
+          rotateZ: 5,
           height: "200vh",
-          scale: 1.5,
+          scale: 2,
           padding: 0,
           ease: "power3.out",
           duration: 2,
@@ -146,7 +147,7 @@ const Skills = () => {
           trigger: "#to-pin",
           pin: true,
           // pinType: "fixed",
-          start: `top+=${offsetTop}px top`,
+          start: `top+=${offsetTop}px 15%`,
           // start: `top+=${offsetTop}px top`,
           id: "pin",
           // pinReparent: true,
@@ -201,7 +202,7 @@ const Skills = () => {
     ScrollTrigger.create({
       trigger: "#scene-wrapper",
       start: "top 25%",
-      end: "top -100%",
+      end: "top -30%", //the camera animation depends on this so be sure to change it the modelanimations() funtion
       // end: "+=1000",
       // scrub: 0.5,
       // pin: true,
@@ -223,6 +224,7 @@ const Skills = () => {
         // }
         wordstl.play();
       },
+
       onUpdate: (self) => {
         // console.log("direction", self.progress);
         // scrollProgress = self.progress;
@@ -296,7 +298,7 @@ const Skills = () => {
   });
   return (
     <div id="to-pin">
-      <div className="" id="skill-container">
+      <div className="px-4 py-20 sm:px-6 lg:px-8" id="skill-container">
         <div className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text pb-6 text-center text-4xl leading-tight font-semibold text-transparent md:text-5xl">
           Skills
         </div>
@@ -305,7 +307,7 @@ const Skills = () => {
           id="scale"
         >
           <div
-            className="z-9 col-span-1 aspect-video size-full overflow-visible rounded-lg"
+            className="z-9 col-span-1 aspect-square size-full overflow-visible rounded-lg md:aspect-video"
             id="scene-wrapper"
             // data-speed="auto"
           >
@@ -314,10 +316,10 @@ const Skills = () => {
 
           <div className="col-start-2" id="Docker">
             <div className="">
-              <span className={`secondary-header`}>Docker</span>
+              <span className={`secondary-header`}>THREE JS</span>
             </div>
             <p
-              className={`mt-2 leading-7 text-balance text-gray-600 dark:text-gray-300`}
+              className={`mt-2 max-w-[25rem] leading-7 text-balance text-gray-800 dark:text-gray-100`}
             >
               Docker, a powerful containerization tool that allows me to package
               applications and their dependencies into lightweight, portable

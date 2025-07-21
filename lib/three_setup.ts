@@ -39,6 +39,8 @@ import gsap from "gsap";
 import { Meh } from "lucide-react";
 import { degToRad, radToDeg } from "three/src/math/MathUtils.js";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useContext } from "react";
+import { buttonrefctx } from "@/components/Skills";
 
 type changesceneFuncProps = Scene;
 
@@ -257,406 +259,462 @@ export function loadaudio(camera: Camera) {
   });
 }
 
-export const loadDockerModel = ({
+export const loadDockerModel = async ({
   loader: glftLoader,
   controls,
   camera,
   scene,
   // lambo,
 }: loaderFuncProps) => {
-  glftLoader.load("/models/moby_dock_docker_whale.glb", async (data) => {
-    console.log("loaded glb file", data);
-    console.log("model scale", data.scene.scale);
-    await new Promise<void>((resolve, reject) => {
-      glftLoader.load("/models/ships_wheel.glb", (wheel_data) => {
-        data.scene.add(wheel_data.scene);
+  return await new Promise<Group<Object3DEventMap>>((resolve) => {
+    glftLoader.load("/models/moby_dock_docker_whale.glb", async (data) => {
+      console.log("loaded glb file", data);
+      console.log("model scale", data.scene.scale);
+      const wheel = await new Promise<Group<Object3DEventMap>>((resolve) => {
+        glftLoader.load("/models/ships_wheel.glb", (wheel_data) => {
+          data.scene.add(wheel_data.scene);
 
-        wheel_data.scene.name = "wheel";
-        wheel_data.scene.scale.setScalar(0.005);
-        const cube9 = data.scene.getObjectByName("Cube009");
-        if (cube9) {
-          const child = cube9.children[0] as Mesh;
-          child.geometry.dispose();
-          child.material.dispose();
-          // cube9.remove(child.children[0]);
+          wheel_data.scene.name = "wheel";
+          wheel_data.scene.scale.setScalar(0.005);
+          const cube9 = data.scene.getObjectByName("Cube009");
+          if (cube9) {
+            const child = cube9.children[0] as Mesh;
+            cube9.parent?.remove(cube9);
+            child.geometry.dispose();
+            child.material.dispose();
+            // cube9.remove(child.children[0]);
 
-          console.log("cude9 pos", cube9.position);
-          cube9.position.set(1, -30, 3);
+            console.log("cude9 pos", cube9.position);
+            cube9.position.set(-30, -30, 3);
 
-          console.log("found cube9", cube9);
-          // cube9.disp
-          // wheel_data.scene.children[0].children[0].children[0].material.color =
-          // cube1.children[0].material;
-          // new Color("#fff");
-          // new MeshStandardMaterial({ color: "white" });
-        }
-        wheel_data.scene.position.set(-1.5, 0.1, -0.3);
-        const target = new Vector3();
-        wheel_data.scene.getWorldPosition(target);
-        console.log("wheel global pos before animation", target);
-        // controls.target = target;
-        // wheel_data.scene.rotation.y = -degToRad(90);
-        // wheel_data.scene.rotation.z = -degToRad(90);
-        wheel_data.scene.rotation.set(0, degToRad(90), 0, "XYZ");
-        console.log("wheel_data.scene", wheel_data.scene);
-        // controls.target = wheel_data.scene.position;
-        resolve();
+            console.log("found cube9", cube9);
+            // cube9.disp
+            // wheel_data.scene.children[0].children[0].children[0].material.color =
+            // cube1.children[0].material;
+            // new Color("#fff");
+            // new MeshStandardMaterial({ color: "white" });
+          }
+          wheel_data.scene.position.set(-1.5, 0.1, -0.3);
+          const target = new Vector3();
+          wheel_data.scene.getWorldPosition(target);
+          console.log("wheel global pos before animation", target);
+          // controls.target = target;
+          // wheel_data.scene.rotation.y = -degToRad(90);
+          // wheel_data.scene.rotation.z = -degToRad(90);
+          wheel_data.scene.rotation.set(0, degToRad(90), 0, "XYZ");
+          console.log("wheel_data.scene", wheel_data.scene);
+          // controls.target = wheel_data.scene.position;
+          resolve(wheel_data.scene);
+        });
       });
-    });
-    // data.scene.matrixAutoUpdate = false;
-    // controls.autoRotate = true;
-    // data.scene.updateMatrix();
-    // data.scene.scale.setScalar(2);
-    controls.target = data.scene.position;
-    data.scene.position.set(20, 1, 0);
-    camera.position.set(
-      15.405193262355265,
-      1.7046355310666237,
-      8.853882753462061,
-    );
 
-    ModelAnimations(data, camera, controls, scene);
-
-    // for (let i = 0; i < 100; i++) {
-    //   // i = degToRad(i);
-    //   //Math.sin takes in radins and returns radians
-    //   console.log(`sine ${i} = ${Math.sin(degToRad(i))}`);
-    //   // console.log(`cosine ${i} = ${Math.cos(degToRad(i))}`);
-    // }
-    const axesHelper = new AxesHelper(20);
-    data.scene.add(axesHelper);
-    // camera.lookAt(new Vector3(10, 10, 0));
-
-    const keysPressed: Record<string, boolean> = {};
-    let speed = 0;
-    let targetSpeed = 0;
-    const baseMaxSpeed = 0.2;
-    const boostedMaxSpeed = 0.5;
-    let maxSpeed = baseMaxSpeed;
-
-    const acceleration = 0.01;
-    const deceleration = 0.01;
-    const brakeDeceleration = 0.5;
-
-    let boosting = false;
-    let braking = false;
-
-    const speedMeter = document.getElementById("speed-meter");
-
-    document.body.addEventListener("keydown", (ev) => {
-      keysPressed[ev.key] = true;
-
-      switch (ev.key) {
-        case "ArrowUp":
-          targetSpeed = maxSpeed;
-          break;
-        case "ArrowDown":
-          targetSpeed = -maxSpeed;
-          break;
-        case "Shift":
-          boosting = true;
-          maxSpeed = boostedMaxSpeed;
-          if (keysPressed["ArrowUp"]) targetSpeed = maxSpeed;
-          if (keysPressed["ArrowDown"]) targetSpeed = -maxSpeed;
-          break;
-        case " ":
-          braking = true;
-          break;
-      }
-    });
-
-    document.body.addEventListener("keyup", (ev) => {
-      keysPressed[ev.key] = false;
-
-      switch (ev.key) {
-        case "ArrowUp":
-        case "ArrowDown":
-          targetSpeed = 0;
-          break;
-        case "Shift":
-          boosting = false;
-          maxSpeed = baseMaxSpeed;
-          if (keysPressed["ArrowUp"]) targetSpeed = maxSpeed;
-          if (keysPressed["ArrowDown"]) targetSpeed = -maxSpeed;
-          break;
-        case " ":
-          braking = false;
-          break;
-      }
-    });
-
-    const gameConrolsLoop = () => {
-      const angle = data.scene.rotation.y;
-
-      // Braking
-      if (braking) {
-        if (speed > 0) {
-          speed = Math.max(speed - brakeDeceleration, 0);
-        } else if (speed < 0) {
-          speed = Math.min(speed + brakeDeceleration, 0);
+      function searchForWheel(scene: Object3D): Object3D | undefined {
+        for (const child of scene.children) {
+          console.log(child.name);
+          if (child.name == "Wheel") {
+            // return child;
+            return child;
+          }
+          const wheel: Object3D | undefined = searchForWheel(child);
+          if (wheel) return wheel;
+          // console.log("ret", wheel);
         }
-      } else {
-        // Normal acceleration/deceleration
-        if (speed < targetSpeed) {
-          speed = Math.min(speed + acceleration, targetSpeed);
-        } else if (speed > targetSpeed) {
-          speed = Math.max(speed - deceleration, targetSpeed);
-        }
+        return undefined;
       }
 
-      // Move scene
-      if (Math.abs(speed) > 0.001) {
-        data.scene.position.x -= Math.cos(-angle) * speed;
-        data.scene.position.z -= Math.sin(-angle) * speed;
-      }
+      const ships_wheel = searchForWheel(wheel);
+      // const pivot = new Object3D();
+      // if (ships_wheel) {
+      //   console.log(ships_wheel);
 
-      if (keysPressed["ArrowRight"]) {
-        data.scene.rotation.y -= degToRad(1);
-      }
-      if (keysPressed["ArrowLeft"]) {
-        data.scene.rotation.y += degToRad(1);
-      }
+      //   // 3. Position the pivot at the wheel’s center
+      //   pivot.position.copy(ships_wheel.position);
+      //   console.log("pivot pos", pivot.position);
+      //   console.log("pivot pos", pivot.position);
 
-      // Update speed meter
-      // if (speedMeter) {
-      //   const percentage = Math.round(
-      //     (Math.abs(speed) / boostedMaxSpeed) * 100,
-      //   );
-      //   speedMeter.innerText = `Speed: ${percentage}knots`;
+      //   // 4. Reposition the wheel so that it's centered in pivot’s local space
+      //   ships_wheel.position.set(0, 0, 0); // reset relative position
+
+      //   // 5. Add wheel to pivot and pivot to the scene (or original parent)
+      //   pivot.add(ships_wheel);
+      //   pivot.position.y += 10;
+      //   wheel.add(pivot); // or wheel.parent.add(pivot), depending on your structure
+
+      //   // 6. Rotate the pivot, not the wheel
+      //   // pivot.rotation.y += 0.05;
+      //   // ships_wheel.parent;
       // }
+      // data.scene.matrixAutoUpdate = false;
+      // controls.autoRotate = true;
+      // data.scene.updateMatrix();
+      // data.scene.scale.setScalar(2);
+      controls.target = data.scene.position;
+      data.scene.position.set(20, 1, 0);
+      camera.position.set(
+        15.405193262355265,
+        1.7046355310666237,
+        8.853882753462061,
+      );
 
-      requestAnimationFrame(gameConrolsLoop);
-    };
+      ModelAnimations(data, camera, controls, scene);
 
-    gameConrolsLoop();
+      // for (let i = 0; i < 100; i++) {
+      //   // i = degToRad(i);
+      //   //Math.sin takes in radins and returns radians
+      //   console.log(`sine ${i} = ${Math.sin(degToRad(i))}`);
+      //   // console.log(`cosine ${i} = ${Math.cos(degToRad(i))}`);
+      // }
+      const axesHelper = new AxesHelper(20);
+      data.scene.add(axesHelper);
+      // camera.lookAt(new Vector3(10, 10, 0));
 
-    //there is overlap of the timeout in the gamloop below
-    //  type gamekeys = {
-    //       ArrowUp?: boolean;
-    //       ArrowLeft?: boolean;
-    //       ArrowRight?: boolean;
-    //       ArrowDown?: boolean;
-    //       Shift?: boolean;
-    //     };
-    // const keysPressed: gamekeys = {};
-    // let speed = 0;
-    // let is_accelerating: boolean;
+      const keysPressed: Record<string, boolean> = {};
+      let speed = 0;
+      let targetSpeed = 0;
+      const baseMaxSpeed = 0.2;
+      const boostedMaxSpeed = 0.5;
+      let maxSpeed = baseMaxSpeed;
 
-    // document.body.addEventListener("keydown", async (ev) => {
-    //   console.log("pressed", ev.key);
-    //   // ev.stopPropagation();
-    //   // ev.preventDefault();
+      const acceleration = 0.01;
+      const deceleration = 0.01;
+      const brakeDeceleration = 0.5;
 
-    //   switch (ev.key) {
-    //     case "Shift":
-    //       // if (speed == 0.2) {
-    //       // speed += 0.3;
-    //       // }
-    //       break;
-    //     case "ArrowUp":
-    //       keysPressed[ev.key] = true;
-    //       is_accelerating = true;
-    //       for (speed; speed < 0.2; speed += 0.01) {
-    //         if (!is_accelerating) break;
-    //         console.log("Accelerating", speed);
-    //         await new Promise<void>((resolve, reject) => {
-    //           setTimeout(resolve, 0.001);
-    //         });
-    //       }
+      let boosting = false;
+      let braking = false;
 
-    //       break;
-    //     case "ArrowDown":
-    //       keysPressed[ev.key] = true;
-    //       for (speed; speed > -0.2; speed -= 0.01) {
-    //         console.log("reversing", speed);
-    //         await new Promise<void>((resolve, reject) => {
-    //           setTimeout(resolve, 0.001);
-    //         });
-    //       }
+      const speedMeter = document.getElementById("speed-meter");
+      const sceneWWrapper = document.getElementById("scene-wrapper");
 
-    //       break;
-    //     case "ArrowRight":
-    //       keysPressed[ev.key] = true;
+      sceneWWrapper?.addEventListener("keydown", (ev) => {
+        keysPressed[ev.key] = true;
+        ev.preventDefault();
+        ev.stopPropagation();
 
-    //       // data.scene.translateZ(0.1);
-    //       break;
-    //     case "ArrowLeft":
-    //       keysPressed[ev.key] = true;
-
-    //       // data.scene.translateZ(-0.1);
-    //       break;
-    //   }
-    // });
-
-    // document.body.addEventListener("keyup", async (ev) => {
-    //   console.log("keyup", ev.key);
-
-    //   switch (ev.key) {
-    //     case "Shift":
-    //       // if (speed == 0.5) {
-    //       speed -= 0.3;
-    //       // }
-
-    //       break;
-    //     case "ArrowUp":
-    //       is_accelerating = false;
-    //       for (speed; speed > 0; speed -= 0.01) {
-    //         // data.scene.translateX(-i);
-    //         if (is_accelerating) break;
-    //         console.log("decelerating", speed);
-
-    //         await new Promise<void>((resolve, reject) => {
-    //           setTimeout(resolve, 0.001);
-    //         });
-    //       }
-
-    //       keysPressed[ev.key] = false;
-
-    //       break;
-    //     case "ArrowDown":
-    //       for (speed; speed < 0; speed += 0.01) {
-    //         // data.scene.translateX(-i);
-    //         console.log("stoping reverse", speed);
-    //         await new Promise<void>((resolve, reject) => {
-    //           setTimeout(resolve, 0.001);
-    //         });
-    //       }
-    //       keysPressed[ev.key] = false;
-    //       break;
-    //     case "ArrowRight":
-    //       keysPressed[ev.key] = false;
-
-    //       break;
-    //     case "ArrowLeft":
-    //       keysPressed[ev.key] = false;
-
-    //       break;
-    //   }
-    // });
-
-    // const gameConrolsLoop = () => {
-    //   const angle = data.scene.rotation.y;
-    //   console.log("gamecontrolsLoop");
-    //   if (keysPressed["ArrowUp"] == true) {
-    //     console.log("current speed", speed);
-    //     // console.log(`angle in radians ${angle}, deg ${radToDeg(angle)}`);
-    //     data.scene.position.x -= Math.cos(-angle) * speed;
-    //     data.scene.position.z -= Math.sin(-angle) * speed;
-    //     // data.scene.translateX(-0.1);
-    //   }
-    //   if (keysPressed["ArrowDown"]) {
-    //     data.scene.position.x += Math.cos(-angle) * Math.abs(speed);
-    //     data.scene.position.z += Math.sin(-angle) * Math.abs(speed);
-    //     // data.scene.translateX(0.1);
-    //   }
-    //   if (keysPressed["ArrowRight"]) {
-    //     data.scene.rotation.y -= degToRad(1);
-    //   }
-    //   if (keysPressed["ArrowLeft"]) {
-    //     data.scene.rotation.y += degToRad(1);
-    //   }
-    //   requestAnimationFrame(gameConrolsLoop);
-    // };
-    // gameConrolsLoop();
-
-    scene.add(data.scene);
-    // data.scene.traverse((obj) => {
-    //   console.log("t ", obj.name, "\n");
-    //   if (obj.name === "Cube002_0") {
-    //     console.log("remove obj");
-    //     // obj.parent?.remove(obj);
-    //     // obj.material.color.set("green");
-    //   }
-    // });
-    console.log(dumpObject(data.scene).join("\n"));
-    // lambo = data.scene.children[0];
-    // console.log("scene", lambo);
-
-    // const geometry = new BufferGeometry();
-
-    // const vertices = new Float32Array([
-    //   -1.0,
-    //   -1.0,
-    //   1.0, // v0
-    //   1.0,
-    //   -1.0,
-    //   1.0, // v1
-    //   1.0,
-    //   1.0,
-    //   1.0, // v2
-    //   -1.0,
-    //   1.0,
-    //   1.0, // v3
-    // ]);
-
-    // const indices = [0, 1, 2, 2, 3, 0];
-
-    // geometry.setIndex(indices);
-    // geometry.setAttribute("position", new BufferAttribute(vertices, 3));
-
-    // const material = new MeshBasicMaterial({ color: 0xff0000 });
-    // const mesh = new Mesh(geometry, material);
-    // scene.add(mesh);
-    // controls.target = mesh.position;
-    // console.log("mesh", mesh.geometry.attributes);
-
-    const quaternion = new Quaternion();
-    quaternion.setFromAxisAngle(new Vector3(0, 1, 0), Math.PI / 2);
-    // camera.applyQuaternion(quaternion);
-    // camera.rotation.x = Math.PI /2
-    await new Promise((res) => {
-      // gsap.to(camera.position, {
-      //   x: -3,
-      //   y: -2,
-      //   duration: 2,
-      //   delay: 20,
-      //   ease: "none",
-      //   onComplete: res, // resolve when animation finishes
-      // });
-      // const targetEuler = new Euler(2 * Math.PI, 0, 0, "XYZ");
-      // const targetQuat = new Quaternion().setFromEuler(targetEuler);
-      // gsap.to(camera.quaternion, {
-      //   x: targetQuat.x,
-      //   y: targetQuat.y,
-      //   z: targetQuat.z,
-      //   w: targetQuat.w,
-      //   duration: 5,
-      // });
-      // controls.disconnect();\
-      console.log(Math.PI / 4 / 2);
-      // controls.enabled = false;
-
-      // gsap.to(camera.rotation, {
-      //   // y: -Math.PI / 2, // 90 degrees
-      //   x: Math.PI / 4 / 2,
-      //   // x: 200,
-      //   duration: 5,
-      //   onUpdate: () => {
-      //     camera.updateMatrixWorld();
-      //   },
-      //   onComplete: () => {
-      //     controls.enabled = true;
-      //     // controls.connect(document.body);
-      //   },
-      //   ease: "none",
-      // });
-      gsap.to(data.scene.position, {
-        // y: -Math.PI / 2, // 90 degrees
-        x: 20,
-        y: 1,
-        // x: 200,
-        duration: 5,
-        onUpdate: () => {
-          camera.updateMatrixWorld();
-        },
-        onComplete: () => {
-          // controls.enabled = true;
-          // controls.connect(document.body);
-          res("done");
-        },
-        ease: "none",
+        switch (ev.key) {
+          case "ArrowUp":
+            targetSpeed = maxSpeed;
+            break;
+          case "ArrowDown":
+            targetSpeed = -maxSpeed;
+            break;
+          case "Shift":
+            boosting = true;
+            maxSpeed = boostedMaxSpeed;
+            if (keysPressed["ArrowUp"]) targetSpeed = maxSpeed;
+            if (keysPressed["ArrowDown"]) targetSpeed = -maxSpeed;
+            break;
+          case " ":
+            braking = true;
+            break;
+        }
       });
-    }).then((result) => console.log("promise done", result));
+
+      sceneWWrapper?.addEventListener("keyup", (ev) => {
+        keysPressed[ev.key] = false;
+        ev.preventDefault();
+        ev.stopPropagation();
+
+        switch (ev.key) {
+          case "ArrowUp":
+          case "ArrowDown":
+            targetSpeed = 0;
+            break;
+          case "Shift":
+            boosting = false;
+            maxSpeed = baseMaxSpeed;
+            if (keysPressed["ArrowUp"]) targetSpeed = maxSpeed;
+            if (keysPressed["ArrowDown"]) targetSpeed = -maxSpeed;
+            break;
+          case " ":
+            braking = false;
+            break;
+        }
+      });
+
+      const gameConrolsLoop = () => {
+        const angle = data.scene.rotation.y;
+
+        // Braking
+        if (braking) {
+          if (speed > 0) {
+            speed = Math.max(speed - brakeDeceleration, 0);
+          } else if (speed < 0) {
+            speed = Math.min(speed + brakeDeceleration, 0);
+          }
+        } else {
+          // Normal acceleration/deceleration
+          if (speed < targetSpeed) {
+            speed = Math.min(speed + acceleration, targetSpeed);
+          } else if (speed > targetSpeed) {
+            speed = Math.max(speed - deceleration, targetSpeed);
+          }
+        }
+
+        // Move scene
+        if (Math.abs(speed) > 0.001) {
+          data.scene.position.x -= Math.cos(-angle) * speed;
+          data.scene.position.z -= Math.sin(-angle) * speed;
+        }
+
+        if (keysPressed["ArrowRight"]) {
+          data.scene.rotation.y -= degToRad(1);
+          if (!ships_wheel) return;
+
+          //TODO
+
+          // ships_wheel.rotation.x -= degToRad(1);
+          // pivot.rotateX(-degToRad(1)); t
+        }
+        if (keysPressed["ArrowLeft"]) {
+          data.scene.rotation.y += degToRad(1);
+          if (!ships_wheel) return;
+          // ships_wheel.rotation.x += degToRad(1);
+          // pivot.rotateX(degToRad(1));
+        }
+
+        // Update speed meter
+        // if (speedMeter) {
+        //   const percentage = Math.round(
+        //     (Math.abs(speed) / boostedMaxSpeed) * 100,
+        //   );
+        //   speedMeter.innerText = `Speed: ${percentage}knots`;
+        // }
+
+        requestAnimationFrame(gameConrolsLoop);
+      };
+
+      gameConrolsLoop();
+
+      //there is overlap of the timeout in the gamloop below
+      //  type gamekeys = {
+      //       ArrowUp?: boolean;
+      //       ArrowLeft?: boolean;
+      //       ArrowRight?: boolean;
+      //       ArrowDown?: boolean;
+      //       Shift?: boolean;
+      //     };
+      // const keysPressed: gamekeys = {};
+      // let speed = 0;
+      // let is_accelerating: boolean;
+
+      // document.body.addEventListener("keydown", async (ev) => {
+      //   console.log("pressed", ev.key);
+      //   // ev.stopPropagation();
+      //   // ev.preventDefault();
+
+      //   switch (ev.key) {
+      //     case "Shift":
+      //       // if (speed == 0.2) {
+      //       // speed += 0.3;
+      //       // }
+      //       break;
+      //     case "ArrowUp":
+      //       keysPressed[ev.key] = true;
+      //       is_accelerating = true;
+      //       for (speed; speed < 0.2; speed += 0.01) {
+      //         if (!is_accelerating) break;
+      //         console.log("Accelerating", speed);
+      //         await new Promise<void>((resolve, reject) => {
+      //           setTimeout(resolve, 0.001);
+      //         });
+      //       }
+
+      //       break;
+      //     case "ArrowDown":
+      //       keysPressed[ev.key] = true;
+      //       for (speed; speed > -0.2; speed -= 0.01) {
+      //         console.log("reversing", speed);
+      //         await new Promise<void>((resolve, reject) => {
+      //           setTimeout(resolve, 0.001);
+      //         });
+      //       }
+
+      //       break;
+      //     case "ArrowRight":
+      //       keysPressed[ev.key] = true;
+
+      //       // data.scene.translateZ(0.1);
+      //       break;
+      //     case "ArrowLeft":
+      //       keysPressed[ev.key] = true;
+
+      //       // data.scene.translateZ(-0.1);
+      //       break;
+      //   }
+      // });
+
+      // document.body.addEventListener("keyup", async (ev) => {
+      //   console.log("keyup", ev.key);
+
+      //   switch (ev.key) {
+      //     case "Shift":
+      //       // if (speed == 0.5) {
+      //       speed -= 0.3;
+      //       // }
+
+      //       break;
+      //     case "ArrowUp":
+      //       is_accelerating = false;
+      //       for (speed; speed > 0; speed -= 0.01) {
+      //         // data.scene.translateX(-i);
+      //         if (is_accelerating) break;
+      //         console.log("decelerating", speed);
+
+      //         await new Promise<void>((resolve, reject) => {
+      //           setTimeout(resolve, 0.001);
+      //         });
+      //       }
+
+      //       keysPressed[ev.key] = false;
+
+      //       break;
+      //     case "ArrowDown":
+      //       for (speed; speed < 0; speed += 0.01) {
+      //         // data.scene.translateX(-i);
+      //         console.log("stoping reverse", speed);
+      //         await new Promise<void>((resolve, reject) => {
+      //           setTimeout(resolve, 0.001);
+      //         });
+      //       }
+      //       keysPressed[ev.key] = false;
+      //       break;
+      //     case "ArrowRight":
+      //       keysPressed[ev.key] = false;
+
+      //       break;
+      //     case "ArrowLeft":
+      //       keysPressed[ev.key] = false;
+
+      //       break;
+      //   }
+      // });
+
+      // const gameConrolsLoop = () => {
+      //   const angle = data.scene.rotation.y;
+      //   console.log("gamecontrolsLoop");
+      //   if (keysPressed["ArrowUp"] == true) {
+      //     console.log("current speed", speed);
+      //     // console.log(`angle in radians ${angle}, deg ${radToDeg(angle)}`);
+      //     data.scene.position.x -= Math.cos(-angle) * speed;
+      //     data.scene.position.z -= Math.sin(-angle) * speed;
+      //     // data.scene.translateX(-0.1);
+      //   }
+      //   if (keysPressed["ArrowDown"]) {
+      //     data.scene.position.x += Math.cos(-angle) * Math.abs(speed);
+      //     data.scene.position.z += Math.sin(-angle) * Math.abs(speed);
+      //     // data.scene.translateX(0.1);
+      //   }
+      //   if (keysPressed["ArrowRight"]) {
+      //     data.scene.rotation.y -= degToRad(1);
+      //   }
+      //   if (keysPressed["ArrowLeft"]) {
+      //     data.scene.rotation.y += degToRad(1);
+      //   }
+      //   requestAnimationFrame(gameConrolsLoop);
+      // };
+      // gameConrolsLoop();
+
+      scene.add(data.scene);
+      // data.scene.traverse((obj) => {
+      //   console.log("t ", obj.name, "\n");
+      //   if (obj.name === "Cube002_0") {
+      //     console.log("remove obj");
+      //     // obj.parent?.remove(obj);
+      //     // obj.material.color.set("green");
+      //   }
+      // });
+      console.log(dumpObject(data.scene).join("\n"));
+      // lambo = data.scene.children[0];
+      // console.log("scene", lambo);
+
+      // const geometry = new BufferGeometry();
+
+      // const vertices = new Float32Array([
+      //   -1.0,
+      //   -1.0,
+      //   1.0, // v0
+      //   1.0,
+      //   -1.0,
+      //   1.0, // v1
+      //   1.0,
+      //   1.0,
+      //   1.0, // v2
+      //   -1.0,
+      //   1.0,
+      //   1.0, // v3
+      // ]);
+
+      // const indices = [0, 1, 2, 2, 3, 0];
+
+      // geometry.setIndex(indices);
+      // geometry.setAttribute("position", new BufferAttribute(vertices, 3));
+
+      // const material = new MeshBasicMaterial({ color: 0xff0000 });
+      // const mesh = new Mesh(geometry, material);
+      // scene.add(mesh);
+      // controls.target = mesh.position;
+      // console.log("mesh", mesh.geometry.attributes);
+
+      const quaternion = new Quaternion();
+      quaternion.setFromAxisAngle(new Vector3(0, 1, 0), Math.PI / 2);
+      // camera.applyQuaternion(quaternion);
+      // camera.rotation.x = Math.PI /2
+      await new Promise((res) => {
+        // gsap.to(camera.position, {
+        //   x: -3,
+        //   y: -2,
+        //   duration: 2,
+        //   delay: 20,
+        //   ease: "none",
+        //   onComplete: res, // resolve when animation finishes
+        // });
+        // const targetEuler = new Euler(2 * Math.PI, 0, 0, "XYZ");
+        // const targetQuat = new Quaternion().setFromEuler(targetEuler);
+        // gsap.to(camera.quaternion, {
+        //   x: targetQuat.x,
+        //   y: targetQuat.y,
+        //   z: targetQuat.z,
+        //   w: targetQuat.w,
+        //   duration: 5,
+        // });
+        // controls.disconnect();\
+        console.log(Math.PI / 4 / 2);
+        // controls.enabled = false;
+
+        // gsap.to(camera.rotation, {
+        //   // y: -Math.PI / 2, // 90 degrees
+        //   x: Math.PI / 4 / 2,
+        //   // x: 200,
+        //   duration: 5,
+        //   onUpdate: () => {
+        //     camera.updateMatrixWorld();
+        //   },
+        //   onComplete: () => {
+        //     controls.enabled = true;
+        //     // controls.connect(document.body);
+        //   },
+        //   ease: "none",
+        // });
+        gsap.to(data.scene.position, {
+          // y: -Math.PI / 2, // 90 degrees
+          x: 20,
+          y: 1,
+          // x: 200,
+          duration: 5,
+          onUpdate: () => {
+            camera.updateMatrixWorld();
+          },
+          onComplete: () => {
+            // controls.enabled = true;
+            // controls.connect(document.body);
+            res("done");
+          },
+          ease: "none",
+        });
+      }).then((result) => console.log("promise done", result));
+
+      resolve(data.scene);
+    });
   });
 };
 
@@ -666,6 +724,8 @@ function ModelAnimations(
   controls: OrbitControls,
   scene: Scene,
 ) {
+  // const Enter3dButtonref = useContext(buttonrefctx);
+
   controls.enablePan = false;
   controls.enableZoom = false;
   let x_r = 0;
@@ -733,7 +793,7 @@ function ModelAnimations(
   skillstl.to(camera.position, {
     x: data.scene.position.x,
     y: data.scene.position.y,
-    z: data.scene.position.z + 4,
+    z: data.scene.position.z + 5,
     ease: "none",
     duration: 2,
 
@@ -742,7 +802,7 @@ function ModelAnimations(
   skillstl
     .addLabel("kubernetes")
     .to(camera.position, {
-      x: data.scene.position.x,
+      x: data.scene.position.x + 1,
       y: data.scene.position.y + 1,
       z: data.scene.position.z - 2,
       ease: "none",
@@ -812,13 +872,15 @@ function ModelAnimations(
     y_v: target.y,
     z_v: target.z,
   };
+
   LinuxModel.getWorldPosition(linuxtarget);
   // skillstl.addLabel("linux model");
   skillstl
+    .addLabel("linux model")
     .to(
       camera.position,
       {
-        x: 15,
+        x: 16,
         y: 3,
         z: -10,
         ease: "none",
@@ -862,22 +924,107 @@ function ModelAnimations(
       "#linux-words",
       {
         y: 0,
-        duration: 2,
+        duration: 1.5,
         stagger: 0.2,
         ease: "power3.out",
       },
       // "<",
     )
+
+    .addLabel("nextjs")
+    .to(
+      camera.position,
+      {
+        x: DesertRoad.position.x,
+        y: DesertRoad.position.y + 4,
+        z: DesertRoad.position.z + 20,
+        ease: "none",
+        duration: 2,
+        // onComplete: () => {
+        //   controls.target = linuxtarget;
+        // },
+
+        // delay: 2,
+      },
+      // "linux model",
+      // ">",
+    )
+    .to(
+      controlsTarget2,
+      {
+        x_v: 10.405193262355265,
+        y_v: 5,
+        z_v: -15.853882753462061,
+        ease: "none",
+        duration: 2,
+
+        onUpdate: () => {
+          // k8sWheel.getWorldPosition(target);
+          controls.target = new Vector3(
+            controlsTarget2.x_v,
+            controlsTarget2.y_v,
+            controlsTarget2.z_v,
+          );
+          console.log(controlsTarget);
+          // controls.update();
+        },
+
+        // delay: 2,
+      },
+
+      // "linux model",
+      "<",
+    )
     .to(
       "#linux-words",
       {
-        y: 100,
+        delay: 1,
+        duration: 2,
+        scrambleText: {
+          text: "NEXTJS",
+          // revealDelay: 1,
+        },
+        ease: "power3.out",
+      },
+      "<",
+    )
+    .to(
+      "#linux-words",
+      {
+        x: 300,
         duration: 2,
         stagger: 0.2,
-        ease: "back.in",
+        ease: "none",
+        onComplete: () => {},
       },
       // "<",
-    );
+    )
+    .to("#enter3d", {
+      opacity: 1,
+    });
+
+  // .to(
+  //   "#netjs-word",
+  //   {
+  //     y: 0,
+  //     duration: 2,
+  //     stagger: 0.2,
+  //     ease: "power3.out",
+  //   },
+  //   // "<",
+  // )
+  // .to(
+  //   "#nextjs-word",
+  //   {
+  //     y: 100,
+  //     duration: 2,
+  //     stagger: 0.2,
+  //     ease: "back.in",
+  //   },
+  //   // "<",
+  // );
+
+  // lookAtmodel(camera, data, controlsTarget2, controls, controlsTarget, scene_wrapper);
 
   // ScrollTrigger.create({
   //   trigger: "#scene-wrapper",
@@ -967,7 +1114,7 @@ export const loadIslandModel = ({
     //   -1.0,
     //   -1.0,
     //   1.0, // v0
-    //   1.0,
+    //   1.0,`
     //   -1.0,
     //   1.0, // v1
     //   1.0,
@@ -1048,163 +1195,245 @@ export const loadIslandModel = ({
     }).then((result) => console.log("promise done", result));
   });
 };
-export const loadIslands = ({
+export const loadIslands = async ({
   name,
   loader: glftLoader,
   controls,
   camera,
   scene,
 }: loadIsland) => {
-  glftLoader.load(`/models/${name}.glb`, async (data) => {
-    console.log("loaded " + name, data);
-    console.log("model scale", data.scene.scale);
-    data.scene.name = name;
-    // data.scene.matrixAutoUpdate = false;
-    // data.scene.updateMatrix();
-    // data.scene.scale.setScalar(2);
-    // controls.target = data.scene.position;
-    // data.scene.position.set(20, 1, 0);
-    const axes = new AxesHelper(60);
-    data.scene.add(axes);
-    if (name == "autumnal_forest") {
-      const mesh = await create3dText("Next js");
-      scene.add(mesh);
-      data.scene.position.set(30.405193262355265, -4, 25.853882753462061);
-    } else if (name == "desert_road") {
-      await new Promise<void>((resolve, reject) => {
-        glftLoader.load("/models/linux-char.glb", (linuxModel) => {
-          data.scene.add(linuxModel.scene);
-          console.log("linux-model", linuxModel.scene);
-          linuxModel.scene.name = "linux model";
-          linuxModel.scene.scale.setScalar(3);
-          linuxModel.scene.position.set(5, 0.6, 5);
-          loadDockerModel({
-            loader: glftLoader,
-            controls,
-            camera,
-            // lambo,
-            scene,
-          });
+  return await new Promise<Group<Object3DEventMap> | null>((resolve) => {
+    glftLoader.load(`/models/${name}.glb`, async (data) => {
+      let dockerscene: Group<Object3DEventMap> | null = null;
+      console.log("loaded " + name, data);
+      console.log("model scale", data.scene.scale);
+      data.scene.name = name;
 
-          resolve();
-        });
-      });
-      const map = new TextureLoader().load("icons8-next.js-240.png");
-      const spriteMaterial = new SpriteMaterial({ map: map });
+      scene.add(data.scene);
 
-      const sprite = new Sprite(spriteMaterial);
-      data.scene.add(sprite);
-      sprite.scale.setScalar(3);
-      sprite.position.set(0, 5, 0);
-
-      const child = data.scene.children[0].children[0].children[0].children[1]
-        .children[0] as Object3D;
-      console.log("desert road child", child);
-      const material: Material = child.material.clone();
-      const mesh = await create3dText("Next js", material);
-      data.scene.add(mesh);
-      mesh.position.set(-3.5, 1.5, 0);
-      // const axesHelper = new AxesHelper(20);
-      // data.scene.add(axesHelper);
-      data.scene.position.set(10.405193262355265, 0, -15.853882753462061);
+      // data.scene.matrixAutoUpdate = false;
+      // data.scene.updateMatrix();
+      // data.scene.scale.setScalar(2);
       // controls.target = data.scene.position;
-      // data.scene.scale.setScalar(0.1);
-    }
-    scene.add(data.scene);
-    // data.scene.traverse((obj) => {
-    //   console.log("t ", obj.name, "\n");
-    //   if (obj.name === "Cube002_0") {
-    //     console.log("remove obj");
-    //     // obj.parent?.remove(obj);
-    //     // obj.material.color.set("green");
-    //   }
-    // });
-    console.log(dumpObject(data.scene).join("\n"));
+      // data.scene.position.set(20, 1, 0);
+      const axes = new AxesHelper(60);
+      data.scene.add(axes);
+      if (name == "autumnal_forest") {
+        const mesh = await create3dText("Next js");
+        scene.add(mesh);
+        data.scene.position.set(30.405193262355265, -4, 25.853882753462061);
+      } else if (name == "desert_road") {
+        dockerscene = await new Promise<Group<Object3DEventMap>>(
+          (resolve, reject) => {
+            glftLoader.load("/models/linux-char.glb", async (linuxModel) => {
+              data.scene.add(linuxModel.scene);
+              console.log("linux-model", linuxModel.scene);
+              linuxModel.scene.name = "linux model";
+              linuxModel.scene.scale.setScalar(3);
+              linuxModel.scene.position.set(5, 0.6, 5);
+              const docker = await loadDockerModel({
+                loader: glftLoader,
+                controls,
+                camera,
+                // lambo,
+                scene,
+              });
 
-    // const geometry = new BufferGeometry();
+              resolve(docker);
+            });
+          },
+        );
+        const map = new TextureLoader().load("icons8-next.js-240.png");
+        const spriteMaterial = new SpriteMaterial({ map: map });
 
-    // const vertices = new Float32Array([
-    //   -1.0,
-    //   -1.0,
-    //   1.0, // v0
-    //   1.0,
-    //   -1.0,
-    //   1.0, // v1
-    //   1.0,
-    //   1.0,
-    //   1.0, // v2
-    //   -1.0,
-    //   1.0,
-    //   1.0, // v3
-    // ]);
+        const sprite = new Sprite(spriteMaterial);
+        data.scene.add(sprite);
+        sprite.scale.setScalar(3);
+        sprite.position.set(0, 5, 0);
 
-    // const indices = [0, 1, 2, 2, 3, 0];
-
-    // geometry.setIndex(indices);
-    // geometry.setAttribute("position", new BufferAttribute(vertices, 3));
-
-    // const material = new MeshBasicMaterial({ color: 0xff0000 });
-    // const mesh = new Mesh(geometry, material);
-    // scene.add(mesh);
-    // controls.target = mesh.position;
-    // console.log("mesh", mesh.geometry.attributes);
-
-    const quaternion = new Quaternion();
-    quaternion.setFromAxisAngle(new Vector3(0, 1, 0), Math.PI / 2);
-    // camera.applyQuaternion(quaternion);
-    // camera.rotation.x = Math.PI /2
-    await new Promise((res) => {
-      // gsap.to(camera.position, {
-      //   x: -3,
-      //   y: -2,
-      //   duration: 2,
-      //   delay: 20,
-      //   ease: "none",
-      //   onComplete: res, // resolve when animation finishes
+        const child = data.scene.children[0].children[0].children[0].children[1]
+          .children[0] as Object3D;
+        console.log("desert road child", child);
+        const material: Material = child.material.clone();
+        const mesh = await create3dText("Next js", material);
+        data.scene.add(mesh);
+        mesh.position.set(-3.5, 1.5, 0);
+        // const axesHelper = new AxesHelper(20);
+        // data.scene.add(axesHelper);
+        data.scene.position.set(10.405193262355265, 0, -15.853882753462061);
+        // controls.target = data.scene.position;
+        // data.scene.scale.setScalar(0.1);
+      }
+      // data.scene.traverse((obj) => {
+      //   console.log("t ", obj.name, "\n");
+      //   if (obj.name === "Cube002_0") {
+      //     console.log("remove obj");
+      //     // obj.parent?.remove(obj);
+      //     // obj.material.color.set("green");
+      //   }
       // });
-      // const targetEuler = new Euler(2 * Math.PI, 0, 0, "XYZ");
-      // const targetQuat = new Quaternion().setFromEuler(targetEuler);
-      // gsap.to(camera.quaternion, {
-      //   x: targetQuat.x,
-      //   y: targetQuat.y,
-      //   z: targetQuat.z,
-      //   w: targetQuat.w,
-      //   duration: 5,
-      // });
-      // controls.disconnect();\
-      console.log(Math.PI / 4 / 2);
-      // controls.enabled = false;
+      console.log(dumpObject(data.scene).join("\n"));
 
-      // gsap.to(camera.rotation, {
-      //   // y: -Math.PI / 2, // 90 degrees
-      //   x: Math.PI / 4 / 2,
-      //   // x: 200,
-      //   duration: 5,
-      //   onUpdate: () => {
-      //     camera.updateMatrixWorld();
-      //   },
-      //   onComplete: () => {
-      //     controls.enabled = true;
-      //     // controls.connect(document.body);
-      //   },
-      //   ease: "none",
-      // });
-      gsap.to(data.scene.position, {
-        // y: -Math.PI / 2, // 90 degrees
-        // x: 20,
-        // y: 1,
-        // x: 200,
-        duration: 5,
-        onUpdate: () => {
-          camera.updateMatrixWorld();
-        },
-        onComplete: () => {
-          // controls.enabled = true;
-          // controls.connect(document.body);
-          res("done");
-        },
-        ease: "none",
-      });
-    }).then((result) => console.log("promise done", result));
+      // const geometry = new BufferGeometry();
+
+      // const vertices = new Float32Array([
+      //   -1.0,
+      //   -1.0,
+      //   1.0, // v0
+      //   1.0,
+      //   -1.0,
+      //   1.0, // v1
+      //   1.0,
+      //   1.0,
+      //   1.0, // v2
+      //   -1.0,
+      //   1.0,
+      //   1.0, // v3
+      // ]);
+
+      // const indices = [0, 1, 2, 2, 3, 0];
+
+      // geometry.setIndex(indices);
+      // geometry.setAttribute("position", new BufferAttribute(vertices, 3));
+
+      // const material = new MeshBasicMaterial({ color: 0xff0000 });
+      // const mesh = new Mesh(geometry, material);
+      // scene.add(mesh);
+      // controls.target = mesh.position;
+      // console.log("mesh", mesh.geometry.attributes);
+
+      const quaternion = new Quaternion();
+      quaternion.setFromAxisAngle(new Vector3(0, 1, 0), Math.PI / 2);
+      // camera.applyQuaternion(quaternion);
+      // camera.rotation.x = Math.PI /2
+      await new Promise((res) => {
+        // gsap.to(camera.position, {
+        //   x: -3,
+        //   y: -2,
+        //   duration: 2,
+        //   delay: 20,
+        //   ease: "none",
+        //   onComplete: res, // resolve when animation finishes
+        // });
+        // const targetEuler = new Euler(2 * Math.PI, 0, 0, "XYZ");
+        // const targetQuat = new Quaternion().setFromEuler(targetEuler);
+        // gsap.to(camera.quaternion, {
+        //   x: targetQuat.x,
+        //   y: targetQuat.y,
+        //   z: targetQuat.z,
+        //   w: targetQuat.w,
+        //   duration: 5,
+        // });
+        // controls.disconnect();\
+        console.log(Math.PI / 4 / 2);
+        // controls.enabled = false;
+
+        // gsap.to(camera.rotation, {
+        //   // y: -Math.PI / 2, // 90 degrees
+        //   x: Math.PI / 4 / 2,
+        //   // x: 200,
+        //   duration: 5,
+        //   onUpdate: () => {
+        //     camera.updateMatrixWorld();
+        //   },
+        //   onComplete: () => {
+        //     controls.enabled = true;
+        //     // controls.connect(document.body);
+        //   },
+        //   ease: "none",
+        // });
+        gsap.to(data.scene.position, {
+          // y: -Math.PI / 2, // 90 degrees
+          // x: 20,
+          // y: 1,
+          // x: 200,
+          duration: 5,
+          onUpdate: () => {
+            camera.updateMatrixWorld();
+          },
+          onComplete: () => {
+            // controls.enabled = true;
+            // controls.connect(document.body);
+            res("done");
+          },
+          ease: "none",
+        });
+      }).then((result) => console.log("promise done", result));
+      resolve(dockerscene);
+    });
   });
 };
+
+type lookAtmodelprps = {
+  camera: Camera;
+  controls: OrbitControls;
+  model: Group<Object3DEventMap> | null;
+};
+export function lookAtmodel({
+  camera,
+  controls,
+  model,
+  // scene_wrapper: HTMLElement | null,
+}: lookAtmodelprps) {
+  console.log("lookatmodel");
+  // data.scene.position.set(10.405193262355265, 0, -15.853882753462061);
+
+  const DesertRoad_Position = {
+    //current Desert_roead position which is also the controlls target
+    x_p: 10.405193262355265,
+    y_p: 0,
+    z_p: -15.853882753462061,
+  };
+  const Docker_model_position = {
+    x_p: 20,
+    y_p: 1,
+    z_p: 0,
+  };
+
+  const lookatmodeltl = gsap.timeline({
+    // paused: true,
+  });
+
+  lookatmodeltl
+    .to(camera.position, {
+      x: Docker_model_position.x_p + 5,
+      y: Docker_model_position.y_p + 2,
+      z: Docker_model_position.z_p - 4,
+      ease: "none",
+      duration: 2,
+      // delay: 2,
+    })
+    .to(
+      DesertRoad_Position,
+      {
+        x_p: Docker_model_position.x_p,
+        y_p: Docker_model_position.y_p,
+        z_p: Docker_model_position.z_p,
+        ease: "none",
+        duration: 2,
+
+        onUpdate: () => {
+          // k8sWheel.getWorldPosition(target);
+          controls.target = new Vector3(
+            DesertRoad_Position.x_p,
+            DesertRoad_Position.y_p,
+            DesertRoad_Position.z_p,
+          );
+          console.log(DesertRoad_Position);
+          // controls.update();
+        },
+        onComplete: () => {
+          if (!model) return;
+          controls.target = model.position;
+          // if (scene_wrapper) {
+          //   scene_wrapper.focus();
+          // }
+        },
+        // delay: 2,
+      },
+
+      // "linux model",
+      "<",
+    );
+  return lookatmodeltl;
+}

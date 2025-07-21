@@ -1,5 +1,11 @@
 "use client";
-import React, { useContext, useState } from "react";
+import React, {
+  createContext,
+  RefObject,
+  useContext,
+  useRef,
+  useState,
+} from "react";
 import Root3d from "./threejs/Root3d";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
@@ -7,10 +13,15 @@ import { Poppins } from "next/font/google";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmotherContext } from "./ClientWrapper";
 import { DefaultLoadingManager } from "three";
+import Contact from "./Contact";
+
+export const buttonrefctx =
+  createContext<RefObject<HTMLButtonElement | null> | null>(null);
 
 const poppins = Poppins({ weight: "600" });
 
 const Skills = () => {
+  const Enter3dButtonref = useRef<HTMLButtonElement | null>(null);
   // const scrollSmother = useContext(ScrollSmotherContext);
   useGSAP(() => {
     // const skillstl = gsap.timeline();
@@ -106,10 +117,10 @@ const Skills = () => {
       .to(
         "#skill-container",
         {
-          width: "200vw",
-          rotateZ: 5,
-          height: "200vh",
-          scale: 2,
+          // width: "200vw",
+          // rotateZ: 5,
+          // height: "200vh",
+          // scale: 2,
           padding: 0,
           ease: "power3.out",
           duration: 2,
@@ -118,45 +129,95 @@ const Skills = () => {
       )
 
       .to(
-        "#scene-wrapper",
+        ".cliprectangle",
         {
-          width: "100vw",
-          height: "100vh",
+          width: "105vw",
+          height: "105vh",
+          // scale: 0.5,
+          // position: "absolute",
+          // top: 0,
+          // left: 0,
           ease: "power3.out",
           duration: 2,
+          // rotateZ: -5,
+          // clipPath: "polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%)",
         },
         "<",
       )
       .to(
-        "#skill-container",
+        ".cliprectangle",
         {
-          rotateZ: 0,
-          scale: 1,
-          // padding: "initial", // or your default value
-          ease: "power.in",
+          // width: "100vw",
+          // height: "100vh",
+          // // scale: 1,
+          // ease: "power3.out",
           duration: 2,
+          // rotateZ: 7,
+
+          // clipPath: "polygon(0 0, 100% 0%, 100% 100%, 0% 100%)",
         },
-        // ">", // run after previous animation
+        // "<",
       )
+      // .to("#outer-scene-wrapper", {
+      //   // scale: 1,
+      //   duration: 2,
+      // })
+      // .to(
+      //   "#skill-container",
+      //   {
+      //     rotateZ: 0,
+      //     scale: 1,
+      //     // padding: "initial", // or your default value
+      //     ease: "power.in",
+      //     duration: 2,
+      //   },
+      //   // ">", // run after previous animation
+      // )
+      .to(".border-t", {
+        // top: 0,
+        // left: 0,
+        // padding: 0,
+        yPercent: -100,
+        ease: "power2.out",
+
+        scrollTrigger: {
+          trigger: "#to-pin",
+          // pin: "#to-pin",
+          // pinSpacing: false,
+          // pinType: "fixed",
+          start: `bottom -10%`,
+          // start: `top top`,
+          id: "fotter",
+          // pinReparent: true,
+          scrub: 4,
+          end: "bottom -90%",
+          markers: true,
+
+          // preventOverlaps: "true",
+        },
+      })
       .to("#skill-container", {
         // top: 0,
         // left: 0,
         // padding: 0,
 
         scrollTrigger: {
-          trigger: "#to-pin",
-          pin: true,
+          trigger: "#skill-container",
+          pin: "#to-pin",
+          anticipatePin: 1,
+          pinSpacing: false,
           // pinType: "fixed",
-          start: `top+=${offsetTop}px 15%`,
-          // start: `top+=${offsetTop}px top`,
+          start: `top+=${offsetTop}px 10%`,
+          // start: `top top`,
           id: "pin",
           // pinReparent: true,
           // scrub: true,
-          end: "bottom -50%",
+          end: "bottom -500%",
           markers: true,
           // preventOverlaps: "true",
         },
       });
+
     const wordstl = gsap.timeline({
       paused: true,
       // scrollTrigger: {
@@ -297,41 +358,54 @@ const Skills = () => {
     // });
   });
   return (
-    <div id="to-pin">
-      <div className="px-4 py-20 sm:px-6 lg:px-8" id="skill-container">
-        <div className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text pb-6 text-center text-4xl leading-tight font-semibold text-transparent md:text-5xl">
-          Skills
-        </div>
-        <div
-          className="mb-5 flex flex-col-reverse gap-12 sm:gap-16 md:grid md:grid-cols-2 md:items-center"
-          id="scale"
-        >
+    <buttonrefctx.Provider value={Enter3dButtonref}>
+      <div className="relative h-screen w-screen">
+        <div id="to-pin" className="">
           <div
-            className="z-9 col-span-1 aspect-square size-full overflow-visible rounded-lg md:aspect-video"
-            id="scene-wrapper"
-            // data-speed="auto"
+            className="origin-centre px-4 py-20 sm:px-6 lg:px-8"
+            id="skill-container"
           >
-            <Root3d />
-          </div>
-
-          <div className="col-start-2" id="Docker">
-            <div className="">
-              <span className={`secondary-header`}>THREE JS</span>
+            <div className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text pb-6 text-center text-4xl leading-tight font-semibold text-transparent md:text-5xl">
+              Skills
             </div>
-            <p
-              className={`mt-2 max-w-[25rem] leading-7 text-balance text-gray-800 dark:text-gray-100`}
+
+            <div
+              className="mb-5 flex flex-col-reverse gap-12 overflow-visible bg-transparent sm:gap-16 md:grid md:grid-cols-2 md:items-center"
+              id="scale"
             >
-              Docker, a powerful containerization tool that allows me to package
-              applications and their dependencies into lightweight, portable
-              containers, ensuring consistency across development, testing, and
-              production environments, eliminating the “it works on my machine”
-              problem.
-            </p>
+              <div className="cliprectangle col-span-1 origin-center">
+                <div
+                  className="z-100 aspect-square size-full overflow-hidden rounded-lg md:aspect-video"
+                  id="scene-wrapper"
+                  tabIndex={0}
+                  // data-speed="auto"
+                >
+                  {/* <Root3d /> */}
+
+                  <Root3d />
+                </div>
+              </div>
+
+              <div className="col-start-2 bg-transparent" id="Docker">
+                <div className="">
+                  <span className={`secondary-header`}>THREE JS</span>
+                </div>
+                <p
+                  className={`mt-2 max-w-[25rem] leading-7 text-balance text-gray-800 dark:text-gray-100`}
+                >
+                  Docker, a powerful containerization tool that allows me to
+                  package applications and their dependencies into lightweight,
+                  portable containers, ensuring consistency across development,
+                  testing, and production environments, eliminating the “it
+                  works on my machine” problem.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
-        <div className="h-[300vh]"></div>
+        <Contact />
       </div>
-    </div>
+    </buttonrefctx.Provider>
   );
 };
 

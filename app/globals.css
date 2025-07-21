@@ -144,3 +144,17 @@ nav {
 .bw-img {
   filter: grayscale(100%) contrast(200%);
 }
+
+.cliprectangle {
+  /* position: absolute; */
+  /* top: 0; left: 0; right: 0; bottom: 0 */
+  /* z-index: 200; */
+  /* pointer-events: none; */
+
+  clip-path: polygon(0 0, 100% 0%, 100% 100%, 0% 100%);
+
+  /* color of the "covering" mask */
+  /* clip-path: polygon(25% 0, 100% 25%, 75% 100%, 0 75%); */
+  /* mix-blend-mode: lighten; */
+  /* background-color: white; */
+}

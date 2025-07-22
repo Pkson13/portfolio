@@ -1,14 +1,18 @@
-import React, { useContext, useEffect } from "react";
+"use client";
+import { useContext, useEffect, useRef } from "react";
 import { Dockermodelctx } from "./Root3d";
 import { degToRad } from "three/src/math/MathUtils.js";
+// import nipplejs from "nipplejs";
 
 const Controls = () => {
+  const nipplejsZone = useRef<HTMLDivElement | undefined>(undefined);
   const DockerModel = useContext(Dockermodelctx);
   useEffect(() => {
     if (!DockerModel) {
       console.log("docker model null in contrls", DockerModel);
       return;
     }
+
     console.log("not working for somr reason");
 
     const keysPressed: Record<string, boolean> = {};
@@ -125,12 +129,55 @@ const Controls = () => {
 
       requestAnimationFrame(gameConrolsLoop);
     };
-
     gameConrolsLoop();
+
+    if (nipplejsZone.current) {
+      async function setupnipplejs() {
+        const nipplejs = (await import("nipplejs")).default;
+        const joystickmanager = nipplejs.create({
+          zone: nipplejsZone.current,
+          mode: "static",
+          position: { left: "50%", top: "50%" },
+          dynamicPage: true,
+        });
+        // console.log("ids:", joystickmanager.ids, "jid", joystickmanager.get(0));
+        const joystick = joystickmanager.get(0);
+        joystick.on("dir", (evt, data) => {
+          //   console.log("evt", evt);
+          //   console.log("data", data);
+
+          switch (data.direction.angle) {
+            case "up":
+              targetSpeed = maxSpeed;
+              break;
+            case "down":
+              targetSpeed = -maxSpeed;
+              break;
+            case "left":
+              keysPressed["ArrowRight"] = false;
+              keysPressed["ArrowLeft"] = true;
+              break;
+            case "right":
+              keysPressed["ArrowLeft"] = false;
+              keysPressed["ArrowRight"] = true;
+              break;
+          }
+        });
+        joystick.on("end", (ev, data) => {
+          targetSpeed = 0;
+          keysPressed["ArrowLeft"] = false;
+          keysPressed["ArrowRight"] = false;
+        });
+      }
+      setupnipplejs();
+    }
   }, [DockerModel]);
 
   return (
-    <div className="absolute right-6 bottom-1/4 z-700 rounded-full bg-red-900">
+    <div
+      ref={nipplejsZone}
+      className="absolute right-6 bottom-6 z-700 size-40 md:hidden"
+    >
       Controls
     </div>
   );

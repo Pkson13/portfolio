@@ -13,7 +13,13 @@ import {
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useTheme } from "next-themes";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   AmbientLight,
   ArrowHelper,
@@ -21,8 +27,10 @@ import {
   BoxGeometry,
   BufferAttribute,
   BufferGeometry,
+  Camera,
   CatmullRomCurve3,
   EdgesGeometry,
+  Group,
   // Fog,
   Line,
   LineBasicMaterial,
@@ -44,6 +52,18 @@ import Stats from "three/examples/jsm/libs/stats.module.js";
 import SceneWords from "./SceneWords";
 import { buttonrefctx } from "../Skills";
 import { Button } from "../ui/button";
+import ControlsComponent from "./Controls";
+
+export const Dockermodelctx = createContext<Group<Object3DEventMap> | null>(
+  null,
+);
+export type global3dctxtypes = {
+  camera: Camera | null;
+  controls: OrbitControls | null;
+};
+export const global3dctx = createContext<global3dctxtypes | undefined>(
+  undefined,
+);
 
 const Root3d = () => {
   const Enter3dButtonref = useContext(buttonrefctx);
@@ -52,6 +72,10 @@ const Root3d = () => {
   const getworldpositionref = useRef<HTMLButtonElement | null>(null);
   const lookatref = useRef<HTMLButtonElement | null>(null);
   const changeLodedref = useRef<HTMLButtonElement | null>(null);
+  const cameraref = useRef<Camera | null>(null);
+  const contrlosref = useRef<OrbitControls | null>(null);
+  const [Docekrmodel, setDockerModel] =
+    useState<Group<Object3DEventMap> | null>(null);
   const [loaded, setloaded] = useState(false);
 
   const { theme } = useTheme();
@@ -116,6 +140,7 @@ const Root3d = () => {
         0.001,
         10000,
       );
+      cameraref.current = camera;
 
       camera.position.z = 10;
       camera.position.y = 1;
@@ -157,6 +182,7 @@ const Root3d = () => {
 
       // create3dText({ scene, textinput: "Hello I'm Peterson" });
       const controls = new OrbitControls(camera, renderer.domElement);
+      contrlosref.current = controls;
       // // controls.autoRotate = true;
       controls.enableDamping = true;
       controls.enabled = true;
@@ -224,34 +250,36 @@ const Root3d = () => {
       scene.add(light);
       loadIslandModel({ loader: glftLoader, controls, camera, lambo, scene });
       //docker model will be loaded inide the next funtion
-      const dockermodel = await loadIslands({
-        name: "desert_road",
-        loader: glftLoader,
-        controls,
-        camera,
-        scene,
-      });
+      setDockerModel(
+        await loadIslands({
+          name: "desert_road",
+          loader: glftLoader,
+          controls,
+          camera,
+          scene,
+        }),
+      );
 
-      if (Enter3dButtonref && Enter3dButtonref.current) {
-        Enter3dButtonref.current.onclick = () => {
-          // lookatmodeltl.play();
-          if (dockermodel) {
-            const lookatmodeltl = lookAtmodel({
-              camera,
-              controls,
-              model: dockermodel,
-            });
-          }
-          // camera.position.set(30.405193262355265, 0, -15.853882753462061);
+      // if (Enter3dButtonref && Enter3dButtonref.current) {
+      //   Enter3dButtonref.current.onclick = () => {
+      //     // lookatmodeltl.play();
+      //     if (Docekrmodel) {
+      //       const lookatmodeltl = lookAtmodel({
+      //         camera,
+      //         controls,
+      //         model: Docekrmodel,
+      //       });
+      //     }
+      //     // camera.position.set(30.405193262355265, 0, -15.853882753462061);
 
-          // window.alert("testing react stuff");
-          document.querySelector<HTMLDivElement>("#scene-wrapper")?.focus();
+      //     // window.alert("testing react stuff");
+      //     document.querySelector<HTMLDivElement>("#scene-wrapper")?.focus();
 
-          gsap.to(Enter3dButtonref.current, {
-            opacity: 0,
-          });
-        };
-      }
+      //     gsap.to(Enter3dButtonref.current, {
+      //       opacity: 0,
+      //     });
+      //   };
+      // }
       // return dockermodel;
       loadIslands({
         name: "autumnal_forest",
@@ -359,42 +387,52 @@ const Root3d = () => {
   }, []); // dependencies cause a whole relod of the scene and models; very expensive
 
   return (
-    <div id="outer-scene-wrapper" className="size-full">
-      <Button className="absolute z-[500]" ref={changeLodedref}>
-        change loaded
-      </Button>
-      <div id="inner-scene-wrapper" className="size-full">
-        <div
-          ref={sceneref}
-          className="relative m-0 mx-auto h-full w-full overflow-visible rounded-lg p-0"
-        >
-          <div
-            className="m-2"
-            id="speed-meter"
-            style={{
-              position: "absolute",
-              bottom: "1rem",
-              left: "1rem",
-              padding: "0.5rem 1rem",
-              background: "rgba(0,0,0,0.7)",
-              color: "lime",
-              fontFamily: "monospace",
-              borderRadius: "6px",
-              fontSize: "1rem",
-              zIndex: 9999,
-            }}
-          >
-            Speed: 0 knots
-          </div>
-          <SceneWords />
-        </div>
-        {/* <div>
+    <global3dctx.Provider
+      value={{
+        camera: cameraref.current,
+        controls: contrlosref.current,
+      }}
+    >
+      <Dockermodelctx.Provider value={Docekrmodel}>
+        <div id="outer-scene-wrapper" className="size-full">
+          <ControlsComponent />
+          <Button className="absolute z-[500]" ref={changeLodedref}>
+            change loaded
+          </Button>
+          <div id="inner-scene-wrapper" className="size-full">
+            <div
+              ref={sceneref}
+              className="relative m-0 mx-auto h-full w-full overflow-visible rounded-lg p-0"
+            >
+              <div
+                className="m-2"
+                id="speed-meter"
+                style={{
+                  position: "absolute",
+                  bottom: "1rem",
+                  left: "1rem",
+                  padding: "0.5rem 1rem",
+                  background: "rgba(0,0,0,0.7)",
+                  color: "lime",
+                  fontFamily: "monospace",
+                  borderRadius: "6px",
+                  fontSize: "1rem",
+                  zIndex: 9999,
+                }}
+              >
+                Speed: 0 knots
+              </div>
+              <SceneWords />
+            </div>
+            {/* <div>
           <button ref={getworldpositionref}>cam worldposition</button>
           <button ref={lookatref}>look at</button>
         </div> */}
-        <canvas className="w-50"></canvas>
-      </div>
-    </div>
+            <canvas className="w-50"></canvas>
+          </div>
+        </div>
+      </Dockermodelctx.Provider>
+    </global3dctx.Provider>
   );
 };
 

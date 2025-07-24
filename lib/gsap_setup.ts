@@ -5,6 +5,7 @@ import MorphSVGPlugin from "gsap/MorphSVGPlugin";
 import ScrambleTextPlugin from "gsap/ScrambleTextPlugin";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
+import { SplitText } from "gsap/SplitText";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
@@ -12,3 +13,4 @@ gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 gsap.registerPlugin(useGSAP);
 gsap.registerPlugin(ScrambleTextPlugin);
 gsap.registerPlugin(MorphSVGPlugin);
+gsap.registerPlugin(SplitText);

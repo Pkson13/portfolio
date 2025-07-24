@@ -71,22 +71,15 @@ const Root3d = () => {
   const sceneref = useRef<HTMLDivElement | null>(null);
   const getworldpositionref = useRef<HTMLButtonElement | null>(null);
   const lookatref = useRef<HTMLButtonElement | null>(null);
-  const changeLodedref = useRef<HTMLButtonElement | null>(null);
   const cameraref = useRef<Camera | null>(null);
   const contrlosref = useRef<OrbitControls | null>(null);
   const [Docekrmodel, setDockerModel] =
     useState<Group<Object3DEventMap> | null>(null);
-  const [loaded, setloaded] = useState(false);
 
   const { theme } = useTheme();
 
   useEffect(() => {
     async function init() {
-      if (changeLodedref.current) {
-        changeLodedref.current.onclick = () => {
-          setloaded((pre) => !pre);
-        };
-      }
       const curvePath = [
         10.136184463414924, -1.374508746897471, 10.384881573913269,
         9.1152593889854714, -1.374508746897471, 8.5846792797570011,
@@ -396,9 +389,7 @@ const Root3d = () => {
       <Dockermodelctx.Provider value={Docekrmodel}>
         <div id="outer-scene-wrapper" className="size-full">
           <ControlsComponent />
-          <Button className="absolute z-[500]" ref={changeLodedref}>
-            change loaded
-          </Button>
+
           <div id="inner-scene-wrapper" className="size-full">
             <div
               ref={sceneref}
@@ -428,7 +419,7 @@ const Root3d = () => {
           <button ref={getworldpositionref}>cam worldposition</button>
           <button ref={lookatref}>look at</button>
         </div> */}
-            <canvas className="w-50"></canvas>
+            {/* <canvas className="w-50"></canvas> */}
           </div>
         </div>
       </Dockermodelctx.Provider>

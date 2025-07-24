@@ -10,126 +10,217 @@ export default function Son() {
   const rightPupilRef = useRef<null | SVGPathElement>(null);
   const mouthRef = useRef<null | SVGPathElement>(null);
 
+  // useGSAP((context, contextsafe) => {
+  //   const face = faceRef.current;
+  //   const leftPupil = leftPupilRef.current;
+  //   const rightPupil = rightPupilRef.current;
+  //   // const mouth = mouthRef.current;
+  //   let lastElemment: "A" | "DIV" | undefined;
+  //   // const sontl = gsap.timeline();
+  //   // sontl.to("#son", { opacity: 1, delay: 2 });
+  //   // gsap.to([leftPupil, rightPupil, mouth], {
+  //   //   y: 4,
+  //   //   yoyo: true,
+  //   //   repeat: -1,
+  //   //   duration: 2,
+  //   //   ease: "circ.inOut",
+  //   // });
+  //   if (!contextsafe) {
+  //     console.log("context safe funtion undefined", contextsafe);
+  //     return;
+  //   }
+  //   //contest safe verion of handle mouse move
+  //   const handleMouseMove = contextsafe((e: MouseEvent) => {
+  //     const target = e.target;
+
+  //     if (!face || !leftPupil || !rightPupil) return;
+  //     //   console.log(target);
+
+  //     if (target instanceof HTMLElement) {
+  //       // for (const attr of target.attributes) {
+  //       // }
+  //       // console.log("Example: Check if it's a link and get the href");
+  //       switch (target.tagName) {
+  //         case "A":
+  //           if (lastElemment === "A") break;
+  //           const mouthmovements = ["#mouthhappy-full", "#mouthhappy-semi"];
+
+  //           const morphMouthto =
+  //             mouthmovements[Math.floor(Math.random() * mouthmovements.length)];
+  //           // console.log(morphMouthto);
+  //           // console.log(target.tagName);
+
+  //           gsap.to("#mouth", {
+  //             //   ease: "bounce.out",
+  //             overwrite: "auto",
+  //             morphSVG: morphMouthto,
+  //           });
+  //           if (morphMouthto == "#mouthhappy-full") {
+  //             const squint = Math.floor(Math.random() * 2);
+  //             // console.log("squint", squint);
+  //             if (!squint) break;
+  //             gsap.to("#normal-left-eye", {
+  //               morphSVG: "#left-squinted-eye",
+  //               //   ease: "elastic.out",
+  //             });
+  //             gsap.to("#normal-right-eye", {
+  //               morphSVG: "#right-squinted-eye",
+  //             });
+  //           }
+
+  //           // className="absolute flex size-2 h-0 w-0 items-center justify-center rounded-full border-y-[4px] border-r-[8px] border-y-transparent border-r-black"
+  //           lastElemment = "A";
+  //           break;
+  //         case "DIV":
+  //           if (lastElemment === "DIV") break;
+  //           console.log(target.tagName);
+
+  //           gsap.to("#normal-left-eye", {
+  //             morphSVG: "#normal-left-eye",
+  //           });
+  //           gsap.to("#normal-right-eye", {
+  //             morphSVG: "#normal-right-eye",
+  //           });
+
+  //           gsap.to("#mouth", {
+  //             height: 1,
+  //             //   ease: "elastic.out",
+  //             overwrite: "auto",
+  //             morphSVG: "#mouth",
+  //             duration: 0.5,
+  //           });
+
+  //           lastElemment = "DIV";
+  //           break;
+  //       }
+  //     }
+
+  //     const { left, top, width, height } = face.getBoundingClientRect();
+  //     // console.log("left", x, "top", top, "width", width, "height", height);
+
+  //     const centerX = left + width / 2;
+  //     const centerY = top + height / 2;
+
+  //     const deltaX = e.clientX - centerX;
+  //     const deltaY = e.clientY - centerY;
+  //     // console.log("deltax", deltaX, "deltay", deltaY);
+
+  //     // max movement range for pupils
+  //     const maxMove = 7;
+
+  //     // normalize and clamp
+  //     //find the distance between the centre of the box and the cursor using pythogras theorem c² = a² +b²
+  //     const distance = Math.sqrt(deltaX ** 2 + deltaY ** 2);
+  //     // The Math.atan2() static method returns the angle in the plane (in radians) between the positive x-axis and the ray from (0, 0) to the point (x, y), for Math.atan2(y, x).
+  //     const angle = Math.atan2(deltaY, deltaX);
+  //     const moveX = Math.min(maxMove, distance) * Math.cos(angle);
+  //     const moveY = Math.min(maxMove, distance) * Math.sin(angle);
+
+  //     movequickto({ id: ["#mouth", leftPupil, rightPupil], moveX, moveY });
+  //     // gsap.to([leftPupil, rightPupil], {
+  //     //   x: moveX,
+  //     //   y: moveY,
+  //     //   duration: 0.5,
+  //     //   ease: "power2.out",
+  //     //   delay: 0.1,
+  //     // });
+  //   });
+
+  //   document.body.addEventListener("mousemove", handleMouseMove);
+
+  //   return () => {
+  //     document.body.removeEventListener("mousemove", handleMouseMove);
+  //   };
+  // }, []);
+
   useGSAP((context, contextsafe) => {
     const face = faceRef.current;
     const leftPupil = leftPupilRef.current;
     const rightPupil = rightPupilRef.current;
-    // const mouth = mouthRef.current;
-    let lastElemment: "A" | "DIV" | undefined;
-    const sontl = gsap.timeline();
-    sontl.to("#son", { opacity: 1, delay: 2 });
-    // gsap.to([leftPupil, rightPupil, mouth], {
-    //   y: 4,
-    //   yoyo: true,
-    //   repeat: -1,
-    //   duration: 2,
-    //   ease: "circ.inOut",
-    // });
-    if (!contextsafe) {
-      console.log("context safe funtion undefined", contextsafe);
-      return;
-    }
-    //contest safe verion of handle mouse move
-    const handleMouseMove = contextsafe((e: MouseEvent) => {
-      const target = e.target;
 
-      if (!face || !leftPupil || !rightPupil) return;
-      //   console.log(target);
+    if (!contextsafe) return;
 
-      if (target instanceof HTMLElement) {
-        // for (const attr of target.attributes) {
-        // }
-        // console.log("Example: Check if it's a link and get the href");
-        switch (target.tagName) {
-          case "A":
-            if (lastElemment === "A") break;
-            const mouthmovements = ["#mouthhappy-full", "#mouthhappy-semi"];
+    const handlePointer = contextsafe(
+      (x: number, y: number, target: EventTarget | null) => {
+        if (!face || !leftPupil || !rightPupil) return;
+        let lastElemment;
 
-            const morphMouthto =
-              mouthmovements[Math.floor(Math.random() * mouthmovements.length)];
-            // console.log(morphMouthto);
-            // console.log(target.tagName);
+        if (target instanceof HTMLElement) {
+          switch (target.tagName) {
+            case "A":
+              if (lastElemment === "A") break;
 
-            gsap.to("#mouth", {
-              //   ease: "bounce.out",
-              overwrite: "auto",
-              morphSVG: morphMouthto,
-            });
-            if (morphMouthto == "#mouthhappy-full") {
-              const squint = Math.floor(Math.random() * 2);
-              // console.log("squint", squint);
-              if (!squint) break;
-              gsap.to("#normal-left-eye", {
-                morphSVG: "#left-squinted-eye",
-                //   ease: "elastic.out",
+              const options = ["#mouthhappy-full", "#mouthhappy-semi"];
+              const morph = options[Math.floor(Math.random() * options.length)];
+
+              gsap.to("#mouth", {
+                overwrite: "auto",
+                morphSVG: morph,
               });
-              gsap.to("#normal-right-eye", {
-                morphSVG: "#right-squinted-eye",
+
+              if (morph === "#mouthhappy-full" && Math.random() > 0.5) {
+                gsap.to("#normal-left-eye", { morphSVG: "#left-squinted-eye" });
+                gsap.to("#normal-right-eye", {
+                  morphSVG: "#right-squinted-eye",
+                });
+              }
+
+              lastElemment = "A";
+              break;
+
+            case "DIV":
+              if (lastElemment === "DIV") break;
+
+              gsap.to("#normal-left-eye", { morphSVG: "#normal-left-eye" });
+              gsap.to("#normal-right-eye", { morphSVG: "#normal-right-eye" });
+
+              gsap.to("#mouth", {
+                morphSVG: "#mouth",
+                height: 1,
+                overwrite: "auto",
+                duration: 0.5,
               });
-            }
 
-            // className="absolute flex size-2 h-0 w-0 items-center justify-center rounded-full border-y-[4px] border-r-[8px] border-y-transparent border-r-black"
-            lastElemment = "A";
-            break;
-          case "DIV":
-            if (lastElemment === "DIV") break;
-            console.log(target.tagName);
-
-            gsap.to("#normal-left-eye", {
-              morphSVG: "#normal-left-eye",
-            });
-            gsap.to("#normal-right-eye", {
-              morphSVG: "#normal-right-eye",
-            });
-
-            gsap.to("#mouth", {
-              height: 1,
-              //   ease: "elastic.out",
-              overwrite: "auto",
-              morphSVG: "#mouth",
-              duration: 0.5,
-            });
-
-            lastElemment = "DIV";
-            break;
+              lastElemment = "DIV";
+              break;
+          }
         }
+
+        const { left, top, width, height } = face.getBoundingClientRect();
+        const centerX = left + width / 2;
+        const centerY = top + height / 2;
+
+        const deltaX = x - centerX;
+        const deltaY = y - centerY;
+
+        const maxMove = 7;
+        const distance = Math.sqrt(deltaX ** 2 + deltaY ** 2);
+        const angle = Math.atan2(deltaY, deltaX);
+
+        const moveX = Math.min(maxMove, distance) * Math.cos(angle);
+        const moveY = Math.min(maxMove, distance) * Math.sin(angle);
+
+        movequickto({ id: ["#mouth", leftPupil, rightPupil], moveX, moveY });
+      },
+    );
+
+    const onMouseMove = (e: MouseEvent) => {
+      handlePointer(e.clientX, e.clientY, e.target);
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      if (touch) {
+        handlePointer(touch.clientX, touch.clientY, e.target);
       }
+    };
 
-      const { left, top, width, height } = face.getBoundingClientRect();
-      // console.log("left", x, "top", top, "width", width, "height", height);
-
-      const centerX = left + width / 2;
-      const centerY = top + height / 2;
-
-      const deltaX = e.clientX - centerX;
-      const deltaY = e.clientY - centerY;
-      // console.log("deltax", deltaX, "deltay", deltaY);
-
-      // max movement range for pupils
-      const maxMove = 7;
-
-      // normalize and clamp
-      //find the distance between the centre of the box and the cursor using pythogras theorem c² = a² +b²
-      const distance = Math.sqrt(deltaX ** 2 + deltaY ** 2);
-      // The Math.atan2() static method returns the angle in the plane (in radians) between the positive x-axis and the ray from (0, 0) to the point (x, y), for Math.atan2(y, x).
-      const angle = Math.atan2(deltaY, deltaX);
-      const moveX = Math.min(maxMove, distance) * Math.cos(angle);
-      const moveY = Math.min(maxMove, distance) * Math.sin(angle);
-
-      movequickto({ id: ["#mouth", leftPupil, rightPupil], moveX, moveY });
-      // gsap.to([leftPupil, rightPupil], {
-      //   x: moveX,
-      //   y: moveY,
-      //   duration: 0.5,
-      //   ease: "power2.out",
-      //   delay: 0.1,
-      // });
-    });
-
-    document.body.addEventListener("mousemove", handleMouseMove);
+    document.body.addEventListener("mousemove", onMouseMove);
+    document.body.addEventListener("touchmove", onTouchMove, { passive: true });
 
     return () => {
-      document.body.removeEventListener("mousemove", handleMouseMove);
+      document.body.removeEventListener("mousemove", onMouseMove);
+      document.body.removeEventListener("touchmove", onTouchMove);
     };
   }, []);
 

@@ -18,7 +18,7 @@ import Contact from "./Contact";
 export const buttonrefctx =
   createContext<RefObject<HTMLButtonElement | null> | null>(null);
 
-const poppins = Poppins({ weight: "600" });
+const poppins = Poppins({ weight: "600", preload: false });
 
 const Skills = () => {
   const Enter3dButtonref = useRef<HTMLButtonElement | null>(null);

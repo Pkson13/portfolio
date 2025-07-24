@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { Poppins } from "next/font/google";
 
-const poppinsFont = Poppins({ weight: ["400", "100", "600"] });
+const poppinsFont = Poppins({ weight: ["400", "100", "600"], preload: false });
 
 export default function Portfolio() {
   return (

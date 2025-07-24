@@ -18,7 +18,7 @@ import Link from "next/link";
 // export const metadata: Metadata = {
 //   themeColor: "#ffffff",
 // };
-const poppinsFont = Poppins({ weight: ["400", "100", "600"] });
+const poppinsFont = Poppins({ weight: ["400", "100", "600"], preload: false });
 
 export default function Home() {
   // const couroselref = useRef<HTMLSpanElement | null>(null);

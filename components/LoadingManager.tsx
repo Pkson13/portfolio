@@ -148,7 +148,7 @@ const LoadingManager = ({ children }: { children: ReactNode }) => {
             duration: 1.5,
             ease: "none",
           },
-          "<15%",
+          "<",
         )
         .to("#logo", {
           duration: 2,

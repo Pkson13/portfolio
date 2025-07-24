@@ -16,7 +16,7 @@ const ClientWrapper = ({ children }: { children: React.ReactNode }) => {
       content: "#smooth-content",
       smooth: 2,
       effects: true,
-      smoothTouch: 0.01,
+      // smoothTouch: 0.01,
     });
 
     setScrollSmoother(smoother);

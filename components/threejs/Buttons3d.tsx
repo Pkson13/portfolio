@@ -42,7 +42,7 @@ const Buttons3d = () => {
     <Button
       id="enter3d"
       ref={Enter3dButtonref}
-      className="pointer-events-auto absolute bottom-1/4 left-1/2 z-[130] -translate-x-1/2 opacity-0"
+      className="pointer-events-auto absolute bottom-1/6 left-1/2 z-[130] -translate-x-1/2 bg-black text-white opacity-0"
     >
       ENTER 3D
     </Button>

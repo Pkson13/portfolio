@@ -16,6 +16,7 @@ const geistSans = Geist({
 const bebasNeue = Bebas_Neue({
   variable: "--font-bebas-neue",
   weight: ["400"],
+  subsets: ["latin"],
 });
 
 // const geistMono = Geist_Mono({

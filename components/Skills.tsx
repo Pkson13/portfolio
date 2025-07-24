@@ -230,7 +230,7 @@ const Skills = () => {
           // id: "fotter",
           // pinReparent: true,
           scrub: 3,
-          markers: true,
+          // markers: true,
           // pinnedContainer: "#to-pin",
           // onUpdate: (self) => {
           //   self.refresh();
@@ -349,7 +349,7 @@ const Skills = () => {
         // delay: 0.2, // wait 0.2 seconds from the last scroll event before doing the snapping
         ease: "none", // the ease of the snap animation ("power3" by default)
       },
-      markers: true,
+      // markers: true,
       // toggleClass: "sticky",
       scrub: true, // this makes scrollProgress update smoothly
       //  onEnter: () => skillstl.play(),

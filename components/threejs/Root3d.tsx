@@ -395,7 +395,7 @@ const Root3d = () => {
               ref={sceneref}
               className="relative m-0 mx-auto h-full w-full overflow-visible rounded-lg p-0"
             >
-              <div
+              {/* <div
                 className="m-2"
                 id="speed-meter"
                 style={{
@@ -412,7 +412,7 @@ const Root3d = () => {
                 }}
               >
                 Speed: 0 knots
-              </div>
+              </div> */}
               <SceneWords />
             </div>
             {/* <div>

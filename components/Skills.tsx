@@ -173,29 +173,7 @@ const Skills = () => {
       //   },
       //   // ">", // run after previous animation
       // )
-      .to(".border-t", {
-        // top: 0,
-        // left: 0,
-        // padding: 0,
-        yPercent: -100,
-        ease: "power2.out",
 
-        scrollTrigger: {
-          trigger: "#to-pin",
-          // pin: "#to-pin",
-          // pinSpacing: false,
-          // pinType: "fixed",
-          start: `bottom -10%`,
-          // start: `top top`,
-          id: "fotter",
-          // pinReparent: true,
-          scrub: 4,
-          end: "bottom -90%",
-          markers: true,
-
-          // preventOverlaps: "true",
-        },
-      })
       .to("#skill-container", {
         // top: 0,
         // left: 0,
@@ -204,19 +182,116 @@ const Skills = () => {
         scrollTrigger: {
           trigger: "#skill-container",
           pin: "#to-pin",
-          anticipatePin: 1,
-          pinSpacing: false,
+          anticipatePin: 3,
+          // pinSpacing: false,
           // pinType: "fixed",
           start: `top+=${offsetTop}px 10%`,
           // start: `top top`,
           id: "pin",
+          // endTrigger: "#footer",
+          end: "bottom -900%",
+
+          // end: "bottom top",
+
+          onUpdate: (self) => {
+            // self.refresh();
+            /*
+            This is a static position that is calculated when the ScrollTrigger is created and when the scroller is resized,
+             based on where things are in the normal document flow. It is not constantly recalculated,
+              so for example if you animate the trigger/endTrigger, it won't constantly update the start/end values accordingly
+               because ScrollTrigger is highly optimized for performance. You can call ScrollTrigger.refresh() to force things to be recalculated.
+            */
+          },
+
           // pinReparent: true,
           // scrub: true,
-          end: "bottom -500%",
           markers: true,
           // preventOverlaps: "true",
         },
+      })
+      .to("#fotter", {
+        //worked on this for almost 7 hours. i'm so pissed rn
+        // top: 0,
+        // left: 0,
+        // padding: 0,
+        // yPercent: -100,
+        ease: "none",
+
+        scrollTrigger: {
+          trigger: "#skill-container",
+          // pin: "#to-pin",
+          // pin: true,
+          // pinSpacing: false,
+          // pinType: "fixed",
+          start: `top+=${offsetTop}px 40%`,
+
+          // start: `top bottom`,
+          end: "bottom top",
+          // id: "fotter",
+          // pinReparent: true,
+          scrub: 3,
+          markers: true,
+          // pinnedContainer: "#to-pin",
+          // onUpdate: (self) => {
+          //   self.refresh();
+          // },
+
+          // preventOverlaps: "true",
+        },
+      })
+      .to("#footer", {
+        // top: 0,
+        // left: 0,
+        // padding: 0,
+        yPercent: -100,
+        // ease: "none",
+
+        scrollTrigger: {
+          // trigger: "#to-pin",
+          // trigger: "#footer",
+          // pinSpacing: false,
+          // pinType: "fixed",
+          trigger: "#fotter",
+          pin: true,
+          anticipatePin: 3,
+          start: `bottom bottom`,
+          // id: "fotter",
+          // pinReparent: true,
+          scrub: 2,
+          end: "bottom -100%",
+          // markers: true,
+          onUpdate: (self) => {
+            self.refresh();
+          },
+
+          // preventOverlaps: "true",
+        },
       });
+    // .to(
+    //   {},
+    //   {
+    //     // top: 0,
+    //     // left: 0,
+    //     // padding: 0,
+
+    //     scrollTrigger: {
+    //       trigger: ".container",
+    //       // pin: "#to-pin",
+    //       // anticipatePin: 1,
+    //       // pinSpacing: false,
+    //       // pinType: "fixed",
+    //       start: `bottom bottom`,
+    //       end: `bottom 10%`,
+    //       // start: `top top`,
+    //       id: "fotter-pin",
+    //       onUpdate: (self) => {
+    //         self.refresh();
+    //       },
+
+    //       markers: true,
+    //     },
+    //   },
+    // );
 
     const wordstl = gsap.timeline({
       paused: true,
@@ -356,10 +431,10 @@ const Skills = () => {
     //     }
     //   },
     // });
-  });
+  }, []);
   return (
     <buttonrefctx.Provider value={Enter3dButtonref}>
-      <div className="relative h-screen w-screen">
+      <div className="relative w-screen bg-background">
         <div id="to-pin" className="">
           <div
             className="origin-centre px-4 py-20 sm:px-6 lg:px-8"
@@ -403,8 +478,8 @@ const Skills = () => {
             </div>
           </div>
         </div>
-        <Contact />
       </div>
+      <Contact />
     </buttonrefctx.Provider>
   );
 };

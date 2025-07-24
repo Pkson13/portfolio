@@ -104,7 +104,11 @@ const Controls = () => {
       }
 
       if (keysPressed["ArrowRight"]) {
-        DockerModel.rotation.y -= degToRad(1);
+        if (keysPressed["ArrowDown"]) {
+          DockerModel.rotation.y += degToRad(1);
+        } else {
+          DockerModel.rotation.y -= degToRad(1);
+        }
         // if (!ships_wheel) return;
 
         //TODO
@@ -113,7 +117,11 @@ const Controls = () => {
         // pivot.rotateX(-degToRad(1)); t
       }
       if (keysPressed["ArrowLeft"]) {
-        DockerModel.rotation.y += degToRad(1);
+        if (keysPressed["ArrowDown"]) {
+          DockerModel.rotation.y -= degToRad(1);
+        } else {
+          DockerModel.rotation.y += degToRad(1);
+        }
         // if (!ships_wheel) return;
         // ships_wheel.rotation.x += degToRad(1);
         // pivot.rotateX(degToRad(1));
@@ -163,7 +171,7 @@ const Controls = () => {
               break;
           }
         });
-        joystick.on("end", (ev, data) => {
+        joystick.on("end", () => {
           targetSpeed = 0;
           keysPressed["ArrowLeft"] = false;
           keysPressed["ArrowRight"] = false;

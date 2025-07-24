@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ReactNode, useEffect, useRef } from "react";
 import { DefaultLoadingManager } from "three";
 import { Button } from "./ui/button";
+import { SplitText } from "gsap/SplitText";
 
 const LoadingManager = ({ children }: { children: ReactNode }) => {
   const progressDisplay = useRef<HTMLDivElement | null>(null);
@@ -23,17 +24,6 @@ const LoadingManager = ({ children }: { children: ReactNode }) => {
         ease: "none",
       },
     });
-    DefaultLoadingManager.onStart = function (url, itemsLoaded, itemsTotal) {
-      console.log(
-        "Started loading file: " +
-          url +
-          ".\nLoaded " +
-          itemsLoaded +
-          " of " +
-          itemsTotal +
-          " files.",
-      );
-    };
 
     DefaultLoadingManager.onLoad = function () {
       console.log("Loading Complete!");
@@ -84,6 +74,14 @@ const LoadingManager = ({ children }: { children: ReactNode }) => {
     function playanimations() {
       const reveltl = gsap.timeline();
 
+      // split elements with the class "split" into words and characters
+      const split = SplitText.create("#split-words", {
+        type: "words",
+        mask: "words",
+      });
+
+      // now animate the characters in a staggered fashion
+
       reveltl
         .to(reveal.current, {
           scale: 2,
@@ -125,6 +123,33 @@ const LoadingManager = ({ children }: { children: ReactNode }) => {
           },
           "<",
         )
+        .from(
+          [split.words],
+          {
+            duration: 1.5,
+            yPercent: 100, // animate from 100px below
+            autoAlpha: 0, // fade in from opacity: 0 and visibility: hidden
+            stagger: 0.05, // 0.05 seconds between each
+          },
+          "<25%",
+        )
+        // .to("#reveal-m", {
+        //   // opacity: 1,
+        //   width: 0,
+        //   duration: 1,
+        //   ease: "none",
+        // })
+        .to(
+          "#matter",
+          {
+            opacity: 1,
+            // width: 0,
+            y: 0,
+            duration: 1.5,
+            ease: "none",
+          },
+          "<15%",
+        )
         .to("#logo", {
           duration: 2,
           scrambleText: {
@@ -133,6 +158,12 @@ const LoadingManager = ({ children }: { children: ReactNode }) => {
             speed: 0.5, // speed of scrambling
           },
           ease: "none",
+        })
+        .to("#son", {
+          opacity: 1,
+          onComplete: () => {
+            split.revert();
+          },
         });
     }
   });

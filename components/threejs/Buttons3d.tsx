@@ -17,6 +17,7 @@ const Buttons3d = () => {
     if (!globalcontext) return;
     if (Enter3dButtonref && Enter3dButtonref.current) {
       Enter3dButtonref.current.onclick = () => {
+        globalcontext.animationsDone.setter(true);
         // lookatmodeltl.play();
         // if (Docekrmodel) {
         if (!globalcontext.camera || !globalcontext.controls) return;
@@ -42,7 +43,7 @@ const Buttons3d = () => {
     <Button
       id="enter3d"
       ref={Enter3dButtonref}
-      className="pointer-events-auto absolute bottom-1/6 left-1/2 z-[130] -translate-x-1/2 bg-black text-white opacity-0"
+      className="pointer-events-auto absolute bottom-1/6 left-1/2 z-[130] -translate-x-1/2 bg-neutral-900 font-medium text-white opacity-0 hover:cursor-pointer hover:bg-neutral-800"
     >
       ENTER 3D
     </Button>

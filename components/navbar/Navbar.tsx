@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "../ui/button";
 import Logo_scramble from "./logo_scramble";
-import Son from "../son/morpsvg";
+// import Son from "../son/morpsvg";
 
 const Navbar = () => {
   // function handleclick() {
@@ -12,10 +12,7 @@ const Navbar = () => {
   return (
     <nav className="nav sticky top-0 left-0 z-10 flex w-full items-center gap-3 rounded-2xl bg-background p-2 px-4 backdrop-blur-sm sm:px-20">
       <Logo_scramble />
-      <span className="size-9">
-        {" "}
-        <Son />
-      </span>
+      <span className="size-9"> {/* <Son /> */}</span>
       {/* <Face></Face> */}
       <div className="ml-auto hidden items-center gap-8 sm:flex">
         <Link href={"about"} className="">

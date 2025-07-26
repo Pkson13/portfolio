@@ -1,15 +1,22 @@
 "use client";
 import { useContext, useEffect, useRef } from "react";
-import { Dockermodelctx } from "./Root3d";
+import { Dockermodelctx, global3dctx } from "./Root3d";
 import { degToRad } from "three/src/math/MathUtils.js";
 // import nipplejs from "nipplejs";
 
-const Controls = () => {
+const ControlsComponent = () => {
   const nipplejsZone = useRef<HTMLDivElement | undefined>(undefined);
   const DockerModel = useContext(Dockermodelctx);
+  const globalcontext = useContext(global3dctx);
+
   useEffect(() => {
-    if (!DockerModel) {
-      console.log("docker model null in contrls", DockerModel);
+    if (!DockerModel || !globalcontext?.animationsDone.state) {
+      console.log(
+        "docker model null in contrls",
+        DockerModel,
+        globalcontext?.animationsDone.state,
+      );
+
       return;
     }
 
@@ -141,6 +148,7 @@ const Controls = () => {
 
     if (nipplejsZone.current) {
       async function setupnipplejs() {
+        console.log("setup nipplejs");
         const nipplejs = (await import("nipplejs")).default;
         const joystickmanager = nipplejs.create({
           zone: nipplejsZone.current,
@@ -179,16 +187,16 @@ const Controls = () => {
       }
       setupnipplejs();
     }
-  }, [DockerModel]);
+  }, [DockerModel, globalcontext?.animationsDone.state]);
 
   return (
     <div
       ref={nipplejsZone}
-      className="absolute right-6 bottom-6 z-700 size-40 md:hidden"
+      className="absolute right-1/12 bottom-1/12 z-700 size-40"
     >
-      Controls
+      {/* ControlsComponent */}
     </div>
   );
 };
 
-export default Controls;
+export default ControlsComponent;

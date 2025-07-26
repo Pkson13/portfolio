@@ -15,6 +15,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useTheme } from "next-themes";
 import React, {
   createContext,
+  Dispatch,
+  SetStateAction,
   useContext,
   useEffect,
   useRef,
@@ -60,6 +62,10 @@ export const Dockermodelctx = createContext<Group<Object3DEventMap> | null>(
 export type global3dctxtypes = {
   camera: Camera | null;
   controls: OrbitControls | null;
+  animationsDone: {
+    state: boolean;
+    setter: Dispatch<SetStateAction<boolean>>;
+  };
 };
 export const global3dctx = createContext<global3dctxtypes | undefined>(
   undefined,
@@ -75,6 +81,7 @@ const Root3d = () => {
   const contrlosref = useRef<OrbitControls | null>(null);
   const [Docekrmodel, setDockerModel] =
     useState<Group<Object3DEventMap> | null>(null);
+  const [animationDone, setanimationDone] = useState<boolean>(false);
 
   const { theme } = useTheme();
 
@@ -384,10 +391,14 @@ const Root3d = () => {
       value={{
         camera: cameraref.current,
         controls: contrlosref.current,
+        animationsDone: {
+          state: animationDone,
+          setter: setanimationDone,
+        },
       }}
     >
       <Dockermodelctx.Provider value={Docekrmodel}>
-        <div id="outer-scene-wrapper" className="size-full">
+        <div id="outer-scene-wrapper" className="relative size-full">
           <ControlsComponent />
 
           <div id="inner-scene-wrapper" className="size-full">

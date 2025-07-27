@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import { Button } from "../ui/button";
 import { buttonrefctx } from "../Skills";
 import { Dockermodelctx, global3dctx } from "./Root3d";
@@ -11,6 +11,9 @@ import { ArrowDown } from "lucide-react";
 import { useGSAP } from "@gsap/react";
 
 const Buttons3d = () => {
+  const exit3dref = useRef<HTMLButtonElement | null>(null);
+  const enter3dPressCount = useRef<number>(0);
+
   const Enter3dButtonref = useContext(buttonrefctx);
   const Dockermodel = useContext(Dockermodelctx);
   const globalcontext: global3dctxtypes | undefined = useContext(global3dctx);
@@ -60,46 +63,51 @@ const Buttons3d = () => {
     if (Enter3dButtonref && Enter3dButtonref.current) {
       Enter3dButtonref.current.onclick = () => {
         globalcontext.animationsDone.setter(true);
+        globalcontext.exit3dstate.setter(true);
         // lookatmodeltl.play();
         // if (Docekrmodel) {
         if (!globalcontext.camera || !globalcontext.controls) return;
-        lookAtmodel({
-          camera: globalcontext.camera,
+        if (enter3dPressCount.current == 0) {
+          lookAtmodel({
+            camera: globalcontext.camera,
 
-          controls: globalcontext.controls,
-          model: Dockermodel,
-        });
+            controls: globalcontext.controls,
+            model: Dockermodel,
+          });
+        }
+        enter3dPressCount.current += 1;
         // }
         // camera.position.set(30.405193262355265, 0, -15.853882753462061);
 
         // window.alert("testing react stuff");
         document.querySelector<HTMLDivElement>("#scene-wrapper")?.focus();
+        document
+          .querySelector<HTMLDivElement>("#scene-words")
+          ?.classList.toggle("pointer-events-none", true);
 
         gsap.to(Enter3dButtonref.current, {
           // opacity: 0,
           autoAlpha: 0,
         });
-        if (globalcontext.exit3dstate.exit3dref)
-          gsap.to(
-            [globalcontext.exit3dstate.exit3dref.current, "#nipplejsZone"],
-            {
-              autoAlpha: 1,
-            },
-          );
+        if (exit3dref)
+          gsap.to([exit3dref.current, "#nipplejsZone"], {
+            autoAlpha: 1,
+          });
         globalcontext.exit3dstate.setter(false);
       };
     }
 
-    if (globalcontext.exit3dstate.exit3dref.current) {
-      globalcontext.exit3dstate.exit3dref.current.onclick = () => {
+    if (exit3dref.current) {
+      exit3dref.current.onclick = () => {
         globalcontext.exit3dstate.setter(true);
-        gsap.to(
-          [globalcontext.exit3dstate.exit3dref.current, "#nipplejsZone"],
-          {
-            autoAlpha: 0,
-            duration: 1,
-          },
-        );
+        document
+          .querySelector<HTMLDivElement>("#scene-words")
+          ?.classList.toggle("pointer-events-none", false);
+
+        gsap.to([exit3dref.current, "#nipplejsZone"], {
+          autoAlpha: 0,
+          duration: 1,
+        });
         if (!Enter3dButtonref?.current) return;
         gsap.to(Enter3dButtonref.current, {
           autoAlpha: 1,
@@ -118,7 +126,7 @@ const Buttons3d = () => {
       {globalcontext && (
         <div className="pointer-events-auto absolute top-1/2 left-6 z-[130]">
           <Button
-            ref={globalcontext.exit3dstate.exit3dref}
+            ref={exit3dref}
             id="exit3d"
             className="invisible rounded-md bg-neutral-900/45 px-3 py-2 text-white opacity-0 hover:bg-neutral-700"
           >

@@ -9,10 +9,7 @@ const Contact = () => {
       id="fotter"
       className="absolute top-0 left-0 z-700 w-screen translate-y-[150%]"
     >
-      <div
-        id="fotter-container"
-        className="container mx-auto bg-background px-5"
-      >
+      <div id="fotter-container" className="mx-auto w-full bg-background px-5">
         <div className="grid grid-cols-1 gap-12 py-16 md:grid-cols-2 lg:grid-cols-4">
           {/* Company Info */}
           {/* Company Info */}

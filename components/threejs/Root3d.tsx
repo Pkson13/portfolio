@@ -70,7 +70,6 @@ export type global3dctxtypes = {
   exit3dstate: {
     state: boolean;
     setter: Dispatch<SetStateAction<boolean>>;
-    exit3dref: React.RefObject<HTMLButtonElement | null>;
   };
 };
 export const global3dctx = createContext<global3dctxtypes | undefined>(
@@ -78,7 +77,6 @@ export const global3dctx = createContext<global3dctxtypes | undefined>(
 );
 
 const Root3d = () => {
-  const exit3dref = useRef<HTMLButtonElement | null>(null);
   const [exit3dpressed, setexit3dpressed] = useState<boolean>(false);
 
   const Enter3dButtonref = useContext(buttonrefctx);
@@ -386,7 +384,6 @@ const Root3d = () => {
         exit3dstate: {
           state: exit3dpressed,
           setter: setexit3dpressed,
-          exit3dref: exit3dref,
         },
       }}
     >

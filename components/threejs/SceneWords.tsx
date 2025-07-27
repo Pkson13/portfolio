@@ -2,7 +2,10 @@ import Buttons3d from "./Buttons3d";
 
 const SceneWords = () => {
   return (
-    <div className="pointer-events-none absolute top-0 left-0 h-full w-full bg-transparent p-4">
+    <div
+      id="scene-words"
+      className="absolute top-0 left-0 h-full w-full bg-transparent p-4"
+    >
       {/* DOCKER */}
       <div className="absolute top-[65%] left-1/2 z-[100] -translate-x-1/2 overflow-hidden">
         <span
@@ -33,13 +36,13 @@ const SceneWords = () => {
         </span>
       </div>
 
-      {/* NEXTJS */}
-      <div className="absolute right-1/4 bottom-1/4 z-[103] overflow-hidden">
+      {/* REACT */}
+      <div className="absolute top-[65%] left-1/2 z-[103] overflow-hidden">
         <span
-          className="block translate-y-full text-3xl font-semibold tracking-wide text-gray-900 md:text-6xl"
-          id="nextjs-words"
+          className="block text-2xl font-semibold tracking-wide text-gray-100 md:text-4xl"
+          id="react-words"
         >
-          NEXTJS
+          REACT
         </span>
       </div>
 

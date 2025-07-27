@@ -691,7 +691,7 @@ function ModelAnimations(
     type: "chars",
     // mask: "chars",
   });
-  const nextjs_words = SplitText.create("#nextjs-words", {
+  const react_words = SplitText.create("#react-words", {
     type: "chars",
     // mask: "chars",
   });
@@ -900,10 +900,88 @@ function ModelAnimations(
       },
       // "<",
     )
+    .addLabel("react")
+    .to(
+      camera.position,
+      {
+        x: DesertRoad.position.x - 4,
+        y: DesertRoad.position.y + 4,
+        z: DesertRoad.position.z + 16,
+        ease: "none",
+        duration: 2,
+        // onComplete: () => {
+        //   controls.target = linuxtarget;
+        // },
+
+        // delay: 2,
+      },
+      // "linux model",
+      // ">",
+    )
+    .to(
+      controlsTarget2,
+      {
+        x_v: 6.405193262355265,
+        y_v: 2,
+        z_v: -18.853882753462061,
+        ease: "none",
+        duration: 2,
+
+        onUpdate: () => {
+          // k8sWheel.getWorldPosition(target);
+          controls.target = new Vector3(
+            controlsTarget2.x_v,
+            controlsTarget2.y_v,
+            controlsTarget2.z_v,
+          );
+          // console.log(controlsTarget);
+          // controls.update();
+        },
+
+        // delay: 2,
+      },
+
+      // "linux model",
+      "<",
+    )
+    .from(
+      react_words.chars,
+      {
+        xPercent: -600,
+        autoAlpha: 1,
+        stagger: {
+          each: 0.01,
+          from: "end",
+        },
+        // delay: 1,
+        duration: 2,
+
+        ease: "power3.out",
+      },
+      "<",
+    )
+    .to(
+      react_words.chars,
+      {
+        yPercent: 100,
+        // autoAlpha: 1,
+        duration: 2,
+        delay: 1,
+        stagger: 0.1,
+        ease: "none",
+        onComplete: () => {},
+      },
+      // "<",
+    )
     .to("#enter3d", {
       // opacity: 1,
       autoAlpha: 1,
       duration: 1,
+      onComplete: () => {
+        // linux_words.revert();
+        // k8s_words.revert();
+        // react_words.revert();
+      },
     });
 
   // .to(
@@ -1119,8 +1197,17 @@ export const loadautmforest = async ({
       // data.scene.scale.setScalar(2);
       // controls.target = data.scene.position;
       // data.scene.position.set(20, 1, 0);
-      const axes = new AxesHelper(60);
-      data.scene.add(axes);
+      // const axes = new AxesHelper(60);
+      // data.scene.add(axes);
+
+      const geometry = new PlaneGeometry(1, 1);
+      const material = new MeshBasicMaterial({
+        color: 0xffff00,
+        // side: DoubleSide,
+      });
+      const plane = new Mesh(geometry, material);
+      data.scene.add(plane);
+
       data.scene.position.set(30.405193262355265, -4, 25.853882753462061);
     });
   });
@@ -1148,6 +1235,12 @@ export const loadIslands = async ({
       // data.scene.position.set(20, 1, 0);
       const axes = new AxesHelper(60);
       data.scene.add(axes);
+      glftLoader.load("/models/react_logo.glb", (reactdata) => {
+        data.scene.add(reactdata.scene);
+        reactdata.scene.scale.setScalar(0.6);
+        reactdata.scene.position.set(-5, 2, -4);
+        reactdata.scene.rotateY(degToRad(-30));
+      });
 
       dockerscene = await new Promise<Group<Object3DEventMap>>(
         (resolve, reject) => {
@@ -1306,9 +1399,9 @@ export function lookAtmodel({
 
   const DesertRoad_Position = {
     //current Desert_roead position which is also the controlls target
-    x_p: 10.405193262355265,
-    y_p: 0,
-    z_p: -15.853882753462061,
+    x_p: 6.405193262355265,
+    y_p: 2,
+    z_p: -18.853882753462061,
   };
   const Docker_model_position = {
     x_p: 20,

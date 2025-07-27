@@ -4,6 +4,7 @@ import {
   getworldposition,
   handlescenetheme,
   loadaudio,
+  loadautmforest,
   loadDockerModel,
   loadIslandModel,
   loadIslands,
@@ -66,12 +67,20 @@ export type global3dctxtypes = {
     state: boolean;
     setter: Dispatch<SetStateAction<boolean>>;
   };
+  exit3dstate: {
+    state: boolean;
+    setter: Dispatch<SetStateAction<boolean>>;
+    exit3dref: React.RefObject<HTMLButtonElement | null>;
+  };
 };
 export const global3dctx = createContext<global3dctxtypes | undefined>(
   undefined,
 );
 
 const Root3d = () => {
+  const exit3dref = useRef<HTMLButtonElement | null>(null);
+  const [exit3dpressed, setexit3dpressed] = useState<boolean>(false);
+
   const Enter3dButtonref = useContext(buttonrefctx);
 
   const sceneref = useRef<HTMLDivElement | null>(null);
@@ -190,8 +199,8 @@ const Root3d = () => {
       // controls.enableZoom = true;
       // controls.minPolarAngle = Math.PI / 3; // 45° on the y-axis
       // controls.maxPolarAngle = Math.PI / 2; // 90°
-      // controls.maxPolarAngle = Math.PI * 0.495;
-      // controls.maxPolarAngle = Math.PI / 2.25;
+      controls.maxPolarAngle = Math.PI * 0.495;
+      controls.maxPolarAngle = Math.PI / 2.25;
       controls.minDistance = 1.0;
       controls.maxDistance = 8;
       // controls.update();
@@ -260,28 +269,7 @@ const Root3d = () => {
         }),
       );
 
-      // if (Enter3dButtonref && Enter3dButtonref.current) {
-      //   Enter3dButtonref.current.onclick = () => {
-      //     // lookatmodeltl.play();
-      //     if (Docekrmodel) {
-      //       const lookatmodeltl = lookAtmodel({
-      //         camera,
-      //         controls,
-      //         model: Docekrmodel,
-      //       });
-      //     }
-      //     // camera.position.set(30.405193262355265, 0, -15.853882753462061);
-
-      //     // window.alert("testing react stuff");
-      //     document.querySelector<HTMLDivElement>("#scene-wrapper")?.focus();
-
-      //     gsap.to(Enter3dButtonref.current, {
-      //       opacity: 0,
-      //     });
-      //   };
-      // }
-      // return dockermodel;
-      loadIslands({
+      loadautmforest({
         name: "autumnal_forest",
         loader: glftLoader,
         controls,
@@ -394,6 +382,11 @@ const Root3d = () => {
         animationsDone: {
           state: animationDone,
           setter: setanimationDone,
+        },
+        exit3dstate: {
+          state: exit3dpressed,
+          setter: setexit3dpressed,
+          exit3dref: exit3dref,
         },
       }}
     >

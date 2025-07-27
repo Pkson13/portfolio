@@ -461,7 +461,7 @@ export default function Home() {
                       >
                         video share
                       </Link>{" "}
-                      to support many to many video calling plaftorm
+                      to support a many to many video calling plaftorm
                     </p>
                     <div className="mb-6 flex gap-3">
                       <Button
@@ -536,7 +536,7 @@ export default function Home() {
             <Skills />
           </div>
           {/* <Contact /> */}
-          <div id="end" className="h-[320vh] bg-background"></div>
+          <div id="end" className="h-[350vh] bg-background"></div>
           {/* </div> */}
         </div>
       </div>

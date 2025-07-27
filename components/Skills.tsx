@@ -16,7 +16,7 @@ import { DefaultLoadingManager } from "three";
 import Contact from "./Contact";
 
 export const buttonrefctx =
-  createContext<RefObject<HTMLButtonElement | null> | null>(null);
+  createContext<RefObject<HTMLDivElement | null> | null>(null);
 
 const poppins = Poppins({ weight: "600", preload: false });
 

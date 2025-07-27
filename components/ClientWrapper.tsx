@@ -16,6 +16,7 @@ const ClientWrapper = ({ children }: { children: React.ReactNode }) => {
       smooth: 2,
       effects: true,
       smoothTouch: 0.000001, // i had to set this coz there are some wierd suddent jump on mobiles witout it
+      ignoreMobileResize: true, //normalizeScroll: true doesn't prevent the address bar from hiding/showing on iOS phones in portrait orientation - the latest Apple iOS makes it impossible to prevent that (at least from what we can tell). Even though event.preventDefault() is called on all scroll-related events, the browser still imposes that behavior. If that causes a jump due to the window resizing and making your ScrollTriggers recalculate their start/end positions, you could ScrollTrigger.config({ ignoreMobileResize: true });
     });
     // const dim = `${window.innerHeight}h, ${window.innerWidth}w`;
 

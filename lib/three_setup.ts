@@ -272,59 +272,59 @@ export const loadDockerModel = async ({
     glftLoader.load("/models/moby_dock_docker_whale.glb", async (data) => {
       console.log("loaded glb file", data);
       console.log("model scale", data.scene.scale);
-      const wheel = await new Promise<Group<Object3DEventMap>>((resolve) => {
-        glftLoader.load("/models/ships_wheel.glb", (wheel_data) => {
-          data.scene.add(wheel_data.scene);
+      // const wheel = await new Promise<Group<Object3DEventMap>>((resolve) => {
+      //   glftLoader.load("/models/ships_wheel.glb", (wheel_data) => {
+      //     data.scene.add(wheel_data.scene);
 
-          wheel_data.scene.name = "wheel";
-          wheel_data.scene.scale.setScalar(0.005);
-          const cube9 = data.scene.getObjectByName("Cube009");
-          if (cube9) {
-            const child = cube9.children[0] as Mesh;
-            cube9.parent?.remove(cube9);
-            child.geometry.dispose();
-            child.material.dispose();
-            // cube9.remove(child.children[0]);
+      //     wheel_data.scene.name = "wheel";
+      //     wheel_data.scene.scale.setScalar(0.005);
+      //     const cube9 = data.scene.getObjectByName("Cube009");
+      //     if (cube9) {
+      //       const child = cube9.children[0] as Mesh;
+      //       cube9.parent?.remove(cube9);
+      //       child.geometry.dispose();
+      //       child.material.dispose();
+      //       // cube9.remove(child.children[0]);
 
-            console.log("cude9 pos", cube9.position);
-            cube9.position.set(-30, -30, 3);
+      //       console.log("cude9 pos", cube9.position);
+      //       cube9.position.set(-30, -30, 3);
 
-            console.log("found cube9", cube9);
-            // cube9.disp
-            // wheel_data.scene.children[0].children[0].children[0].material.color =
-            // cube1.children[0].material;
-            // new Color("#fff");
-            // new MeshStandardMaterial({ color: "white" });
-          }
-          wheel_data.scene.position.set(-1.5, 0.1, -0.3);
-          const target = new Vector3();
-          wheel_data.scene.getWorldPosition(target);
-          console.log("wheel global pos before animation", target);
-          // controls.target = target;
-          // wheel_data.scene.rotation.y = -degToRad(90);
-          // wheel_data.scene.rotation.z = -degToRad(90);
-          wheel_data.scene.rotation.set(0, degToRad(90), 0, "XYZ");
-          console.log("wheel_data.scene", wheel_data.scene);
-          // controls.target = wheel_data.scene.position;
-          resolve(wheel_data.scene);
-        });
-      });
+      //       console.log("found cube9", cube9);
+      //       // cube9.disp
+      //       // wheel_data.scene.children[0].children[0].children[0].material.color =
+      //       // cube1.children[0].material;
+      //       // new Color("#fff");
+      //       // new MeshStandardMaterial({ color: "white" });
+      //     }
+      //     wheel_data.scene.position.set(-1.5, 0.1, -0.3);
+      //     const target = new Vector3();
+      //     wheel_data.scene.getWorldPosition(target);
+      //     console.log("wheel global pos before animation", target);
+      //     // controls.target = target;
+      //     // wheel_data.scene.rotation.y = -degToRad(90);
+      //     // wheel_data.scene.rotation.z = -degToRad(90);
+      //     wheel_data.scene.rotation.set(0, degToRad(90), 0, "XYZ");
+      //     console.log("wheel_data.scene", wheel_data.scene);
+      //     // controls.target = wheel_data.scene.position;
+      //     resolve(wheel_data.scene);
+      //   });
+      // });
 
-      function searchForWheel(scene: Object3D): Object3D | undefined {
-        for (const child of scene.children) {
-          console.log(child.name);
-          if (child.name == "Wheel") {
-            // return child;
-            return child;
-          }
-          const wheel: Object3D | undefined = searchForWheel(child);
-          if (wheel) return wheel;
-          // console.log("ret", wheel);
-        }
-        return undefined;
-      }
+      // function searchForWheel(scene: Object3D): Object3D | undefined {
+      //   for (const child of scene.children) {
+      //     console.log(child.name);
+      //     if (child.name == "Wheel") {
+      //       // return child;
+      //       return child;
+      //     }
+      //     const wheel: Object3D | undefined = searchForWheel(child);
+      //     if (wheel) return wheel;
+      //     // console.log("ret", wheel);
+      //   }
+      //   return undefined;
+      // }
 
-      const ships_wheel = searchForWheel(wheel);
+      // const ships_wheel = searchForWheel(wheel);
       // const pivot = new Object3D();
       // if (ships_wheel) {
       //   console.log(ships_wheel);
@@ -628,14 +628,14 @@ function ModelAnimations(
       },
     },
   );
-  const k8sWheel = data.scene.getObjectByName("wheel");
-  if (!k8sWheel) {
-    console.error("wheel not found");
-    return;
-  }
+  // const k8sWheel = data.scene.getObjectByName("wheel");
+  // if (!k8sWheel) {
+  //   console.error("wheel not found");
+  //   return;
+  // }
 
   const target = new Vector3();
-  k8sWheel.getWorldPosition(target);
+  // k8sWheel.getWorldPosition(target);
   const controlsTarget = {
     x_v: data.scene.position.x,
     y_v: data.scene.position.y,

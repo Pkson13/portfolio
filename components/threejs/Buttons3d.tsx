@@ -76,6 +76,9 @@ const Buttons3d = () => {
           });
         }
         enter3dPressCount.current += 1;
+        if (globalcontext.controls) {
+          globalcontext.controls.autoRotate = false;
+        }
         // }
         // camera.position.set(30.405193262355265, 0, -15.853882753462061);
 
@@ -99,6 +102,9 @@ const Buttons3d = () => {
 
     if (exit3dref.current) {
       exit3dref.current.onclick = () => {
+        if (globalcontext.controls) {
+          globalcontext.controls.autoRotate = true;
+        }
         globalcontext.exit3dstate.setter(true);
         document
           .querySelector<HTMLDivElement>("#scene-words")

@@ -321,6 +321,12 @@ const Skills = () => {
           id: "pin",
           // endTrigger: "#footer",
           end: "bottom -1000%",
+          onLeaveBack: () => {
+            gsap.to("#enter3d", {
+              autoAlpha: 0,
+              duration: 1,
+            });
+          },
 
           // end: "bottom top",
 

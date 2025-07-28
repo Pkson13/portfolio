@@ -190,15 +190,15 @@ const Root3d = () => {
       // create3dText({ scene, textinput: "Hello I'm Peterson" });
       const controls = new OrbitControls(camera, renderer.domElement);
       contrlosref.current = controls;
-      // // controls.autoRotate = true;
+      controls.autoRotate = true;
       controls.enableDamping = true;
       controls.enabled = true;
       // controls.enablePan = true;
       // controls.enableZoom = true;
       // controls.minPolarAngle = Math.PI / 3; // 45° on the y-axis
       // controls.maxPolarAngle = Math.PI / 2; // 90°
-      controls.maxPolarAngle = Math.PI * 0.495;
-      controls.maxPolarAngle = Math.PI / 2.25;
+      // controls.maxPolarAngle = Math.PI * 0.495;
+      // controls.maxPolarAngle = Math.PI / 2.25;
       controls.minDistance = 1.0;
       controls.maxDistance = 8;
       // controls.update();

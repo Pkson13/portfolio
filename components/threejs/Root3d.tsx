@@ -267,13 +267,13 @@ const Root3d = () => {
         }),
       );
 
-      loadautmforest({
-        name: "autumnal_forest",
-        loader: glftLoader,
-        controls,
-        camera,
-        scene,
-      });
+      // loadautmforest({
+      //   name: "autumnal_forest",
+      //   loader: glftLoader,
+      //   controls,
+      //   camera,
+      //   scene,
+      // });
       // if (loaded) {
       // }
 

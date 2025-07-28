@@ -43,7 +43,7 @@ export default function Home() {
               >
                 {/* Background Pattern */}
                 <div className="absolute inset-0">
-                  <div className="absolute top-20 left-5 hidden h-16 w-16 rotate-12 overflow-clip rounded-lg sm:block md:left-10">
+                  <div className="absolute top-2/4 left-5 hidden h-16 w-16 rotate-12 overflow-clip rounded-lg sm:block md:top-20 md:left-10">
                     {/* <Image
               alt="hacker"
               src={"/corrupt.jpg"}
@@ -168,8 +168,9 @@ export default function Home() {
                       whoami
                     </div>
                     <div className="mt-1 text-sm text-gray-300 sm:text-base">
-                      I'm <span className="text-red-400">Peterson</span>, a
-                      passionate full-stack developer with 3+ years crafting
+                      I'm{" "}
+                      <span className="text-red-400">Peterson kinyanjui</span>,
+                      a passionate full-stack developer with 3+ years crafting
                       scalable web applications, elegant UIs, and robust systems
                       that solve real problems.
                     </div>
@@ -675,19 +676,19 @@ export default function Home() {
                           variant="secondary"
                           className="border-purple-300 bg-purple-50 text-purple-700 dark:bg-purple-900/20 dark:text-purple-300"
                         >
-                          Threejs
+                          Expressjs
                         </Badge>
                         <Badge
                           variant="secondary"
                           className="border-blue-300 bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300"
                         >
-                          Webgl
+                          React
                         </Badge>
                         <Badge
                           variant="secondary"
                           className="border-green-300 bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-300"
                         >
-                          React
+                          Socket.io
                         </Badge>
                       </div>
                     </div>

@@ -14,35 +14,32 @@ const Logo_scramble = () => {
   }
 
   useGSAP(() => {
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: "#videoshareproj",
-        // pin: true,
-        // pinSpacing: false,
-        start: "top bottom",
-        // scrub: true,
-        markers: true,
-        once: true,
-      },
-    });
-
-    tl.from("#video-share-desc", {
-      // start the animation when ".box" enters the viewport (once)
-      y: 200,
-      // delay: 1,
-      duration: 1,
-      ease: "none",
-    });
-    tl.from(
-      "#video-share-img",
-      {
-        y: 200,
-      },
-      // "+=0.5",
-    );
-
+    // const tl = gsap.timeline({
+    //   scrollTrigger: {
+    //     trigger: "#videoshareproj",
+    //     // pin: true,
+    //     // pinSpacing: false,
+    //     start: "top bottom",
+    //     // scrub: true,
+    //     markers: true,
+    //     once: true,
+    //   },
+    // });
+    // tl.from("#video-share-desc", {
+    //   // start the animation when ".box" enters the viewport (once)
+    //   y: 200,
+    //   // delay: 1,
+    //   duration: 1,
+    //   ease: "none",
+    // });
+    // tl.from(
+    //   "#video-share-img",
+    //   {
+    //     y: 200,
+    //   },
+    //   // "+=0.5",
+    // );
     // smoother.scrollTo("#projects", true, "center center");
-
     // skillstl.to(
     //   "#skill-container",
     //   {
@@ -60,14 +57,12 @@ const Logo_scramble = () => {
     //       // anticipatePin: 1,
     //       // once: true,
     //     },
-
     //     // delay: 1,
     //     duration: 3,
     //     ease: "power2.inOut",
     //   },
     //   3,
     // );
-
     // gsap.to(".nav", { top: 0, duration: 1 });
     // gsap.registerPlugin(ScrambleTextPlugin); moved to lib/gsap_setup.ts
     // ref.current = gsap.to(logoRef.current, {

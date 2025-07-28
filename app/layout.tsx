@@ -50,7 +50,7 @@ export default function RootLayout({
             <ThemeColorMeta />
             <Navbar />
             {/* <Morpsvg /> */}
-            <CursorFollower />
+            {/* <CursorFollower /> */}
 
             {children}
           </ClientWrapper>

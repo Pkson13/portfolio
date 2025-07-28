@@ -24,7 +24,7 @@ const Buttons3d = () => {
     scrollanimations
       .to(".left-arrows", {
         keyframes: [
-          { yPercent: 0, duration: 1, delay: 4 },
+          { yPercent: 0, duration: 1, delay: 10 },
           { yPercent: 120, duration: 1, ease: "power1.inOut" },
           { yPercent: -120, duration: 0, ease: "power1.inOut" },
         ],
@@ -36,7 +36,7 @@ const Buttons3d = () => {
         ".scroll-words",
         {
           keyframes: [
-            { yPercent: 0, duration: 1, delay: 4 },
+            { yPercent: 0, duration: 1, delay: 10 },
             { yPercent: 100, duration: 1, ease: "power1.inOut" },
             { yPercent: -100, duration: 0, ease: "power1.inOut" },
           ],
@@ -50,7 +50,7 @@ const Buttons3d = () => {
         ".right-arrows",
         {
           keyframes: [
-            { yPercent: 0, duration: 1, delay: 4 },
+            { yPercent: 0, duration: 1, delay: 10 },
             { yPercent: 120, duration: 1, ease: "power1.inOut" },
             { yPercent: -120, duration: 0, ease: "power1.inOut" },
           ],

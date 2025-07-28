@@ -14,7 +14,7 @@ const Navbar = () => {
       <Logo_scramble />
       <span className="size-9">
         {" "}
-        <Son />{" "}
+        <Son />
       </span>
       {/* <Face></Face> */}
       <div className="ml-auto hidden items-center gap-8 sm:flex">

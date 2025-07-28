@@ -324,7 +324,7 @@ export const loadDockerModel = async ({
         return undefined;
       }
 
-      const ships_wheel = searchForWheel(wheel);
+      // const ships_wheel = searchForWheel(wheel);
       // const pivot = new Object3D();
       // if (ships_wheel) {
       //   console.log(ships_wheel);
@@ -672,321 +672,467 @@ function ModelAnimations(
       // onLeaveBack: () => (controls.enabled = true),
     },
   });
+  skillstl.addLabel("docker");
+
+  skillstl.to(camera.position, {
+    x: data.scene.position.x,
+    y: data.scene.position.y,
+    z: data.scene.position.z + 5,
+    ease: "none",
+    duration: 2,
+    onStart: () => {
+      controls.autoRotate = false;
+    },
+
+    // delay: 2,
+  });
+  const k8s_words = SplitText.create("#k8s-words", {
+    type: "chars",
+    // mask: "chars",
+  });
+  const linux_words = SplitText.create("#linux-words", {
+    type: "chars",
+    // mask: "chars",
+  });
+  const react_words = SplitText.create("#react-words", {
+    type: "chars",
+    // mask: "chars",
+  });
   skillstl
-    .addLabel("docker")
+    .addLabel("kubernetes")
+    .to(camera.position, {
+      x: data.scene.position.x + 1,
+      y: data.scene.position.y + 1,
+      z: data.scene.position.z - 2,
+      ease: "none",
+      duration: 2,
 
-    // skillstl.to(camera.position, {
-    //   x: data.scene.position.x,
-    //   y: data.scene.position.y,
-    //   z: data.scene.position.z + 5,
-    //   ease: "none",
-    //   duration: 2,
-    //   onStart: () => {
-    //     controls.autoRotate = false;
-    //   },
+      delay: 2,
+    })
+    .to(
+      controlsTarget,
+      {
+        x_v: target.x,
+        y_v: target.y,
+        z_v: target.z,
+        ease: "none",
+        duration: 2,
 
-    //   // delay: 2,
-    // });
-    // const k8s_words = SplitText.create("#k8s-words", {
-    //   type: "chars",
-    //   // mask: "chars",
-    // });
-    // const linux_words = SplitText.create("#linux-words", {
-    //   type: "chars",
-    //   // mask: "chars",
-    // });
-    // const react_words = SplitText.create("#react-words", {
-    //   type: "chars",
-    //   // mask: "chars",
-    // });
-    // skillstl
-    //   .addLabel("kubernetes")
-    //   .to(camera.position, {
-    //     x: data.scene.position.x + 1,
-    //     y: data.scene.position.y + 1,
-    //     z: data.scene.position.z - 2,
-    //     ease: "none",
-    //     duration: 2,
+        onUpdate: () => {
+          // k8sWheel.getWorldPosition(target);
+          controls.target = new Vector3(
+            controlsTarget.x_v,
+            controlsTarget.y_v,
+            controlsTarget.z_v,
+          );
+          // console.log(controlsTarget);
+          // controls.update();
+        },
 
-    //     delay: 2,
-    //   })
-    //   .to(
-    //     controlsTarget,
-    //     {
-    //       x_v: target.x,
-    //       y_v: target.y,
-    //       z_v: target.z,
-    //       ease: "none",
-    //       duration: 2,
-
-    //       onUpdate: () => {
-    //         // k8sWheel.getWorldPosition(target);
-    //         controls.target = new Vector3(
-    //           controlsTarget.x_v,
-    //           controlsTarget.y_v,
-    //           controlsTarget.z_v,
-    //         );
-    //         // console.log(controlsTarget);
-    //         // controls.update();
-    //       },
-
-    //       // delay: 2,
-    //     },
-
-    //     "<",
-    //   )
-    //   .from(
-    //     k8s_words.chars,
-    //     {
-    //       yPercent: -100,
-    //       duration: 1.5,
-    //       stagger: 0.05,
-    //       autoAlpha: 0,
-    //       // opacity: 0,
-    //       ease: "power3.out",
-    //     },
-    //     // "<",
-    //   )
-    //   .to(
-    //     k8s_words.chars,
-    //     {
-    //       yPercent: 100,
-    //       duration: 2,
-    //       stagger: 0.05,
-    //       autoAlpha: 0,
-    //       ease: "back.in",
-    //     },
-    //     // "<",
-    //   );
-
-    // const DesertRoad = scene.getObjectByName("desert_road");
-    // if (!DesertRoad) {
-    //   console.log("linux model not found");
-    //   return;
-    // }
-    // const LinuxModel = DesertRoad.getObjectByName("linux model");
-    // if (!LinuxModel) {
-    //   console.log("not found");
-    //   return;
-    // }
-    // const linuxtarget = new Vector3();
-    // const controlsTarget2 = {
-    //   x_v: target.x,
-    //   y_v: target.y,
-    //   z_v: target.z,
-    // };
-
-    // LinuxModel.getWorldPosition(linuxtarget);
-    // // skillstl.addLabel("linux model");
-    // skillstl
-    //   .addLabel("linux model")
-    //   .to(
-    //     camera.position,
-    //     {
-    //       x: 16,
-    //       y: 3,
-    //       z: -10,
-    //       ease: "none",
-    //       duration: 2,
-    //       // onComplete: () => {
-    //       //   controls.target = linuxtarget;
-    //       // },
-
-    //       // delay: 2,
-    //     },
-    //     // "linux model",
-    //     // ">",
-    //   )
-    //   .to(
-    //     controlsTarget2,
-    //     {
-    //       x_v: 15.405193262355265,
-    //       y_v: 0,
-    //       z_v: -16.853882753462061,
-    //       ease: "none",
-    //       duration: 2,
-
-    //       onUpdate: () => {
-    //         // k8sWheel.getWorldPosition(target);
-    //         controls.target = new Vector3(
-    //           controlsTarget2.x_v,
-    //           controlsTarget2.y_v,
-    //           controlsTarget2.z_v,
-    //         );
-    //         // console.log(controlsTarget);
-    //         // controls.update();
-    //       },
-
-    //       // delay: 2,
-    //     },
-
-    //     // "linux model",
-    //     "<",
-    //   )
-    //   .from(
-    //     linux_words.chars,
-    //     {
-    //       yPercent: 100,
-    //       duration: 1.5,
-    //       stagger: 0.01,
-    //       autoAlpha: 0,
-    //       ease: "power3.out",
-    //     },
-    //     // "<",
-    //   )
-
-    //   .addLabel("nextjs")
-    //   .to(
-    //     camera.position,
-    //     {
-    //       x: DesertRoad.position.x,
-    //       y: DesertRoad.position.y + 4,
-    //       z: DesertRoad.position.z + 20,
-    //       ease: "none",
-    //       duration: 2,
-    //       // onComplete: () => {
-    //       //   controls.target = linuxtarget;
-    //       // },
-
-    //       // delay: 2,
-    //     },
-    //     // "linux model",
-    //     // ">",
-    //   )
-    //   .to(
-    //     controlsTarget2,
-    //     {
-    //       x_v: 10.405193262355265,
-    //       y_v: 3,
-    //       z_v: -15.853882753462061,
-    //       ease: "none",
-    //       duration: 2,
-
-    //       onUpdate: () => {
-    //         // k8sWheel.getWorldPosition(target);
-    //         controls.target = new Vector3(
-    //           controlsTarget2.x_v,
-    //           controlsTarget2.y_v,
-    //           controlsTarget2.z_v,
-    //         );
-    //         // console.log(controlsTarget);
-    //         // controls.update();
-    //       },
-
-    //       // delay: 2,
-    //     },
-
-    //     // "linux model",
-    //     "<",
-    //   )
-    //   .to(
-    //     "#linux-words",
-    //     {
-    //       delay: 1,
-    //       duration: 2,
-    //       scrambleText: {
-    //         text: "NEXTJS",
-    //         // revealDelay: 1,
-    //       },
-    //       ease: "power3.out",
-    //     },
-    //     "<-25%",
-    //   )
-    //   .to(
-    //     "#linux-words",
-    //     {
-    //       xPercent: 300,
-    //       // autoAlpha: 1,
-    //       duration: 2,
-    //       stagger: 0.1,
-    //       ease: "none",
-    //       onComplete: () => {},
-    //     },
-    //     // "<",
-    //   )
-    //   .addLabel("react")
-    //   .to(
-    //     camera.position,
-    //     {
-    //       x: DesertRoad.position.x - 4,
-    //       y: DesertRoad.position.y + 4,
-    //       z: DesertRoad.position.z + 16,
-    //       ease: "none",
-    //       duration: 2,
-    //       // onComplete: () => {
-    //       //   controls.target = linuxtarget;
-    //       // },
-
-    //       // delay: 2,
-    //     },
-    //     // "linux model",
-    //     // ">",
-    //   )
-    //   .to(
-    //     controlsTarget2,
-    //     {
-    //       x_v: 6.405193262355265,
-    //       y_v: 2,
-    //       z_v: -18.853882753462061,
-    //       ease: "none",
-    //       duration: 2,
-
-    //       onUpdate: () => {
-    //         // k8sWheel.getWorldPosition(target);
-    //         controls.target = new Vector3(
-    //           controlsTarget2.x_v,
-    //           controlsTarget2.y_v,
-    //           controlsTarget2.z_v,
-    //         );
-    //         // console.log(controlsTarget);
-    //         // controls.update();
-    //       },
-
-    //       // delay: 2,
-    //     },
-
-    //     // "linux model",
-    //     "<",
-    //   )
-    //   .from(
-    //     react_words.chars,
-    //     {
-    //       xPercent: -600,
-    //       autoAlpha: 1,
-    //       stagger: {
-    //         each: 0.01,
-    //         from: "end",
-    //       },
-    //       // delay: 1,
-    //       duration: 2,
-
-    //       ease: "power3.out",
-    //     },
-    //     "<",
-    //   )
-    //   .to(
-    //     react_words.chars,
-    //     {
-    //       yPercent: 100,
-    //       // autoAlpha: 1,
-    //       duration: 2,
-    //       delay: 1,
-    //       stagger: 0.1,
-    //       ease: "none",
-    //       onComplete: () => {},
-    //     },
-    //     // "<",
-    //   )
-    .to("#enter3d", {
-      // opacity: 1,
-      autoAlpha: 1,
-      duration: 1,
-      onComplete: () => {
-        // linux_words.revert();
-        // k8s_words.revert();
-        // react_words.revert();
+        // delay: 2,
       },
-    });
+
+      "<",
+    )
+    .from(
+      k8s_words.chars,
+      {
+        yPercent: -100,
+        duration: 1.5,
+        stagger: 0.05,
+        autoAlpha: 0,
+        // opacity: 0,
+        ease: "power3.out",
+      },
+      // "<",
+    )
+    .to(
+      k8s_words.chars,
+      {
+        yPercent: 100,
+        duration: 2,
+        stagger: 0.05,
+        autoAlpha: 0,
+        ease: "back.in",
+      },
+      // "<",
+    );
+
+  const DesertRoad = scene.getObjectByName("desert_road");
+  if (!DesertRoad) {
+    console.log("linux model not found");
+    return;
+  }
+  const LinuxModel = DesertRoad.getObjectByName("linux model");
+  if (!LinuxModel) {
+    console.log("not found");
+    return;
+  }
+  const linuxtarget = new Vector3();
+  const controlsTarget2 = {
+    x_v: target.x,
+    y_v: target.y,
+    z_v: target.z,
+  };
+
+  LinuxModel.getWorldPosition(linuxtarget);
+  // skillstl.addLabel("linux model");
+  skillstl
+    .addLabel("linux model")
+    .to(
+      camera.position,
+      {
+        x: 16,
+        y: 3,
+        z: -10,
+        ease: "none",
+        duration: 2,
+        // onComplete: () => {
+        //   controls.target = linuxtarget;
+        // },
+
+        // delay: 2,
+      },
+      // "linux model",
+      // ">",
+    )
+    .to(
+      controlsTarget2,
+      {
+        x_v: 15.405193262355265,
+        y_v: 0,
+        z_v: -16.853882753462061,
+        ease: "none",
+        duration: 2,
+
+        onUpdate: () => {
+          // k8sWheel.getWorldPosition(target);
+          controls.target = new Vector3(
+            controlsTarget2.x_v,
+            controlsTarget2.y_v,
+            controlsTarget2.z_v,
+          );
+          // console.log(controlsTarget);
+          // controls.update();
+        },
+
+        // delay: 2,
+      },
+
+      // "linux model",
+      "<",
+    )
+    .from(
+      linux_words.chars,
+      {
+        yPercent: 100,
+        duration: 1.5,
+        stagger: 0.01,
+        autoAlpha: 0,
+        ease: "power3.out",
+      },
+      // "<",
+    )
+
+    .addLabel("nextjs")
+    .to(
+      camera.position,
+      {
+        x: DesertRoad.position.x,
+        y: DesertRoad.position.y + 4,
+        z: DesertRoad.position.z + 20,
+        ease: "none",
+        duration: 2,
+        // onComplete: () => {
+        //   controls.target = linuxtarget;
+        // },
+
+        // delay: 2,
+      },
+      // "linux model",
+      // ">",
+    )
+    .to(
+      controlsTarget2,
+      {
+        x_v: 10.405193262355265,
+        y_v: 3,
+        z_v: -15.853882753462061,
+        ease: "none",
+        duration: 2,
+
+        onUpdate: () => {
+          // k8sWheel.getWorldPosition(target);
+          controls.target = new Vector3(
+            controlsTarget2.x_v,
+            controlsTarget2.y_v,
+            controlsTarget2.z_v,
+          );
+          // console.log(controlsTarget);
+          // controls.update();
+        },
+
+        // delay: 2,
+      },
+
+      // "linux model",
+      "<",
+    )
+    .to(
+      "#linux-words",
+      {
+        delay: 1,
+        duration: 2,
+        scrambleText: {
+          text: "NEXTJS",
+          // revealDelay: 1,
+        },
+        ease: "power3.out",
+      },
+      "<-25%",
+    )
+    .to(
+      "#linux-words",
+      {
+        xPercent: 300,
+        // autoAlpha: 1,
+        duration: 2,
+        stagger: 0.01,
+        ease: "none",
+        onComplete: () => {},
+      },
+      // "<",
+    )
+    .addLabel("react")
+    .to(
+      camera.position,
+      {
+        x: DesertRoad.position.x - 4,
+        y: DesertRoad.position.y + 4,
+        z: DesertRoad.position.z + 16,
+        ease: "none",
+        duration: 2,
+        // onComplete: () => {
+        //   controls.target = linuxtarget;
+        // },
+
+        // delay: 2,
+      },
+      // "linux model",
+      // ">",
+    )
+    .to(
+      controlsTarget2,
+      {
+        x_v: 6.405193262355265,
+        y_v: 2,
+        z_v: -18.853882753462061,
+        ease: "none",
+        duration: 2,
+
+        onUpdate: () => {
+          // k8sWheel.getWorldPosition(target);
+          controls.target = new Vector3(
+            controlsTarget2.x_v,
+            controlsTarget2.y_v,
+            controlsTarget2.z_v,
+          );
+          // console.log(controlsTarget);
+          // controls.update();
+        },
+
+        // delay: 2,
+      },
+
+      // "linux model",
+      "<",
+    )
+    .from(
+      react_words.chars,
+      {
+        xPercent: -600,
+        autoAlpha: 1,
+        stagger: {
+          each: 0.01,
+          from: "end",
+        },
+        // delay: 1,
+        duration: 1,
+
+        ease: "power3.out",
+      },
+      "<",
+    )
+    .to(
+      react_words.chars,
+      {
+        yPercent: 100,
+        // autoAlpha: 1,
+        duration: 2,
+        delay: 1,
+        stagger: 0.01,
+        ease: "none",
+        onComplete: () => {},
+      },
+      // "<",
+    )
+    .addLabel("gsap")
+    .to(
+      camera.position,
+      {
+        x: -8,
+        y: 2,
+        z: 1,
+        ease: "none",
+        duration: 2,
+        // onComplete: () => {
+        //   controls.target = linuxtarget;
+        // },
+
+        // delay: 2,
+      },
+      // "linux model",
+      // ">",
+    )
+    .to(
+      controlsTarget2,
+      {
+        x_v: -15,
+        y_v: 2,
+        z_v: 2,
+        ease: "none",
+        duration: 2,
+
+        onUpdate: () => {
+          // k8sWheel.getWorldPosition(target);
+          controls.target = new Vector3(
+            controlsTarget2.x_v,
+            controlsTarget2.y_v,
+            controlsTarget2.z_v,
+          );
+          // console.log(controlsTarget);
+          // controls.update();
+        },
+
+        // delay: 2,
+      },
+
+      // "linux model",
+      "<",
+    )
+    .set(["#G-path", "#S", "#A", "#P"], {
+      drawSVG: "50%, 50%",
+    })
+    .fromTo(
+      "#G-path",
+      {
+        drawSVG: "50% 50%",
+      },
+      {
+        drawSVG: "0% 100%",
+        duration: 2,
+      },
+      // "<",
+    )
+    .fromTo(
+      "#S",
+      {
+        drawSVG: "50% 50%",
+      },
+      {
+        drawSVG: "0% 100%",
+        duration: 2,
+      },
+      "<",
+    )
+    .fromTo(
+      "#A",
+      {
+        drawSVG: "50% 50%",
+      },
+      {
+        drawSVG: "0% 100%",
+        duration: 2,
+      },
+      "<",
+    )
+    .fromTo(
+      "#P",
+      {
+        drawSVG: "50% 50%",
+      },
+      {
+        drawSVG: "0% 100%",
+        duration: 2,
+        onComplete: () => {
+          const hidetl = gsap
+            .timeline({})
+            .addLabel("hide gsap")
+            .to({}, { delay: 2 })
+
+            .fromTo(
+              "#G-path",
+
+              {
+                drawSVG: "0% 100%",
+                // duration: 2,
+              },
+              {
+                drawSVG: "50% 50%",
+              },
+
+              // "<",
+            )
+            .fromTo(
+              "#S",
+
+              {
+                drawSVG: "0% 100%",
+                duration: 2,
+              },
+              {
+                drawSVG: "50% 50%",
+              },
+              "<",
+            )
+            .fromTo(
+              "#A",
+
+              {
+                drawSVG: "0% 100%",
+                duration: 2,
+              },
+              {
+                drawSVG: "50% 50%",
+              },
+              "<",
+            )
+            .fromTo(
+              "#P",
+
+              {
+                drawSVG: "0% 100%",
+                duration: 2,
+              },
+              {
+                drawSVG: "50% 50%",
+              },
+              "<",
+            )
+            .to("#enter3d", {
+              // opacity: 1,
+              autoAlpha: 1,
+              duration: 1,
+              onComplete: () => {
+                // linux_words.revert();
+                // k8s_words.revert();
+                // react_words.revert();
+              },
+            });
+        },
+      },
+      "<",
+    );
 
   // .to(
   //   "#netjs-word",
@@ -1422,10 +1568,10 @@ export function lookAtmodel({
   // data.scene.position.set(10.405193262355265, 0, -15.853882753462061);
 
   const DesertRoad_Position = {
-    //current Desert_roead position which is also the controlls target
-    x_p: 6.405193262355265,
+    //current gsap position which is also the controlls target
+    x_p: -8,
     y_p: 2,
-    z_p: -18.853882753462061,
+    z_p: 1,
   };
   const Docker_model_position = {
     x_p: 20,

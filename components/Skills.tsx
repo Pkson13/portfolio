@@ -205,7 +205,7 @@ const Skills = () => {
           end: "bottom -130%",
           // end: "top bottom",
           // pinnedContainer: "#to-pin",
-          markers: true,
+          // markers: true,
           onUpdate: (self) => {
             // self.refresh();
           },
@@ -292,7 +292,7 @@ const Skills = () => {
             id: "test",
             pinReparent: true,
             scrub: 1,
-            markers: true,
+            // markers: true,
             // pinnedContainer: "#to-pin",
             onUpdate: (self) => {
               self.refresh();
@@ -322,10 +322,10 @@ const Skills = () => {
           // endTrigger: "#footer",
           end: "bottom -1000%",
           onLeaveBack: () => {
-            gsap.to("#enter3d", {
-              autoAlpha: 0,
-              duration: 1,
-            });
+            // gsap.to("#enter3d", {
+            //   autoAlpha: 0,
+            //   duration: 1,
+            // });
           },
 
           // end: "bottom top",
@@ -342,7 +342,7 @@ const Skills = () => {
 
           // pinReparent: true,
           // scrub: true,
-          markers: true,
+          // markers: true,
           // preventOverlaps: "true",
         },
       });
@@ -388,7 +388,7 @@ const Skills = () => {
     });
     wordstl
       .to(
-        "#scene-words",
+        "#docker-words",
         {
           y: 0,
           // rotate: 360,
@@ -400,7 +400,7 @@ const Skills = () => {
         // ">", // run after previous animation
       )
       .to(
-        "#scene-words",
+        "#docker-words",
         {
           y: 100,
           // rotate: 360,

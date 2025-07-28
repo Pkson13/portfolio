@@ -175,10 +175,6 @@ const LoadingManager = ({ children }: { children: ReactNode }) => {
       >
         {/* <div className="text-4xl text-white">Hi, i'm Peterson</div> */}
         <div className="relative flex items-end justify-center">
-          <div
-            className="absolute z-10 h-full w-full mix-blend-color"
-            id=""
-          ></div>
           <div className="flex flex-col items-center justify-center">
             <div className="relative flex h-1/2 w-fit items-end sm:h-3/5">
               <div className="absolute bottom-0 left-0 h-fit w-full -rotate-90 font-(family-name:--font-bebas-neue) text-6xl tracking-wide text-gray-400">

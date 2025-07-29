@@ -111,9 +111,9 @@ export function dumpObject(
     console.log("cubeoo2");
     // obj.position.set(1, 2, 3);
     console.log("cobe002", obj);
-    const mesh = obj.children[0] as Mesh;
-    mesh.material = mesh.material.clone(); //all containera share the same material by refrence so without clone it willchange  all containers
-    mesh.material.color.set("#ff0000");
+    // const mesh = obj.children[0] as Mesh;
+    // mesh.material = mesh.material.clone(); //all containera share the same material by refrence so without clone it willchange  all containers
+    // mesh.material.color.set("#ff0000");
     //still works don't know what's the problem
     obj.children.forEach((child) => {
       console.log("child", child);

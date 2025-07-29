@@ -117,7 +117,7 @@ const Contact = () => {
                   General enquiries
                 </p>
                 <Link
-                  href="mailto:hello@blog.co"
+                  href="mailto:hello@kinyanjui.dev"
                   className="text-sm text-neutral-600 transition-colors hover:text-neutral-900 dark:text-neutral-300 dark:hover:text-white"
                 >
                   hello@kinyanjui.dev
@@ -128,7 +128,7 @@ const Contact = () => {
                   New business
                 </p>
                 <Link
-                  href="mailto:business@blog.co"
+                  href="mailto:business@kinyanjui.dev"
                   className="text-sm text-neutral-600 transition-colors hover:text-neutral-900 dark:text-neutral-300 dark:hover:text-white"
                 >
                   business@kinyanjui.dev

@@ -29,7 +29,7 @@ const LoadingManager = ({ children }: { children: ReactNode }) => {
 
     DefaultLoadingManager.onLoad = function () {
       if (scrollSmother && scrollSmother.current) {
-        scrollSmother.current.scrollTo("#hero", true, "top 10%");
+        // scrollSmother.current.scrollTo("#hero", true, "top 10%");
       }
       console.log("Loading Complete!");
       loadingDots.revert();

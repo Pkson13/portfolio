@@ -36,8 +36,11 @@ export default function Home() {
       <LoadingManager>
         <div id="smooth-wrapper" className="max-w-screen">
           <div id="smooth-content" className="max-w-screen">
-            <div className="relative max-w-screen scale-[2] -rotate-10 overflow-hidden overflow-x-hidden px-4 py-20 sm:px-6 lg:px-8">
-              <section id="hero" className="max-w-screen overflow-hidden">
+            <div className="relative max-w-screen overflow-hidden overflow-x-hidden px-4 py-20 sm:px-6 lg:px-8">
+              <section
+                id="hero"
+                className="max-w-screen scale-[2] -rotate-10 overflow-hidden"
+              >
                 {/* Background Pattern */}
                 <div className="absolute inset-0">
                   <div className="absolute top-40 left-5 h-16 w-16 rotate-12 overflow-clip rounded-lg sm:top-2/4 sm:block md:top-20 md:left-10">

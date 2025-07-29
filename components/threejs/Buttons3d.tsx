@@ -7,7 +7,7 @@ import { Dockermodelctx, global3dctx } from "./Root3d";
 import type { global3dctxtypes } from "./Root3d";
 import { lookAtmodel } from "@/lib/three_setup";
 import gsap from "gsap";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, ArrowUp } from "lucide-react";
 import { useGSAP } from "@gsap/react";
 
 const Buttons3d = () => {
@@ -93,7 +93,7 @@ const Buttons3d = () => {
           autoAlpha: 0,
         });
         if (exit3dref)
-          gsap.to([exit3dref.current, "#nipplejsZone"], {
+          gsap.to([exit3dref.current, "#nipplejsZone", "#controls-indicator"], {
             autoAlpha: 1,
           });
         globalcontext.exit3dstate.setter(false);
@@ -110,7 +110,7 @@ const Buttons3d = () => {
           .querySelector<HTMLDivElement>("#scene-words")
           ?.classList.toggle("pointer-events-none", false);
 
-        gsap.to([exit3dref.current, "#nipplejsZone"], {
+        gsap.to([exit3dref.current, "#nipplejsZone", "#controls-indicator"], {
           autoAlpha: 0,
           duration: 1,
         });
@@ -130,7 +130,7 @@ const Buttons3d = () => {
   return (
     <>
       {globalcontext && (
-        <div className="pointer-events-auto absolute top-1/2 left-6 z-[130]">
+        <div className="pointer-events-auto absolute top-1/2 left-6 z-[130] flex flex-col items-center justify-between gap-8">
           <Button
             ref={exit3dref}
             id="exit3d"
@@ -138,6 +138,38 @@ const Buttons3d = () => {
           >
             EXIT 3D
           </Button>
+          <div
+            id="controls-indicator"
+            className="invisible z-50 hidden flex-col items-center text-white md:flex"
+          >
+            {/* <p className="mb-2 text-sm text-gray-300 sm:text-base">
+              Use arrow keys to move
+            </p> */}
+            <div className="mb-2 grid grid-cols-3 gap-1">
+              <div></div>
+              <div className="flex h-10 w-10 items-center justify-center rounded bg-gray-700/45">
+                ↑
+              </div>
+              <div></div>
+
+              <div className="flex h-10 w-10 items-center justify-center rounded bg-gray-700/45">
+                ←
+              </div>
+              <div className="flex h-10 w-10 items-center justify-center rounded bg-gray-700/45">
+                ↓
+              </div>
+              <div className="flex h-10 w-10 items-center justify-center rounded bg-gray-700/45">
+                →
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <div className="flex h-10 items-center justify-center rounded bg-yellow-600 px-3 text-sm font-medium">
+                Shift
+              </div>
+              <span className="text-sm text-gray-300">Boost</span>
+            </div>
+          </div>
         </div>
       )}
 

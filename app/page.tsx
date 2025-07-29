@@ -13,6 +13,9 @@ import { ArrowRight, ExternalLink } from "lucide-react";
 import { Poppins } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
+import Navbar from "@/components/navbar/Navbar";
+import ViewMyWorkBtn from "@/components/ViewMyWorkBtn";
+
 // import { useRef } from "react";
 
 // export const metadata: Metadata = {
@@ -34,6 +37,8 @@ export default function Home() {
   return (
     <>
       <LoadingManager>
+        <Navbar />
+
         <div id="smooth-wrapper" className="max-w-screen">
           <div id="smooth-content" className="max-w-screen">
             <div className="relative max-w-screen overflow-hidden overflow-x-hidden px-4 py-20 sm:px-6 lg:px-8">
@@ -193,23 +198,14 @@ export default function Home() {
                   </div>
 
                   <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-                    <Button
-                      size="lg"
-                      className="bg-purple-600 px-8 text-gray-200 hover:bg-purple-700"
-                      asChild
-                    >
-                      <a href="#projects">
-                        View my work
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </a>
-                    </Button>
+                    <ViewMyWorkBtn />
                     <Button
                       variant="outline"
                       size="lg"
                       className="px-8"
                       asChild
                     >
-                      <Link href="#contact">
+                      <Link href="https://www.linkedin.com/in/peterson-kinyanjui-5308b1317/">
                         Let's connect
                         <ExternalLink className="ml-2 h-4 w-4" />
                       </Link>
@@ -304,7 +300,7 @@ export default function Home() {
                 </div>
 
                 {/* Projects Grid */}
-                <div className="space-y-20">
+                <div id="projects" className="space-y-20">
                   {/* Project 1 */}
                   <div
                     className="flex flex-col-reverse items-center gap-8 md:grid md:grid-cols-2"
@@ -557,13 +553,8 @@ export default function Home() {
                       </h4>
                       <p className="mb-6 leading-relaxed text-gray-600 dark:text-gray-300">
                         An imporvement to{" "}
-                        <Link
-                          className="text-purple-600"
-                          href={"/#videoshareproj"}
-                        >
-                          video share
-                        </Link>{" "}
-                        to support a many to many video calling plaftorm
+                        <span className="text-purple-600">video share</span> to
+                        support a many to many video calling plaftorm
                       </p>
                       <div className="mb-6 flex gap-3">
                         {/* <Button

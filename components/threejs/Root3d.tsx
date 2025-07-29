@@ -166,8 +166,8 @@ const Root3d = () => {
         // canvas: canvasref.current,
       });
 
-      const axesHelper = new AxesHelper(100);
-      scene.add(axesHelper);
+      // const axesHelper = new AxesHelper(100);
+      // scene.add(axesHelper);
 
       const dir = new Vector3(1, 3, 0);
 
@@ -199,7 +199,7 @@ const Root3d = () => {
       // controls.maxPolarAngle = Math.PI / 2; // 90°
       // controls.maxPolarAngle = Math.PI * 0.495;
       // controls.maxPolarAngle = Math.PI / 2.25;
-      controls.minDistance = 1.0;
+      controls.minDistance = 2.0;
       controls.maxDistance = 8;
       // controls.update();
 

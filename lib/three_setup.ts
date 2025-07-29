@@ -368,8 +368,8 @@ export const loadDockerModel = async ({
       //   console.log(`sine ${i} = ${Math.sin(degToRad(i))}`);
       //   // console.log(`cosine ${i} = ${Math.cos(degToRad(i))}`);
       // }
-      const axesHelper = new AxesHelper(20);
-      data.scene.add(axesHelper);
+      // const axesHelper = new AxesHelper(20);
+      // data.scene.add(axesHelper);
       // camera.lookAt(new Vector3(10, 10, 0));
 
       //there is overlap of the timeout in the gamloop below
@@ -1222,9 +1222,9 @@ export const loadIslandModel = ({
     //   -8.853882753462061,
 
     // );
-    const axesHelper = new AxesHelper(100);
-    data.scene.add(axesHelper);
-    console.log("found", data.scene.getObjectByName("Group50463_104"));
+    // const axesHelper = new AxesHelper(100);
+    // data.scene.add(axesHelper);
+    // console.log("found", data.scene.getObjectByName("Group50463_104"));
 
     data.scene.scale.setScalar(0.1);
     data.scene.position.set(-20, 1, 4);
@@ -1440,8 +1440,8 @@ export const loadIslands = async ({
       // data.scene.scale.setScalar(2);
       // controls.target = data.scene.position;
       // data.scene.position.set(20, 1, 0);
-      const axes = new AxesHelper(60);
-      data.scene.add(axes);
+      // const axes = new AxesHelper(60);
+      // data.scene.add(axes);
       glftLoader.load("/models/react_logo.glb", (reactdata) => {
         data.scene.add(reactdata.scene);
         reactdata.scene.scale.setScalar(0.6);

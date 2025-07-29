@@ -7,6 +7,7 @@ import {
   Color,
   DoubleSide,
   Group,
+  LoadingManager,
   Material,
   MathUtils,
   // Fog,
@@ -29,13 +30,14 @@ import {
 import {
   FontLoader,
   GLTF,
+  GLTFLoader,
   OrbitControls,
   Sky,
   TextGeometry,
   Water,
 } from "three/examples/jsm/Addons.js";
 import GUI from "three/examples/jsm/libs/lil-gui.module.min.js";
-import { loaderFuncProps, loadIsland } from "./threeTypes";
+import { LoadAutumnForest, loaderFuncProps, loadIsland } from "./threeTypes";
 import gsap from "gsap";
 import { Meh } from "lucide-react";
 import { degToRad, radToDeg } from "three/src/math/MathUtils.js";
@@ -1349,11 +1351,46 @@ export const loadIslandModel = ({
 
 export const loadautmforest = async ({
   // name,
-  loader: glftLoader,
+  // loader: glftLoader,
   // controls,
   // camera,
   scene,
-}: loadIsland) => {
+}: LoadAutumnForest) => {
+  //use a different custom loading manager so that the loading screen can finish as soon as possible when neccessary models finish loading
+  const customLoadingManager = new LoadingManager();
+  customLoadingManager.onStart = function (url, itemsLoaded, itemsTotal) {
+    console.log(
+      "Started loading file:  on custom manager" +
+        url +
+        ".\nLoaded " +
+        itemsLoaded +
+        " of " +
+        itemsTotal +
+        " files.",
+    );
+  };
+
+  customLoadingManager.onLoad = function () {
+    console.log("Loading complete on custom manager!");
+  };
+
+  customLoadingManager.onProgress = function (url, itemsLoaded, itemsTotal) {
+    console.log(
+      "Loading file: " +
+        url +
+        ".\nLoaded " +
+        itemsLoaded +
+        " of " +
+        itemsTotal +
+        " files.",
+    );
+  };
+
+  customLoadingManager.onError = function (url) {
+    console.log("There was an error loading " + url);
+  };
+
+  const glftLoader = new GLTFLoader(customLoadingManager);
   return await new Promise<Group<Object3DEventMap> | null>((resolve) => {
     glftLoader.load(`/models/autumnal_forest.glb`, async (data) => {
       console.log("loaded autumnal_forest", data);

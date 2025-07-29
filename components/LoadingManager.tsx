@@ -197,6 +197,7 @@ const LoadingManager = ({ children }: { children: ReactNode }) => {
             <Image
               src={"/loading_central_cee.png"}
               alt="loading"
+              priority
               className="size-full contrast-100 grayscale"
               width={200}
               height={600}

@@ -7,9 +7,12 @@ const Contact = () => {
     // <div id="footer-wrapper" className="">
     <footer
       id="fotter"
-      className="absolute top-0 left-0 z-700 w-screen translate-y-[150%]"
+      className="absolute top-0 left-0 z-700 h-fit w-screen translate-y-[150%]"
     >
-      <div id="fotter-container" className="mx-auto w-full bg-background px-5">
+      <div
+        id="fotter-container"
+        className="mx-auto mb-20 h-fit w-full bg-background px-5"
+      >
         <div className="grid grid-cols-1 gap-12 py-16 md:grid-cols-2 lg:grid-cols-4">
           {/* Company Info */}
           {/* Company Info */}
@@ -117,7 +120,7 @@ const Contact = () => {
                   href="mailto:hello@blog.co"
                   className="text-sm text-neutral-600 transition-colors hover:text-neutral-900 dark:text-neutral-300 dark:hover:text-white"
                 >
-                  hello@blog.co
+                  hello@kinyanjui.dev
                 </Link>
               </div>
               <div>
@@ -128,7 +131,7 @@ const Contact = () => {
                   href="mailto:business@blog.co"
                   className="text-sm text-neutral-600 transition-colors hover:text-neutral-900 dark:text-neutral-300 dark:hover:text-white"
                 >
-                  business@blog.co
+                  business@kinyanjui.dev
                 </Link>
               </div>
             </div>
@@ -195,7 +198,8 @@ const Contact = () => {
                   className="w-full bg-neutral-900 font-medium text-white hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100"
                 >
                   <Link
-                    href="/contact"
+                    href="https://api.whatsapp.com/send?phone=254706169658"
+                    target="_blank"
                     className="flex items-center justify-center gap-2"
                   >
                     Let&apos;s Talk

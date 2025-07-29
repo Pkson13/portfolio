@@ -14,3 +14,9 @@ export type loadIsland = {
   camera: PerspectiveCamera;
   scene: Scene;
 };
+export type LoadAutumnForest = {
+  name: string;
+  controls: OrbitControls;
+  camera: PerspectiveCamera;
+  scene: Scene;
+};

@@ -197,8 +197,8 @@ const Root3d = () => {
       // controls.enableZoom = true;
       // controls.minPolarAngle = Math.PI / 3; // 45° on the y-axis
       // controls.maxPolarAngle = Math.PI / 2; // 90°
-      // controls.maxPolarAngle = Math.PI * 0.495;
-      // controls.maxPolarAngle = Math.PI / 2.25;
+      controls.maxPolarAngle = Math.PI * 0.495;
+      controls.maxPolarAngle = Math.PI / 2.25;
       controls.minDistance = 2.0;
       controls.maxDistance = 8;
       // controls.update();

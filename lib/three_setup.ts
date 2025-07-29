@@ -111,6 +111,7 @@ export function dumpObject(
     console.log("cubeoo2");
     // obj.position.set(1, 2, 3);
     console.log("cobe002", obj);
+    console.warn("env", process.env.NEXT_PUBLIC_PROD);
     // const mesh = obj.children[0] as Mesh;
     // mesh.material = mesh.material.clone(); //all containera share the same material by refrence so without clone it willchange  all containers
     // mesh.material.color.set("#ff0000");

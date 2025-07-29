@@ -107,11 +107,20 @@ export function dumpObject(
   lines.push(
     `${prefix}${prefix ? localPrefix : ""}${obj.name || "*no-name*"} [${obj.type}]`,
   );
+  if (obj.name == "body001outline" || obj.name == "terrain001outline") {
+    obj.position.set(15, 4, 0);
+    obj.clear();
+  }
+  if (obj.name == "body" || obj.name == "Object001" || obj.name == "glass") {
+    obj.position.set(15, 4, 0);
+    obj.clear();
+  }
   if (obj.name === "Cube002") {
     console.log("cubeoo2");
     // obj.position.set(1, 2, 3);
     console.log("cobe002", obj);
-    console.warn("env", process.env.NEXT_PUBLIC_PROD);
+    obj.clear();
+    // console.warn("env", process.env.NEXT_PUBLIC_PROD);
     // const mesh = obj.children[0] as Mesh;
     // mesh.material = mesh.material.clone(); //all containera share the same material by refrence so without clone it willchange  all containers
     // mesh.material.color.set("#ff0000");
@@ -126,14 +135,7 @@ export function dumpObject(
       // obj.remove(child);
     });
   }
-  if (obj.name == "body001outline" || obj.name == "terrain001outline") {
-    obj.position.set(15, 4, 0);
-    obj.clear();
-  }
-  if (obj.name == "body" || obj.name == "Object001" || obj.name == "glass") {
-    obj.position.set(15, 4, 0);
-    obj.clear();
-  }
+
   const newPrefix = prefix + (isLast ? "  " : "│ ");
   const lastNdx = obj.children.length - 1;
   obj.children.forEach((child, ndx) => {
@@ -511,7 +513,8 @@ export const loadDockerModel = async ({
       //     // obj.material.color.set("green");
       //   }
       // });
-      console.log(dumpObject(data.scene).join("\n"));
+      const res = dumpObject(data.scene).join("\n");
+      console.log(res);
       // lambo = data.scene.children[0];
       // console.log("scene", lambo);
 
@@ -1499,8 +1502,8 @@ export const loadIslands = async ({
       //     // obj.material.color.set("green");
       //   }
       // });
-      console.log(dumpObject(data.scene).join("\n"));
-
+      const res = dumpObject(data.scene).join("\n");
+      console.log(res);
       // const geometry = new BufferGeometry();
 
       // const vertices = new Float32Array([

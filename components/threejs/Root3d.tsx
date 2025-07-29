@@ -174,9 +174,9 @@ const Root3d = () => {
       //normalize the direction vector (convert to vector of length 1/ convert the vector to a unit vector)
       dir.normalize();
 
-      const origin = new Vector3(0, 0, 0);
-      const length = 2;
-      const hex = 0xffff00;
+      // const origin = new Vector3(0, 0, 0);
+      // const length = 2;
+      // const hex = 0xffff00;
 
       // new TextureLoader().load("2k_stars.jpg", (texture) => {
       //   scene.background = texture;
@@ -184,8 +184,8 @@ const Root3d = () => {
 
       const water = setupSkyAndWater(scene, renderer, camera);
 
-      const arrowHelper = new ArrowHelper(dir, origin, length, hex);
-      scene.add(arrowHelper);
+      // const arrowHelper = new ArrowHelper(dir, origin, length, hex);
+      // scene.add(arrowHelper);
 
       // create3dText({ scene, textinput: "Hello I'm Peterson" });
       const controls = new OrbitControls(camera, renderer.domElement);

@@ -61,7 +61,39 @@ export const create3dText = async (
   textinput: string,
   material?: Material | undefined | null,
 ): Promise<Mesh> => {
-  const loader = new FontLoader();
+  const customLoadingManager = new LoadingManager();
+  customLoadingManager.onStart = function (url, itemsLoaded, itemsTotal) {
+    console.log(
+      "Started loading font on custom manager" +
+        url +
+        ".\nLoaded " +
+        itemsLoaded +
+        " of " +
+        itemsTotal +
+        " files.",
+    );
+  };
+
+  customLoadingManager.onLoad = function () {
+    console.log("Loading font complete on custom manager!");
+  };
+
+  customLoadingManager.onProgress = function (url, itemsLoaded, itemsTotal) {
+    console.log(
+      "Loading font: " +
+        url +
+        ".\nLoaded " +
+        itemsLoaded +
+        " of " +
+        itemsTotal +
+        " files.",
+    );
+  };
+
+  customLoadingManager.onError = function (url) {
+    console.log("There was an error loading " + url);
+  };
+  const loader = new FontLoader(customLoadingManager);
   let mesh: Mesh;
   return new Promise((res, rej) => {
     loader.load(
@@ -1017,41 +1049,9 @@ export const loadmushroom_suspended_island = ({
   controls,
   camera,
   scene,
+  manager: customLoadingManager,
   // lambo,
 }: LoadAutumnForest) => {
-  const customLoadingManager = new LoadingManager();
-  customLoadingManager.onStart = function (url, itemsLoaded, itemsTotal) {
-    console.log(
-      "Started loading file:  on custom manager" +
-        url +
-        ".\nLoaded " +
-        itemsLoaded +
-        " of " +
-        itemsTotal +
-        " files.",
-    );
-  };
-
-  customLoadingManager.onLoad = function () {
-    console.log("Loading complete on custom manager!");
-  };
-
-  customLoadingManager.onProgress = function (url, itemsLoaded, itemsTotal) {
-    console.log(
-      "Loading file: " +
-        url +
-        ".\nLoaded " +
-        itemsLoaded +
-        " of " +
-        itemsTotal +
-        " files.",
-    );
-  };
-
-  customLoadingManager.onError = function (url) {
-    console.log("There was an error loading " + url);
-  };
-
   const glftLoader = new GLTFLoader(customLoadingManager);
   glftLoader.load("/models/mushroom_suspended_island.glb", async (data) => {
     console.log("mushreoom", data);
@@ -1084,7 +1084,7 @@ export const loadmushroom_suspended_island = ({
     //     // obj.material.color.set("green");
     //   }
     // });
-    const texture = new TextureLoader();
+    const texture = new TextureLoader(customLoadingManager);
     const gsapImg = texture.load("/gsap.png");
     const geometry = new PlaneGeometry(10, 10);
     const material = new MeshBasicMaterial({
@@ -1103,92 +1103,6 @@ export const loadmushroom_suspended_island = ({
     plane.position.x = -30;
     plane.position.z = -50;
     console.log(dumpObject(data.scene).join("\n"));
-
-    // const geometry = new BufferGeometry();
-
-    // const vertices = new Float32Array([
-    //   -1.0,
-    //   -1.0,
-    //   1.0, // v0
-    //   1.0,`
-    //   -1.0,
-    //   1.0, // v1
-    //   1.0,
-    //   1.0,
-    //   1.0, // v2
-    //   -1.0,
-    //   1.0,
-    //   1.0, // v3
-    // ]);
-
-    // const indices = [0, 1, 2, 2, 3, 0];
-
-    // geometry.setIndex(indices);
-    // geometry.setAttribute("position", new BufferAttribute(vertices, 3));
-
-    // const material = new MeshBasicMaterial({ color: 0xff0000 });
-    // const mesh = new Mesh(geometry, material);
-    // scene.add(mesh);
-    // controls.target = mesh.position;
-    // console.log("mesh", mesh.geometry.attributes);
-
-    const quaternion = new Quaternion();
-    quaternion.setFromAxisAngle(new Vector3(0, 1, 0), Math.PI / 2);
-    // camera.applyQuaternion(quaternion);
-    // camera.rotation.x = Math.PI /2
-    await new Promise((res) => {
-      // gsap.to(camera.position, {
-      //   x: -3,
-      //   y: -2,
-      //   duration: 2,
-      //   delay: 20,
-      //   ease: "none",
-      //   onComplete: res, // resolve when animation finishes
-      // });
-      // const targetEuler = new Euler(2 * Math.PI, 0, 0, "XYZ");
-      // const targetQuat = new Quaternion().setFromEuler(targetEuler);
-      // gsap.to(camera.quaternion, {
-      //   x: targetQuat.x,
-      //   y: targetQuat.y,
-      //   z: targetQuat.z,
-      //   w: targetQuat.w,
-      //   duration: 5,
-      // });
-      // controls.disconnect();\
-      console.log(Math.PI / 4 / 2);
-      // controls.enabled = false;
-
-      // gsap.to(camera.rotation, {
-      //   // y: -Math.PI / 2, // 90 degrees
-      //   x: Math.PI / 4 / 2,
-      //   // x: 200,
-      //   duration: 5,
-      //   onUpdate: () => {
-      //     camera.updateMatrixWorld();
-      //   },
-      //   onComplete: () => {
-      //     controls.enabled = true;
-      //     // controls.connect(document.body);
-      //   },
-      //   ease: "none",
-      // });
-      gsap.to(data.scene.position, {
-        // y: -Math.PI / 2, // 90 degrees
-        // x: 20,
-        // y: 1,
-        // x: 200,
-        duration: 5,
-        onUpdate: () => {
-          camera.updateMatrixWorld();
-        },
-        onComplete: () => {
-          // controls.enabled = true;
-          // controls.connect(document.body);
-          res("done");
-        },
-        ease: "none",
-      });
-    }).then((result) => console.log("promise done", result));
   });
 };
 
@@ -1197,41 +1111,10 @@ export const loadautmforest = async ({
   // loader: glftLoader,
   // controls,
   // camera,
+  manager: customLoadingManager,
   scene,
 }: LoadAutumnForest) => {
   //use a different custom loading manager so that the loading screen can finish as soon as possible when neccessary models finish loading
-  const customLoadingManager = new LoadingManager();
-  customLoadingManager.onStart = function (url, itemsLoaded, itemsTotal) {
-    console.log(
-      "Started loading file:  on custom manager" +
-        url +
-        ".\nLoaded " +
-        itemsLoaded +
-        " of " +
-        itemsTotal +
-        " files.",
-    );
-  };
-
-  customLoadingManager.onLoad = function () {
-    console.log("Loading complete on custom manager!");
-  };
-
-  customLoadingManager.onProgress = function (url, itemsLoaded, itemsTotal) {
-    console.log(
-      "Loading file: " +
-        url +
-        ".\nLoaded " +
-        itemsLoaded +
-        " of " +
-        itemsTotal +
-        " files.",
-    );
-  };
-
-  customLoadingManager.onError = function (url) {
-    console.log("There was an error loading " + url);
-  };
 
   const glftLoader = new GLTFLoader(customLoadingManager);
   return await new Promise<Group<Object3DEventMap> | null>((resolve) => {
@@ -1267,6 +1150,7 @@ export const loadDesertRoad = async ({
   controls,
   camera,
   scene,
+  manager: customLoadingManager,
 }: loadIsland) => {
   return await new Promise<Group<Object3DEventMap> | null>((resolve) => {
     const name = "desert_road";
@@ -1312,7 +1196,9 @@ export const loadDesertRoad = async ({
           });
         },
       );
-      const map = new TextureLoader().load("icons8-next.js-240.png");
+      const map = new TextureLoader(customLoadingManager).load(
+        "icons8-next.js-240.png",
+      );
       const spriteMaterial = new SpriteMaterial({ map: map });
 
       const sprite = new Sprite(spriteMaterial);
@@ -1371,63 +1257,6 @@ export const loadDesertRoad = async ({
       // controls.target = mesh.position;
       // console.log("mesh", mesh.geometry.attributes);
 
-      const quaternion = new Quaternion();
-      quaternion.setFromAxisAngle(new Vector3(0, 1, 0), Math.PI / 2);
-      // camera.applyQuaternion(quaternion);
-      // camera.rotation.x = Math.PI /2
-      await new Promise((res) => {
-        // gsap.to(camera.position, {
-        //   x: -3,
-        //   y: -2,
-        //   duration: 2,
-        //   delay: 20,
-        //   ease: "none",
-        //   onComplete: res, // resolve when animation finishes
-        // });
-        // const targetEuler = new Euler(2 * Math.PI, 0, 0, "XYZ");
-        // const targetQuat = new Quaternion().setFromEuler(targetEuler);
-        // gsap.to(camera.quaternion, {
-        //   x: targetQuat.x,
-        //   y: targetQuat.y,
-        //   z: targetQuat.z,
-        //   w: targetQuat.w,
-        //   duration: 5,
-        // });
-        // controls.disconnect();\
-        console.log(Math.PI / 4 / 2);
-        // controls.enabled = false;
-
-        // gsap.to(camera.rotation, {
-        //   // y: -Math.PI / 2, // 90 degrees
-        //   x: Math.PI / 4 / 2,
-        //   // x: 200,
-        //   duration: 5,
-        //   onUpdate: () => {
-        //     camera.updateMatrixWorld();
-        //   },
-        //   onComplete: () => {
-        //     controls.enabled = true;
-        //     // controls.connect(document.body);
-        //   },
-        //   ease: "none",
-        // });
-        gsap.to(data.scene.position, {
-          // y: -Math.PI / 2, // 90 degrees
-          // x: 20,
-          // y: 1,
-          // x: 200,
-          duration: 5,
-          onUpdate: () => {
-            camera.updateMatrixWorld();
-          },
-          onComplete: () => {
-            // controls.enabled = true;
-            // controls.connect(document.body);
-            res("done");
-          },
-          ease: "none",
-        });
-      }).then((result) => console.log("promise done", result));
       resolve(dockerscene);
     });
   });

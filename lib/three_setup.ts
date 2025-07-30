@@ -7,6 +7,7 @@ import {
   Color,
   DoubleSide,
   Group,
+  LoadingManager,
   Material,
   MathUtils,
   // Fog,
@@ -29,13 +30,14 @@ import {
 import {
   FontLoader,
   GLTF,
+  GLTFLoader,
   OrbitControls,
   Sky,
   TextGeometry,
   Water,
 } from "three/examples/jsm/Addons.js";
 import GUI from "three/examples/jsm/libs/lil-gui.module.min.js";
-import { loaderFuncProps, loadIsland } from "./threeTypes";
+import { LoadAutumnForest, loaderFuncProps, loadIsland } from "./threeTypes";
 import gsap from "gsap";
 import { Meh } from "lucide-react";
 import { degToRad, radToDeg } from "three/src/math/MathUtils.js";
@@ -105,13 +107,23 @@ export function dumpObject(
   lines.push(
     `${prefix}${prefix ? localPrefix : ""}${obj.name || "*no-name*"} [${obj.type}]`,
   );
+  if (obj.name == "body001outline" || obj.name == "terrain001outline") {
+    obj.position.set(15, 4, 0);
+    obj.clear();
+  }
+  if (obj.name == "body" || obj.name == "Object001" || obj.name == "glass") {
+    obj.position.set(15, 4, 0);
+    obj.clear();
+  }
   if (obj.name === "Cube002") {
     console.log("cubeoo2");
     // obj.position.set(1, 2, 3);
     console.log("cobe002", obj);
-    const mesh = obj.children[0] as Mesh;
-    mesh.material = mesh.material.clone(); //all containera share the same material by refrence so without clone it willchange  all containers
-    mesh.material.color.set("#ff0000");
+    obj.clear();
+    // console.warn("env", process.env.NEXT_PUBLIC_PROD);
+    // const mesh = obj.children[0] as Mesh;
+    // mesh.material = mesh.material.clone(); //all containera share the same material by refrence so without clone it willchange  all containers
+    // mesh.material.color.set("#ff0000");
     //still works don't know what's the problem
     obj.children.forEach((child) => {
       console.log("child", child);
@@ -123,14 +135,7 @@ export function dumpObject(
       // obj.remove(child);
     });
   }
-  if (obj.name == "body001outline" || obj.name == "terrain001outline") {
-    obj.position.set(15, 4, 0);
-    obj.clear();
-  }
-  if (obj.name == "body" || obj.name == "Object001" || obj.name == "glass") {
-    obj.position.set(15, 4, 0);
-    obj.clear();
-  }
+
   const newPrefix = prefix + (isLast ? "  " : "│ ");
   const lastNdx = obj.children.length - 1;
   obj.children.forEach((child, ndx) => {
@@ -366,8 +371,8 @@ export const loadDockerModel = async ({
       //   console.log(`sine ${i} = ${Math.sin(degToRad(i))}`);
       //   // console.log(`cosine ${i} = ${Math.cos(degToRad(i))}`);
       // }
-      const axesHelper = new AxesHelper(20);
-      data.scene.add(axesHelper);
+      // const axesHelper = new AxesHelper(20);
+      // data.scene.add(axesHelper);
       // camera.lookAt(new Vector3(10, 10, 0));
 
       //there is overlap of the timeout in the gamloop below
@@ -508,7 +513,8 @@ export const loadDockerModel = async ({
       //     // obj.material.color.set("green");
       //   }
       // });
-      console.log(dumpObject(data.scene).join("\n"));
+      const res = dumpObject(data.scene).join("\n");
+      console.log(res);
       // lambo = data.scene.children[0];
       // console.log("scene", lambo);
 
@@ -1220,9 +1226,9 @@ export const loadIslandModel = ({
     //   -8.853882753462061,
 
     // );
-    const axesHelper = new AxesHelper(100);
-    data.scene.add(axesHelper);
-    console.log("found", data.scene.getObjectByName("Group50463_104"));
+    // const axesHelper = new AxesHelper(100);
+    // data.scene.add(axesHelper);
+    // console.log("found", data.scene.getObjectByName("Group50463_104"));
 
     data.scene.scale.setScalar(0.1);
     data.scene.position.set(-20, 1, 4);
@@ -1349,11 +1355,46 @@ export const loadIslandModel = ({
 
 export const loadautmforest = async ({
   // name,
-  loader: glftLoader,
+  // loader: glftLoader,
   // controls,
   // camera,
   scene,
-}: loadIsland) => {
+}: LoadAutumnForest) => {
+  //use a different custom loading manager so that the loading screen can finish as soon as possible when neccessary models finish loading
+  const customLoadingManager = new LoadingManager();
+  customLoadingManager.onStart = function (url, itemsLoaded, itemsTotal) {
+    console.log(
+      "Started loading file:  on custom manager" +
+        url +
+        ".\nLoaded " +
+        itemsLoaded +
+        " of " +
+        itemsTotal +
+        " files.",
+    );
+  };
+
+  customLoadingManager.onLoad = function () {
+    console.log("Loading complete on custom manager!");
+  };
+
+  customLoadingManager.onProgress = function (url, itemsLoaded, itemsTotal) {
+    console.log(
+      "Loading file: " +
+        url +
+        ".\nLoaded " +
+        itemsLoaded +
+        " of " +
+        itemsTotal +
+        " files.",
+    );
+  };
+
+  customLoadingManager.onError = function (url) {
+    console.log("There was an error loading " + url);
+  };
+
+  const glftLoader = new GLTFLoader(customLoadingManager);
   return await new Promise<Group<Object3DEventMap> | null>((resolve) => {
     glftLoader.load(`/models/autumnal_forest.glb`, async (data) => {
       console.log("loaded autumnal_forest", data);
@@ -1403,8 +1444,8 @@ export const loadIslands = async ({
       // data.scene.scale.setScalar(2);
       // controls.target = data.scene.position;
       // data.scene.position.set(20, 1, 0);
-      const axes = new AxesHelper(60);
-      data.scene.add(axes);
+      // const axes = new AxesHelper(60);
+      // data.scene.add(axes);
       glftLoader.load("/models/react_logo.glb", (reactdata) => {
         data.scene.add(reactdata.scene);
         reactdata.scene.scale.setScalar(0.6);
@@ -1461,8 +1502,8 @@ export const loadIslands = async ({
       //     // obj.material.color.set("green");
       //   }
       // });
-      console.log(dumpObject(data.scene).join("\n"));
-
+      const res = dumpObject(data.scene).join("\n");
+      console.log(res);
       // const geometry = new BufferGeometry();
 
       // const vertices = new Float32Array([

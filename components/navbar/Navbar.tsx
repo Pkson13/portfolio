@@ -3,6 +3,7 @@ import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "../ui/button";
 import Logo_scramble from "./logo_scramble";
 import Son from "../son/morpsvg";
+import Links from "./Links";
 
 const Navbar = () => {
   // function handleclick() {
@@ -17,21 +18,7 @@ const Navbar = () => {
         <Son />
       </span>
       {/* <Face></Face> */}
-      <div className="ml-auto hidden items-center gap-8 sm:flex">
-        <Link href={"about"} className="">
-          About me
-        </Link>
-        <Link href={"projects"}>projects</Link>
-
-        <Button asChild>
-          <a
-          // href="google.com"
-          // className="rounded-xl bg-black px-2 py-1 text-white hover:cursor-pointer dark:bg-white dark:text-[background]"
-          >
-            contact me
-          </a>
-        </Button>
-      </div>
+      <Links />
       <div className="ml-auto flex items-center gap-1 sm:ml-1 sm:gap-2">
         <Button asChild variant={"ghost"} className="p-0">
           <Link

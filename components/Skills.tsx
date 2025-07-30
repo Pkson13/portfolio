@@ -1,18 +1,11 @@
 "use client";
-import React, {
-  createContext,
-  RefObject,
-  useContext,
-  useRef,
-  useState,
-} from "react";
+import React, { createContext, RefObject, useContext, useRef } from "react";
 import Root3d from "./threejs/Root3d";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { Poppins } from "next/font/google";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmotherContext } from "./ClientWrapper";
-import { DefaultLoadingManager } from "three";
 import Contact from "./Contact";
 
 export const buttonrefctx =
@@ -144,6 +137,7 @@ const Skills = () => {
           // left: 0,
           ease: "power3.out",
           duration: 2,
+          padding: 0,
           // rotateZ: -5,
           // clipPath: "polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%)",
         },
@@ -288,7 +282,7 @@ const Skills = () => {
             },
 
             // start: `top bottom`,
-            end: "bottom top",
+            end: "bottom -50%",
             id: "test",
             pinReparent: true,
             scrub: 1,
@@ -528,7 +522,7 @@ const Skills = () => {
               className="mb-5 flex flex-col-reverse gap-12 overflow-visible bg-transparent sm:gap-16 md:grid md:grid-cols-2 md:items-center"
               id="scale"
             >
-              <div className="cliprectangle col-span-1 origin-center">
+              <div className="cliprectangle col-span-1 origin-center md:p-4">
                 <div
                   className="z-100 aspect-square size-full overflow-hidden rounded-lg md:aspect-video"
                   id="scene-wrapper"

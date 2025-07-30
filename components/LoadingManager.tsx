@@ -2,16 +2,18 @@
 
 import gsap from "gsap";
 import Image from "next/image";
-import { ReactNode, useEffect, useRef } from "react";
+import { ReactNode, useContext, useEffect, useRef } from "react";
 import { DefaultLoadingManager } from "three";
 import { Button } from "./ui/button";
 import { SplitText } from "gsap/SplitText";
+import { ScrollSmotherContext } from "./ClientWrapper";
 
 const LoadingManager = ({ children }: { children: ReactNode }) => {
   const progressDisplay = useRef<HTMLDivElement | null>(null);
   const loadingScreen = useRef<HTMLDivElement | null>(null);
   const reveal = useRef<HTMLDivElement | null>(null);
   const startButtonref = useRef<HTMLButtonElement | null>(null);
+  const scrollSmother = useContext(ScrollSmotherContext);
 
   useEffect(() => {
     const loadingDots = gsap.to(".loading-dot", {
@@ -26,6 +28,9 @@ const LoadingManager = ({ children }: { children: ReactNode }) => {
     });
 
     DefaultLoadingManager.onLoad = function () {
+      if (scrollSmother && scrollSmother.current) {
+        scrollSmother.current.scrollTo("#hero", true, "top 15%");
+      }
       console.log("Loading Complete!");
       loadingDots.revert();
       loadingDots.kill();
@@ -197,6 +202,7 @@ const LoadingManager = ({ children }: { children: ReactNode }) => {
             <Image
               src={"/loading_central_cee.png"}
               alt="loading"
+              priority
               className="size-full contrast-100 grayscale"
               width={200}
               height={600}

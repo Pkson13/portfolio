@@ -277,6 +277,15 @@ export const loadDockerModel = async ({
     glftLoader.load("/models/moby_dock_docker_whale.glb", async (data) => {
       console.log("loaded glb file", data);
       console.log("model scale", data.scene.scale);
+      scene.add(data.scene);
+      controls.target = data.scene.position;
+      data.scene.position.set(20, 1, 0);
+      camera.position.set(
+        15.405193262355265,
+        1.7046355310666237,
+        8.853882753462061,
+      );
+
       const wheel = await new Promise<Group<Object3DEventMap>>((resolve) => {
         const customLoadingManager = new LoadingManager();
         customLoadingManager.onStart = function (url, itemsLoaded, itemsTotal) {
@@ -393,254 +402,14 @@ export const loadDockerModel = async ({
       // controls.autoRotate = true;
       // data.scene.updateMatrix();
       // data.scene.scale.setScalar(2);
-      controls.target = data.scene.position;
-      data.scene.position.set(20, 1, 0);
-      camera.position.set(
-        15.405193262355265,
-        1.7046355310666237,
-        8.853882753462061,
-      );
 
       ModelAnimations(data, camera, controls, scene);
 
-      // for (let i = 0; i < 100; i++) {
-      //   // i = degToRad(i);
-      //   //Math.sin takes in radins and returns radians
-      //   console.log(`sine ${i} = ${Math.sin(degToRad(i))}`);
-      //   // console.log(`cosine ${i} = ${Math.cos(degToRad(i))}`);
-      // }
-      // const axesHelper = new AxesHelper(20);
-      // data.scene.add(axesHelper);
-      // camera.lookAt(new Vector3(10, 10, 0));
-
-      //there is overlap of the timeout in the gamloop below
-      //  type gamekeys = {
-      //       ArrowUp?: boolean;
-      //       ArrowLeft?: boolean;
-      //       ArrowRight?: boolean;
-      //       ArrowDown?: boolean;
-      //       Shift?: boolean;
-      //     };
-      // const keysPressed: gamekeys = {};
-      // let speed = 0;
-      // let is_accelerating: boolean;
-
-      // document.body.addEventListener("keydown", async (ev) => {
-      //   console.log("pressed", ev.key);
-      //   // ev.stopPropagation();
-      //   // ev.preventDefault();
-
-      //   switch (ev.key) {
-      //     case "Shift":
-      //       // if (speed == 0.2) {
-      //       // speed += 0.3;
-      //       // }
-      //       break;
-      //     case "ArrowUp":
-      //       keysPressed[ev.key] = true;
-      //       is_accelerating = true;
-      //       for (speed; speed < 0.2; speed += 0.01) {
-      //         if (!is_accelerating) break;
-      //         console.log("Accelerating", speed);
-      //         await new Promise<void>((resolve, reject) => {
-      //           setTimeout(resolve, 0.001);
-      //         });
-      //       }
-
-      //       break;
-      //     case "ArrowDown":
-      //       keysPressed[ev.key] = true;
-      //       for (speed; speed > -0.2; speed -= 0.01) {
-      //         console.log("reversing", speed);
-      //         await new Promise<void>((resolve, reject) => {
-      //           setTimeout(resolve, 0.001);
-      //         });
-      //       }
-
-      //       break;
-      //     case "ArrowRight":
-      //       keysPressed[ev.key] = true;
-
-      //       // data.scene.translateZ(0.1);
-      //       break;
-      //     case "ArrowLeft":
-      //       keysPressed[ev.key] = true;
-
-      //       // data.scene.translateZ(-0.1);
-      //       break;
-      //   }
-      // });
-
-      // document.body.addEventListener("keyup", async (ev) => {
-      //   console.log("keyup", ev.key);
-
-      //   switch (ev.key) {
-      //     case "Shift":
-      //       // if (speed == 0.5) {
-      //       speed -= 0.3;
-      //       // }
-
-      //       break;
-      //     case "ArrowUp":
-      //       is_accelerating = false;
-      //       for (speed; speed > 0; speed -= 0.01) {
-      //         // data.scene.translateX(-i);
-      //         if (is_accelerating) break;
-      //         console.log("decelerating", speed);
-
-      //         await new Promise<void>((resolve, reject) => {
-      //           setTimeout(resolve, 0.001);
-      //         });
-      //       }
-
-      //       keysPressed[ev.key] = false;
-
-      //       break;
-      //     case "ArrowDown":
-      //       for (speed; speed < 0; speed += 0.01) {
-      //         // data.scene.translateX(-i);
-      //         console.log("stoping reverse", speed);
-      //         await new Promise<void>((resolve, reject) => {
-      //           setTimeout(resolve, 0.001);
-      //         });
-      //       }
-      //       keysPressed[ev.key] = false;
-      //       break;
-      //     case "ArrowRight":
-      //       keysPressed[ev.key] = false;
-
-      //       break;
-      //     case "ArrowLeft":
-      //       keysPressed[ev.key] = false;
-
-      //       break;
-      //   }
-      // });
-
-      // const gameConrolsLoop = () => {
-      //   const angle = data.scene.rotation.y;
-      //   console.log("gamecontrolsLoop");
-      //   if (keysPressed["ArrowUp"] == true) {
-      //     console.log("current speed", speed);
-      //     // console.log(`angle in radians ${angle}, deg ${radToDeg(angle)}`);
-      //     data.scene.position.x -= Math.cos(-angle) * speed;
-      //     data.scene.position.z -= Math.sin(-angle) * speed;
-      //     // data.scene.translateX(-0.1);
-      //   }
-      //   if (keysPressed["ArrowDown"]) {
-      //     data.scene.position.x += Math.cos(-angle) * Math.abs(speed);
-      //     data.scene.position.z += Math.sin(-angle) * Math.abs(speed);
-      //     // data.scene.translateX(0.1);
-      //   }
-      //   if (keysPressed["ArrowRight"]) {
-      //     data.scene.rotation.y -= degToRad(1);
-      //   }
-      //   if (keysPressed["ArrowLeft"]) {
-      //     data.scene.rotation.y += degToRad(1);
-      //   }
-      //   requestAnimationFrame(gameConrolsLoop);
-      // };
-      // gameConrolsLoop();
-
-      scene.add(data.scene);
-      // data.scene.traverse((obj) => {
-      //   console.log("t ", obj.name, "\n");
-      //   if (obj.name === "Cube002_0") {
-      //     console.log("remove obj");
-      //     // obj.parent?.remove(obj);
-      //     // obj.material.color.set("green");
-      //   }
-      // });
       const res = dumpObject(data.scene).join("\n");
       console.log(res);
-      // lambo = data.scene.children[0];
-      // console.log("scene", lambo);
-
-      // const geometry = new BufferGeometry();
-
-      // const vertices = new Float32Array([
-      //   -1.0,
-      //   -1.0,
-      //   1.0, // v0
-      //   1.0,
-      //   -1.0,
-      //   1.0, // v1
-      //   1.0,
-      //   1.0,
-      //   1.0, // v2
-      //   -1.0,
-      //   1.0,
-      //   1.0, // v3
-      // ]);
-
-      // const indices = [0, 1, 2, 2, 3, 0];
-
-      // geometry.setIndex(indices);
-      // geometry.setAttribute("position", new BufferAttribute(vertices, 3));
-
-      // const material = new MeshBasicMaterial({ color: 0xff0000 });
-      // const mesh = new Mesh(geometry, material);
-      // scene.add(mesh);
-      // controls.target = mesh.position;
-      // console.log("mesh", mesh.geometry.attributes);
 
       const quaternion = new Quaternion();
       quaternion.setFromAxisAngle(new Vector3(0, 1, 0), Math.PI / 2);
-      // camera.applyQuaternion(quaternion);
-      // camera.rotation.x = Math.PI /2
-      await new Promise((res) => {
-        // gsap.to(camera.position, {
-        //   x: -3,
-        //   y: -2,
-        //   duration: 2,
-        //   delay: 20,
-        //   ease: "none",
-        //   onComplete: res, // resolve when animation finishes
-        // });
-        // const targetEuler = new Euler(2 * Math.PI, 0, 0, "XYZ");
-        // const targetQuat = new Quaternion().setFromEuler(targetEuler);
-        // gsap.to(camera.quaternion, {
-        //   x: targetQuat.x,
-        //   y: targetQuat.y,
-        //   z: targetQuat.z,
-        //   w: targetQuat.w,
-        //   duration: 5,
-        // });
-        // controls.disconnect();\
-        console.log(Math.PI / 4 / 2);
-        // controls.enabled = false;
-
-        // gsap.to(camera.rotation, {
-        //   // y: -Math.PI / 2, // 90 degrees
-        //   x: Math.PI / 4 / 2,
-        //   // x: 200,
-        //   duration: 5,
-        //   onUpdate: () => {
-        //     camera.updateMatrixWorld();
-        //   },
-        //   onComplete: () => {
-        //     controls.enabled = true;
-        //     // controls.connect(document.body);
-        //   },
-        //   ease: "none",
-        // });
-        gsap.to(data.scene.position, {
-          // y: -Math.PI / 2, // 90 degrees
-          x: 20,
-          y: 1,
-          // x: 200,
-          duration: 5,
-          onUpdate: () => {
-            camera.updateMatrixWorld();
-          },
-          onComplete: () => {
-            // controls.enabled = true;
-            // controls.connect(document.body);
-            res("done");
-          },
-          ease: "none",
-        });
-      }).then((result) => console.log("promise done", result));
 
       resolve(data.scene);
     });

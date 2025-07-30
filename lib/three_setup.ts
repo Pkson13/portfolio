@@ -357,11 +357,13 @@ export const loadDockerModel = async ({
         };
         const glftLoader = new GLTFLoader(customLoadingManager);
 
-        glftLoader.load("/models/ships_wheel.glb", (wheel_data) => {
+        glftLoader.load("/models/ship_steering_wheel.glb", (wheel_data) => {
           data.scene.add(wheel_data.scene);
+          // const axesHelper = new AxesHelper(100);
+          // wheel_data.scene.add(axesHelper);
 
           wheel_data.scene.name = "wheel";
-          wheel_data.scene.scale.setScalar(0.005);
+          wheel_data.scene.scale.setScalar(0.5);
           const cube9 = data.scene.getObjectByName("Cube009");
           if (cube9) {
             const child = cube9.children[0] as Mesh;
@@ -380,14 +382,15 @@ export const loadDockerModel = async ({
             // new Color("#fff");
             // new MeshStandardMaterial({ color: "white" });
           }
-          wheel_data.scene.position.set(-1.5, 0.1, -0.3);
+          wheel_data.scene.position.set(-1.5, 0.5, -0.3);
           const target = new Vector3();
           wheel_data.scene.getWorldPosition(target);
           console.log("wheel global pos before animation", target);
           // controls.target = target;
-          // wheel_data.scene.rotation.y = -degToRad(90);
           // wheel_data.scene.rotation.z = -degToRad(90);
-          wheel_data.scene.rotation.set(0, degToRad(90), 0, "XYZ");
+          wheel_data.scene.rotation.y = degToRad(90);
+          // wheel_data.scene.rotation.z = degToRad(20);
+          // wheel_data.scene.rotation.set(0, degToRad(90), 0, "XYZ");
           console.log("wheel_data.scene", wheel_data.scene);
           // controls.target = wheel_data.scene.position;
           resolve(wheel_data.scene);

@@ -355,7 +355,7 @@ export const loadDockerModel = async ({
         customLoadingManager.onError = function (url) {
           console.log("There was an error loading " + url);
         };
-        const glftLoader = new GLTFLoader(customLoadingManager);
+        const glftLoader = new GLTFLoader();
 
         glftLoader.load("/models/ship_steering_wheel.glb", (wheel_data) => {
           data.scene.add(wheel_data.scene);

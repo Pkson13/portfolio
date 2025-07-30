@@ -355,7 +355,7 @@ export const loadDockerModel = async ({
         customLoadingManager.onError = function (url) {
           console.log("There was an error loading " + url);
         };
-        const glftLoader = new GLTFLoader();
+        const glftLoader = new GLTFLoader(customLoadingManager);
 
         glftLoader.load("/models/ship_steering_wheel.glb", (wheel_data) => {
           data.scene.add(wheel_data.scene);
@@ -686,9 +686,9 @@ function ModelAnimations(
     .to(
       camera.position,
       {
-        x: DesertRoad.position.x,
+        x: DesertRoad.position.x + 1,
         y: DesertRoad.position.y + 4,
-        z: DesertRoad.position.z + 20,
+        z: DesertRoad.position.z + 2,
         ease: "none",
         duration: 2,
         // onComplete: () => {
@@ -757,7 +757,7 @@ function ModelAnimations(
       {
         x: DesertRoad.position.x - 4,
         y: DesertRoad.position.y + 4,
-        z: DesertRoad.position.z + 16,
+        z: DesertRoad.position.z + 5,
         ease: "none",
         duration: 2,
         // onComplete: () => {

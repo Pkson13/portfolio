@@ -278,6 +278,44 @@ export const loadDockerModel = async ({
       console.log("loaded glb file", data);
       console.log("model scale", data.scene.scale);
       const wheel = await new Promise<Group<Object3DEventMap>>((resolve) => {
+        const customLoadingManager = new LoadingManager();
+        customLoadingManager.onStart = function (url, itemsLoaded, itemsTotal) {
+          console.log(
+            "Started loading file:  on custom manager" +
+              url +
+              ".\nLoaded " +
+              itemsLoaded +
+              " of " +
+              itemsTotal +
+              " files.",
+          );
+        };
+
+        customLoadingManager.onLoad = function () {
+          console.log("Loading complete on custom manager!");
+        };
+
+        customLoadingManager.onProgress = function (
+          url,
+          itemsLoaded,
+          itemsTotal,
+        ) {
+          console.log(
+            "Loading file: " +
+              url +
+              ".\nLoaded " +
+              itemsLoaded +
+              " of " +
+              itemsTotal +
+              " files.",
+          );
+        };
+
+        customLoadingManager.onError = function (url) {
+          console.log("There was an error loading " + url);
+        };
+        const glftLoader = new GLTFLoader(customLoadingManager);
+
         glftLoader.load("/models/ships_wheel.glb", (wheel_data) => {
           data.scene.add(wheel_data.scene);
 
@@ -1205,12 +1243,12 @@ function ModelAnimations(
   //   duration: 2,
   // });
 }
-export const loadIslandModel = ({
+export const loadmushroom_suspended_island = ({
   // loader: glftLoader,
   controls,
   camera,
   scene,
-  lambo,
+  // lambo,
 }: LoadAutumnForest) => {
   const customLoadingManager = new LoadingManager();
   customLoadingManager.onStart = function (url, itemsLoaded, itemsTotal) {
@@ -1296,8 +1334,6 @@ export const loadIslandModel = ({
     plane.position.x = -30;
     plane.position.z = -50;
     console.log(dumpObject(data.scene).join("\n"));
-    lambo = data.scene.children[0];
-    console.log("scene", lambo);
 
     // const geometry = new BufferGeometry();
 
@@ -1457,7 +1493,7 @@ export const loadautmforest = async ({
     });
   });
 };
-export const loadIslands = async ({
+export const loadDesertRoad = async ({
   loader: glftLoader,
   controls,
   camera,

@@ -15,7 +15,7 @@ export type loadIsland = {
   scene: Scene;
 };
 export type LoadAutumnForest = {
-  name: string;
+  // name: string;
   controls: OrbitControls;
   camera: PerspectiveCamera;
   scene: Scene;

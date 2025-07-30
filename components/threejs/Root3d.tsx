@@ -1,60 +1,37 @@
 "use client";
 import {
-  dumpObject,
   getworldposition,
-  handlescenetheme,
   loadaudio,
   loadautmforest,
-  loadDockerModel,
-  loadIslandModel,
-  loadIslands,
-  lookAtmodel,
+  loadDesertRoad,
+  loadmushroom_suspended_island,
   setupSkyAndWater,
 } from "@/lib/three_setup";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useTheme } from "next-themes";
+// import { useTheme } from "next-themes";
 import React, {
   createContext,
   Dispatch,
   SetStateAction,
-  useContext,
   useEffect,
   useRef,
   useState,
 } from "react";
 import {
   AmbientLight,
-  ArrowHelper,
-  AxesHelper,
-  BoxGeometry,
-  BufferAttribute,
-  BufferGeometry,
   Camera,
-  CatmullRomCurve3,
-  EdgesGeometry,
   Group,
   // Fog,
-  Line,
-  LineBasicMaterial,
-  LineSegments,
-  MathUtils,
-  Mesh,
-  MeshBasicMaterial,
-  Object3D,
   Object3DEventMap,
   PerspectiveCamera,
-  Quaternion,
   Scene,
-  TubeGeometry,
+  // TubeGeometry,
   Vector3,
   WebGLRenderer,
 } from "three";
 import { GLTFLoader, OrbitControls } from "three/examples/jsm/Addons.js";
 import Stats from "three/examples/jsm/libs/stats.module.js";
 import SceneWords from "./SceneWords";
-import { buttonrefctx } from "../Skills";
-import { Button } from "../ui/button";
+// import { buttonrefctx } from "../Skills";
 import ControlsComponent from "./Controls";
 
 export const Dockermodelctx = createContext<Group<Object3DEventMap> | null>(
@@ -79,7 +56,7 @@ export const global3dctx = createContext<global3dctxtypes | undefined>(
 const Root3d = () => {
   const [exit3dpressed, setexit3dpressed] = useState<boolean>(false);
 
-  const Enter3dButtonref = useContext(buttonrefctx);
+  // const Enter3dButtonref = useContext(buttonrefctx);
 
   const sceneref = useRef<HTMLDivElement | null>(null);
   const getworldpositionref = useRef<HTMLButtonElement | null>(null);
@@ -90,7 +67,7 @@ const Root3d = () => {
     useState<Group<Object3DEventMap> | null>(null);
   const [animationDone, setanimationDone] = useState<boolean>(false);
 
-  const { theme } = useTheme();
+  // const { theme } = useTheme();
 
   useEffect(() => {
     async function init() {
@@ -241,23 +218,23 @@ const Root3d = () => {
         );
       }
 
-      const threelinematerial = new LineBasicMaterial({});
+      // const threelinematerial = new LineBasicMaterial({});
       const points1 = [] as Vector3[];
       points1.push(new Vector3(-3, 0, 0));
       points1.push(new Vector3(0, 3, 0));
       points1.push(new Vector3(3, 0, 0));
 
-      const linegeometry = new BufferGeometry().setFromPoints(points1);
-      const line = new Line(linegeometry, threelinematerial);
+      // const linegeometry = new BufferGeometry().setFromPoints(points1);
+      // const line = new Line(linegeometry, threelinematerial);
       // scene.add(line);
-      let lambo = null as Object3D<Object3DEventMap> | null;
+      // let lambo = null as Object3D<Object3DEventMap> | null;
 
       const glftLoader = new GLTFLoader();
       const light = new AmbientLight(0xffffff, 2);
       scene.add(light);
       //docker model will be loaded inide the next funtion
       setDockerModel(
-        await loadIslands({
+        await loadDesertRoad({
           name: "desert_road",
           loader: glftLoader,
           controls,
@@ -265,10 +242,9 @@ const Root3d = () => {
           scene,
         }),
       );
-      loadIslandModel({ controls, camera, lambo, scene });
+      loadmushroom_suspended_island({ controls, camera, scene });
 
       loadautmforest({
-        name: "autumnal_forest",
         // loader: glftLoader,
         controls,
         camera,
@@ -323,32 +299,23 @@ const Root3d = () => {
       //   // ">", // run after previous animation
       // );
 
-      const curve = new CatmullRomCurve3(points, true);
+      // const curve = new CatmullRomCurve3(points, true);
 
       // const pointss = curve.getPoints(50);
-      const tubegeo = new TubeGeometry(curve, 222, 0.625, 16, true);
-      const tubelinesgeo = new EdgesGeometry(tubegeo);
+      // const tubegeo = new TubeGeometry(curve, 222, 0.625, 16, true);
+      // const tubelinesgeo = new EdgesGeometry(tubegeo);
 
-      const linematerial = new MeshBasicMaterial({
-        color: 0xff0000,
-        // wireframe: true,
-      });
+      // const linematerial = new MeshBasicMaterial({
+      //   color: 0xff0000,
+      //   // wireframe: true,
+      // });
 
       // Create the final object to add to the scene
-      const curveObject = new LineSegments(tubelinesgeo, linematerial);
+      // const curveObject = new LineSegments(tubelinesgeo, linematerial);
       // console.log(points);
       // scene.add(curveObject);
 
-      const geometry = new BoxGeometry(1, 1, 1);
-      const material = new MeshBasicMaterial({ color: 0x00ff00 });
-      const cube = new Mesh(geometry, material);
-      // scene.add(cube);
-
       function animate() {
-        if (lambo) {
-          // console.log("rotating monkey");
-          // lambo.position.x += 0.01;
-        }
         // cube.rotation.x += 0.01;
         // cube.rotation.y += 0.01;
         if (controls.enabled) controls.update();

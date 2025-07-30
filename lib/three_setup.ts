@@ -1206,12 +1206,46 @@ function ModelAnimations(
   // });
 }
 export const loadIslandModel = ({
-  loader: glftLoader,
+  // loader: glftLoader,
   controls,
   camera,
   scene,
   lambo,
-}: loaderFuncProps) => {
+}: LoadAutumnForest) => {
+  const customLoadingManager = new LoadingManager();
+  customLoadingManager.onStart = function (url, itemsLoaded, itemsTotal) {
+    console.log(
+      "Started loading file:  on custom manager" +
+        url +
+        ".\nLoaded " +
+        itemsLoaded +
+        " of " +
+        itemsTotal +
+        " files.",
+    );
+  };
+
+  customLoadingManager.onLoad = function () {
+    console.log("Loading complete on custom manager!");
+  };
+
+  customLoadingManager.onProgress = function (url, itemsLoaded, itemsTotal) {
+    console.log(
+      "Loading file: " +
+        url +
+        ".\nLoaded " +
+        itemsLoaded +
+        " of " +
+        itemsTotal +
+        " files.",
+    );
+  };
+
+  customLoadingManager.onError = function (url) {
+    console.log("There was an error loading " + url);
+  };
+
+  const glftLoader = new GLTFLoader(customLoadingManager);
   glftLoader.load("/models/mushroom_suspended_island.glb", async (data) => {
     console.log("mushreoom", data);
     console.log("model scale", data.scene.scale);

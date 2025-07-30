@@ -255,7 +255,6 @@ const Root3d = () => {
       const glftLoader = new GLTFLoader();
       const light = new AmbientLight(0xffffff, 2);
       scene.add(light);
-      loadIslandModel({ loader: glftLoader, controls, camera, lambo, scene });
       //docker model will be loaded inide the next funtion
       setDockerModel(
         await loadIslands({
@@ -266,6 +265,7 @@ const Root3d = () => {
           scene,
         }),
       );
+      loadIslandModel({ controls, camera, lambo, scene });
 
       loadautmforest({
         name: "autumnal_forest",

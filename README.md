@@ -41,6 +41,7 @@ A modern, responsive portfolio website built with Next.js, showcasing my project
 - [Threejs](https://reactjs.org/) - JavaScript library for rendering 3d content on the web
 - [TypeScript](https://www.typescriptlang.org/) - Typed JavaScript
 - [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
+- [gsap](https://gsap.com/)
 - [Vercel](https://vercel.com/) - Deployment platform
 
 ## 🏃‍♂️ Running Locally
@@ -48,7 +49,7 @@ A modern, responsive portfolio website built with Next.js, showcasing my project
 1. Clone the repository:
 
    ```bash
-   https://github.com/Pkson13/portfolio.git
+   git clone https://github.com/Pkson13/portfolio.git
    ```
 
 2. Install dependencies:

@@ -18,6 +18,7 @@ import React, {
 } from "react";
 import {
   AmbientLight,
+  // AxesHelper,
   Camera,
   Group,
   LoadingManager,
@@ -238,12 +239,12 @@ const Root3d = () => {
       customLoadingManager.onStart = function (url, itemsLoaded, itemsTotal) {
         console.log(
           "Started loading file:  on custom manager" +
-            url +
-            ".\nLoaded " +
-            itemsLoaded +
-            " of " +
-            itemsTotal +
-            " files.",
+          url +
+          ".\nLoaded " +
+          itemsLoaded +
+          " of " +
+          itemsTotal +
+          " files.",
         );
       };
 
@@ -258,12 +259,12 @@ const Root3d = () => {
       ) {
         console.log(
           "Loading file: " +
-            url +
-            ".\nLoaded " +
-            itemsLoaded +
-            " of " +
-            itemsTotal +
-            " files.",
+          url +
+          ".\nLoaded " +
+          itemsLoaded +
+          " of " +
+          itemsTotal +
+          " files.",
         );
       };
 

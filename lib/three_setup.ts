@@ -2,7 +2,7 @@ import {
   Audio,
   AudioListener,
   AudioLoader,
-  AxesHelper,
+  // AxesHelper,
   Camera,
   Color,
   DoubleSide,
@@ -65,12 +65,12 @@ export const create3dText = async (
   customLoadingManager.onStart = function (url, itemsLoaded, itemsTotal) {
     console.log(
       "Started loading font on custom manager" +
-        url +
-        ".\nLoaded " +
-        itemsLoaded +
-        " of " +
-        itemsTotal +
-        " files.",
+      url +
+      ".\nLoaded " +
+      itemsLoaded +
+      " of " +
+      itemsTotal +
+      " files.",
     );
   };
 
@@ -81,12 +81,12 @@ export const create3dText = async (
   customLoadingManager.onProgress = function (url, itemsLoaded, itemsTotal) {
     console.log(
       "Loading font: " +
-        url +
-        ".\nLoaded " +
-        itemsLoaded +
-        " of " +
-        itemsTotal +
-        " files.",
+      url +
+      ".\nLoaded " +
+      itemsLoaded +
+      " of " +
+      itemsTotal +
+      " files.",
     );
   };
 
@@ -323,12 +323,12 @@ export const loadDockerModel = async ({
         customLoadingManager.onStart = function (url, itemsLoaded, itemsTotal) {
           console.log(
             "Started loading file:  on custom manager" +
-              url +
-              ".\nLoaded " +
-              itemsLoaded +
-              " of " +
-              itemsTotal +
-              " files.",
+            url +
+            ".\nLoaded " +
+            itemsLoaded +
+            " of " +
+            itemsTotal +
+            " files.",
           );
         };
 
@@ -343,12 +343,12 @@ export const loadDockerModel = async ({
         ) {
           console.log(
             "Loading file: " +
-              url +
-              ".\nLoaded " +
-              itemsLoaded +
-              " of " +
-              itemsTotal +
-              " files.",
+            url +
+            ".\nLoaded " +
+            itemsLoaded +
+            " of " +
+            itemsTotal +
+            " files.",
           );
         };
 
@@ -747,7 +747,7 @@ function ModelAnimations(
         duration: 2,
         stagger: 0.01,
         ease: "none",
-        onComplete: () => {},
+        onComplete: () => { },
       },
       // "<",
     )
@@ -820,7 +820,7 @@ function ModelAnimations(
         delay: 1,
         stagger: 0.01,
         ease: "none",
-        onComplete: () => {},
+        onComplete: () => { },
       },
       // "<",
     )
@@ -1073,7 +1073,7 @@ export const loadmushroom_suspended_island = ({
     // const axesHelper = new AxesHelper(100);
     // data.scene.add(axesHelper);
     // console.log("found", data.scene.getObjectByName("Group50463_104"));
-
+    //
     data.scene.scale.setScalar(0.1);
     data.scene.position.set(-20, 1, 4);
     data.scene.rotateY(80);
@@ -1087,24 +1087,77 @@ export const loadmushroom_suspended_island = ({
     //     // obj.material.color.set("green");
     //   }
     // });
-    const texture = new TextureLoader(customLoadingManager);
-    const gsapImg = texture.load("/gsap.png");
-    const geometry = new PlaneGeometry(10, 10);
-    const material = new MeshBasicMaterial({
-      color: 0xffff00,
-      // side: DoubleSide,
-      side: DoubleSide,
-      map: gsapImg,
-    });
-    const plane = new Mesh(geometry, material);
+    const images: any = {
+      gsap: "gsap.png",
+      git: "git-logo.png",
+      python: "python-logo.png",
+      django: "django-logo.png"
+    }
+    // const textures = {}
+    // controls.target = new Vector3(-20, 1, 0);
+    // controls.autoRotate = false
+    // controls.enableZoom = true
+    // controls.maxDistance = 50
+    const textureLoader = new TextureLoader(customLoadingManager);
+    // const gsapImg = texture.load("/gsap.png");
+    for (const img of Object.keys(images)) {
+      const texture = textureLoader.load(images[img]);
+      // textures[img] = texture
 
-    plane.scale.setScalar(2);
-    // plane.rotateY(degToRad(90));
-    data.scene.add(plane);
-    // plane.position.set(-20, 5, -17);
-    plane.position.y = 10;
-    plane.position.x = -30;
-    plane.position.z = -50;
+      const geometry = new PlaneGeometry(10, 10);
+      const material = new MeshBasicMaterial({
+        color: 0xffff00,
+        // side: DoubleSide,
+        side: DoubleSide,
+        map: texture,
+      });
+      switch (img) {
+        case "gsap":
+          let gsapPlane = new Mesh(geometry, material);
+          gsapPlane.scale.setScalar(2);
+          // plane.rotateY(degToRad(90));
+          data.scene.add(gsapPlane);
+          // plane.position.set(-20, 5, -17);
+          gsapPlane.position.y = 10;
+          gsapPlane.position.x = -30;
+          gsapPlane.position.z = -50;
+          break;
+
+        case "git":
+          let GitPlane = new Mesh(geometry, material);
+          GitPlane.scale.set(2.5, 2, 0)
+          GitPlane.rotateY(degToRad(190));
+          data.scene.add(GitPlane);
+          // plane.position.set(-20, 5, -17);
+          GitPlane.position.y = 10
+          GitPlane.position.x = -70;
+          GitPlane.position.z = -45;
+          break;
+        case "python":
+          let pythonPlane = new Mesh(geometry, material);
+          pythonPlane.scale.set(2.5, 2, 0)
+          pythonPlane.rotateY(degToRad(210));
+          data.scene.add(pythonPlane);
+          // plane.position.set(-20, 5, -17);
+          pythonPlane.position.y = 10
+          pythonPlane.position.x = -100;
+          pythonPlane.position.z = -30;
+          break;
+        case "django":
+          let djangoPlane = new Mesh(geometry, material);
+          djangoPlane.scale.set(2.5, 2, 0)
+          djangoPlane.rotateY(-degToRad(100));
+          data.scene.add(djangoPlane);
+          // plane.position.set(-20, 5, -17);
+          djangoPlane.position.y = 10
+          djangoPlane.position.x = -125;
+          // djangoPlane.position.z = -30;
+          break;
+
+      }
+
+    }
+    // console.log("textures", textures)
     console.log(dumpObject(data.scene).join("\n"));
   });
 };
@@ -1112,7 +1165,7 @@ export const loadmushroom_suspended_island = ({
 export const loadautmforest = async ({
   // name,
   // loader: glftLoader,
-  // controls,
+  controls,
   // camera,
   manager: customLoadingManager,
   scene,
@@ -1131,20 +1184,79 @@ export const loadautmforest = async ({
       // data.scene.matrixAutoUpdate = false;
       // data.scene.updateMatrix();
       // data.scene.scale.setScalar(2);
-      // controls.target = data.scene.position;
       // data.scene.position.set(20, 1, 0);
       // const axes = new AxesHelper(60);
       // data.scene.add(axes);
 
-      const geometry = new PlaneGeometry(1, 1);
-      const material = new MeshBasicMaterial({
-        color: 0xffff00,
-        // side: DoubleSide,
-      });
-      const plane = new Mesh(geometry, material);
-      data.scene.add(plane);
+      data.scene.position.set(30.405193262355265, -4, 40.853882753462061);
+      // controls.target = data.scene.position;
 
-      data.scene.position.set(30.405193262355265, -4, 25.853882753462061);
+      type images = {
+        nodejs: string,
+        lua: string
+        asm: string
+      }
+
+      const images: images = {
+        nodejs: "nodejs.png",
+        lua: "lua.png",
+        asm: "assembly.png"
+      }
+      // // const textures = {}
+      // controls.autoRotate = false
+      // controls.enableZoom = true
+      // controls.maxDistance = 50
+      const textureLoader = new TextureLoader(customLoadingManager);
+      // const gsapImg = texture.load("/gsap.png");
+      for (const img of Object.keys(images)) {
+        const texture = textureLoader.load(images[img]);
+        // textures[img] = texture
+
+        const geometry = new PlaneGeometry(15, 10);
+        const material = new MeshBasicMaterial({
+          // color: 0xffff00,
+          // side: DoubleSide,
+          side: DoubleSide,
+          map: texture,
+        });
+        switch (img) {
+          case "nodejs":
+            let gsapPlane = new Mesh(geometry, material);
+            gsapPlane.scale.setScalar(0.2)
+            gsapPlane.rotateY(degToRad(180));
+            data.scene.add(gsapPlane);
+            // plane.position.set(-20, 5, -17);
+            gsapPlane.position.y = 7;
+            // gsapPlane.position.x = -30;
+            gsapPlane.position.z = -13;
+            break;
+          case "lua":
+            let luaPlane = new Mesh(geometry, material);
+            luaPlane.scale.setScalar(0.2)
+            luaPlane.rotateY(degToRad(200));
+            data.scene.add(luaPlane);
+            // plane.position.set(-20, 5, -17);
+            luaPlane.position.y = 7;
+            luaPlane.position.x = -7;
+            luaPlane.position.z = -11;
+            break
+
+          case "asm":
+            let asmPlane = new Mesh(geometry, material);
+            asmPlane.scale.setScalar(0.2)
+            asmPlane.rotateY(degToRad(250));
+            data.scene.add(asmPlane);
+            // plane.position.set(-20, 5, -17);
+            asmPlane.position.y = 7;
+            asmPlane.position.x = -12;
+            asmPlane.position.z = -3;
+
+        }
+
+      }
+      // console.log("textures", textures)
+      console.log(dumpObject(data.scene).join("\n"));
+
     });
   });
 };

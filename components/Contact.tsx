@@ -18,7 +18,7 @@ const Contact = () => {
           {/* Company Info */}
           <div className="space-y-4">
             <h3 className="text-2xl font-bold tracking-tight">ABOUT ME</h3>
-            <div className="space-y-1 text-sm text-balance text-neutral-600 dark:text-neutral-300">
+            <div className="space-y-1 text-sm text-balance text-neutral-600 text-gree dark:text-neutral-300">
               <p>Student at Mount Kenya University</p>
               <p>Pursuing a degree in Computer Science</p>
               <p>and Information Technology</p>

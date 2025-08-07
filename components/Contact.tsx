@@ -33,7 +33,7 @@ const Contact = () => {
               </h4>
               <div className="space-y-3">
                 <Link
-                  href="https://x.com/of_head26431"
+                  href="https://x.com/pk_son_dev"
                   target="_blank"
                   className="group flex items-center gap-3 text-sm text-neutral-600 transition-all duration-200 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white"
                 >
@@ -241,3 +241,4 @@ const Contact = () => {
 };
 
 export default Contact;
+

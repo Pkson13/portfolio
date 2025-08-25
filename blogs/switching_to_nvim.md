@@ -132,6 +132,6 @@ Switching from VSCode to Neovim was challenging but ultimately rewarding. The sp
 
 ---
 
-> if you don't use Neovim eventually you'll yourself alone in a urinal, i walk in, turn my head and look at you then say this three words **"i use neovim, BTW"**, you'll immediatly feel smaller, like your editor is not just well endowed as you thought
+> if you don't use Neovim eventually you'll find yourself alone in a urinal, i walk in, turn my head and look at you then say this three words **"i use neovim, BTW"**, you'll immediatly feel smaller, like your editor is not just well endowed as you thought
 
 > -Peteron kinyanjui

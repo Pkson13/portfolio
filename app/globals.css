@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -141,6 +142,11 @@ nav {
 .secondary-header {
   @apply font-(family-name:--font-bebas-neue) text-2xl font-bold tracking-wide text-gray-900 dark:text-white;
 }
+
+.bebas-header{
+  @apply font-(family-name:--font-bebas-neue)
+}
+
 .bw-img {
   filter: grayscale(100%) contrast(200%);
 }
@@ -157,4 +163,10 @@ nav {
   /* clip-path: polygon(25% 0, 100% 25%, 75% 100%, 0 75%); */
   /* mix-blend-mode: lighten; */
   /* background-color: white; */
+}
+#markdown h1{
+  @apply text-2xl
+}
+#markdown strong{
+  @apply text-green-800
 }

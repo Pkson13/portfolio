@@ -1,57 +1,39 @@
 "use client";
 import {
-  dumpObject,
   getworldposition,
-  handlescenetheme,
   loadaudio,
-  loadDockerModel,
-  loadIslandModel,
-  loadIslands,
-  lookAtmodel,
+  loadautmforest,
+  loadDesertRoad,
+  loadmushroom_suspended_island,
   setupSkyAndWater,
 } from "@/lib/three_setup";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useTheme } from "next-themes";
+// import { useTheme } from "next-themes";
 import React, {
   createContext,
-  useContext,
+  Dispatch,
+  SetStateAction,
   useEffect,
   useRef,
   useState,
 } from "react";
 import {
   AmbientLight,
-  ArrowHelper,
-  AxesHelper,
-  BoxGeometry,
-  BufferAttribute,
-  BufferGeometry,
+  // AxesHelper,
   Camera,
-  CatmullRomCurve3,
-  EdgesGeometry,
   Group,
+  LoadingManager,
   // Fog,
-  Line,
-  LineBasicMaterial,
-  LineSegments,
-  MathUtils,
-  Mesh,
-  MeshBasicMaterial,
-  Object3D,
   Object3DEventMap,
   PerspectiveCamera,
-  Quaternion,
   Scene,
-  TubeGeometry,
+  // TubeGeometry,
   Vector3,
   WebGLRenderer,
 } from "three";
 import { GLTFLoader, OrbitControls } from "three/examples/jsm/Addons.js";
 import Stats from "three/examples/jsm/libs/stats.module.js";
 import SceneWords from "./SceneWords";
-import { buttonrefctx } from "../Skills";
-import { Button } from "../ui/button";
+// import { buttonrefctx } from "../Skills";
 import ControlsComponent from "./Controls";
 
 export const Dockermodelctx = createContext<Group<Object3DEventMap> | null>(
@@ -60,13 +42,23 @@ export const Dockermodelctx = createContext<Group<Object3DEventMap> | null>(
 export type global3dctxtypes = {
   camera: Camera | null;
   controls: OrbitControls | null;
+  animationsDone: {
+    state: boolean;
+    setter: Dispatch<SetStateAction<boolean>>;
+  };
+  exit3dstate: {
+    state: boolean;
+    setter: Dispatch<SetStateAction<boolean>>;
+  };
 };
 export const global3dctx = createContext<global3dctxtypes | undefined>(
   undefined,
 );
 
 const Root3d = () => {
-  const Enter3dButtonref = useContext(buttonrefctx);
+  const [exit3dpressed, setexit3dpressed] = useState<boolean>(false);
+
+  // const Enter3dButtonref = useContext(buttonrefctx);
 
   const sceneref = useRef<HTMLDivElement | null>(null);
   const getworldpositionref = useRef<HTMLButtonElement | null>(null);
@@ -75,8 +67,9 @@ const Root3d = () => {
   const contrlosref = useRef<OrbitControls | null>(null);
   const [Docekrmodel, setDockerModel] =
     useState<Group<Object3DEventMap> | null>(null);
+  const [animationDone, setanimationDone] = useState<boolean>(false);
 
-  const { theme } = useTheme();
+  // const { theme } = useTheme();
 
   useEffect(() => {
     async function init() {
@@ -152,17 +145,17 @@ const Root3d = () => {
         // canvas: canvasref.current,
       });
 
-      const axesHelper = new AxesHelper(100);
-      scene.add(axesHelper);
+      // const axesHelper = new AxesHelper(100);
+      // scene.add(axesHelper);
 
       const dir = new Vector3(1, 3, 0);
 
       //normalize the direction vector (convert to vector of length 1/ convert the vector to a unit vector)
       dir.normalize();
 
-      const origin = new Vector3(0, 0, 0);
-      const length = 2;
-      const hex = 0xffff00;
+      // const origin = new Vector3(0, 0, 0);
+      // const length = 2;
+      // const hex = 0xffff00;
 
       // new TextureLoader().load("2k_stars.jpg", (texture) => {
       //   scene.background = texture;
@@ -170,22 +163,22 @@ const Root3d = () => {
 
       const water = setupSkyAndWater(scene, renderer, camera);
 
-      const arrowHelper = new ArrowHelper(dir, origin, length, hex);
-      scene.add(arrowHelper);
+      // const arrowHelper = new ArrowHelper(dir, origin, length, hex);
+      // scene.add(arrowHelper);
 
       // create3dText({ scene, textinput: "Hello I'm Peterson" });
       const controls = new OrbitControls(camera, renderer.domElement);
       contrlosref.current = controls;
-      // // controls.autoRotate = true;
+      controls.autoRotate = true;
       controls.enableDamping = true;
       controls.enabled = true;
       // controls.enablePan = true;
       // controls.enableZoom = true;
       // controls.minPolarAngle = Math.PI / 3; // 45° on the y-axis
       // controls.maxPolarAngle = Math.PI / 2; // 90°
-      // controls.maxPolarAngle = Math.PI * 0.495;
-      // controls.maxPolarAngle = Math.PI / 2.25;
-      controls.minDistance = 1.0;
+      controls.maxPolarAngle = Math.PI * 0.495;
+      controls.maxPolarAngle = Math.PI / 2.25;
+      controls.minDistance = 2.0;
       controls.maxDistance = 8;
       // controls.update();
 
@@ -227,56 +220,78 @@ const Root3d = () => {
         );
       }
 
-      const threelinematerial = new LineBasicMaterial({});
+      // const threelinematerial = new LineBasicMaterial({});
       const points1 = [] as Vector3[];
       points1.push(new Vector3(-3, 0, 0));
       points1.push(new Vector3(0, 3, 0));
       points1.push(new Vector3(3, 0, 0));
 
-      const linegeometry = new BufferGeometry().setFromPoints(points1);
-      const line = new Line(linegeometry, threelinematerial);
+      // const linegeometry = new BufferGeometry().setFromPoints(points1);
+      // const line = new Line(linegeometry, threelinematerial);
       // scene.add(line);
-      let lambo = null as Object3D<Object3DEventMap> | null;
+      // let lambo = null as Object3D<Object3DEventMap> | null;
 
       const glftLoader = new GLTFLoader();
       const light = new AmbientLight(0xffffff, 2);
       scene.add(light);
-      loadIslandModel({ loader: glftLoader, controls, camera, lambo, scene });
       //docker model will be loaded inide the next funtion
+      const customLoadingManager = new LoadingManager();
+      customLoadingManager.onStart = function (url, itemsLoaded, itemsTotal) {
+        console.log(
+          "Started loading file:  on custom manager" +
+          url +
+          ".\nLoaded " +
+          itemsLoaded +
+          " of " +
+          itemsTotal +
+          " files.",
+        );
+      };
+
+      customLoadingManager.onLoad = function () {
+        console.log("Loading complete on custom manager!");
+      };
+
+      customLoadingManager.onProgress = function (
+        url,
+        itemsLoaded,
+        itemsTotal,
+      ) {
+        console.log(
+          "Loading file: " +
+          url +
+          ".\nLoaded " +
+          itemsLoaded +
+          " of " +
+          itemsTotal +
+          " files.",
+        );
+      };
+
+      customLoadingManager.onError = function (url) {
+        console.log("There was an error loading " + url);
+      };
+
       setDockerModel(
-        await loadIslands({
+        await loadDesertRoad({
           name: "desert_road",
           loader: glftLoader,
           controls,
           camera,
           scene,
+          manager: customLoadingManager,
         }),
       );
+      loadmushroom_suspended_island({
+        controls,
+        camera,
+        scene,
+        manager: customLoadingManager,
+      });
 
-      // if (Enter3dButtonref && Enter3dButtonref.current) {
-      //   Enter3dButtonref.current.onclick = () => {
-      //     // lookatmodeltl.play();
-      //     if (Docekrmodel) {
-      //       const lookatmodeltl = lookAtmodel({
-      //         camera,
-      //         controls,
-      //         model: Docekrmodel,
-      //       });
-      //     }
-      //     // camera.position.set(30.405193262355265, 0, -15.853882753462061);
-
-      //     // window.alert("testing react stuff");
-      //     document.querySelector<HTMLDivElement>("#scene-wrapper")?.focus();
-
-      //     gsap.to(Enter3dButtonref.current, {
-      //       opacity: 0,
-      //     });
-      //   };
-      // }
-      // return dockermodel;
-      loadIslands({
-        name: "autumnal_forest",
-        loader: glftLoader,
+      loadautmforest({
+        // loader: glftLoader,
+        manager: customLoadingManager,
         controls,
         camera,
         scene,
@@ -330,32 +345,23 @@ const Root3d = () => {
       //   // ">", // run after previous animation
       // );
 
-      const curve = new CatmullRomCurve3(points, true);
+      // const curve = new CatmullRomCurve3(points, true);
 
       // const pointss = curve.getPoints(50);
-      const tubegeo = new TubeGeometry(curve, 222, 0.625, 16, true);
-      const tubelinesgeo = new EdgesGeometry(tubegeo);
+      // const tubegeo = new TubeGeometry(curve, 222, 0.625, 16, true);
+      // const tubelinesgeo = new EdgesGeometry(tubegeo);
 
-      const linematerial = new MeshBasicMaterial({
-        color: 0xff0000,
-        // wireframe: true,
-      });
+      // const linematerial = new MeshBasicMaterial({
+      //   color: 0xff0000,
+      //   // wireframe: true,
+      // });
 
       // Create the final object to add to the scene
-      const curveObject = new LineSegments(tubelinesgeo, linematerial);
+      // const curveObject = new LineSegments(tubelinesgeo, linematerial);
       // console.log(points);
       // scene.add(curveObject);
 
-      const geometry = new BoxGeometry(1, 1, 1);
-      const material = new MeshBasicMaterial({ color: 0x00ff00 });
-      const cube = new Mesh(geometry, material);
-      // scene.add(cube);
-
       function animate() {
-        if (lambo) {
-          // console.log("rotating monkey");
-          // lambo.position.x += 0.01;
-        }
         // cube.rotation.x += 0.01;
         // cube.rotation.y += 0.01;
         if (controls.enabled) controls.update();
@@ -384,10 +390,18 @@ const Root3d = () => {
       value={{
         camera: cameraref.current,
         controls: contrlosref.current,
+        animationsDone: {
+          state: animationDone,
+          setter: setanimationDone,
+        },
+        exit3dstate: {
+          state: exit3dpressed,
+          setter: setexit3dpressed,
+        },
       }}
     >
       <Dockermodelctx.Provider value={Docekrmodel}>
-        <div id="outer-scene-wrapper" className="size-full">
+        <div id="outer-scene-wrapper" className="relative size-full">
           <ControlsComponent />
 
           <div id="inner-scene-wrapper" className="size-full">
@@ -395,7 +409,7 @@ const Root3d = () => {
               ref={sceneref}
               className="relative m-0 mx-auto h-full w-full overflow-visible rounded-lg p-0"
             >
-              <div
+              {/* <div
                 className="m-2"
                 id="speed-meter"
                 style={{
@@ -412,7 +426,7 @@ const Root3d = () => {
                 }}
               >
                 Speed: 0 knots
-              </div>
+              </div> */}
               <SceneWords />
             </div>
             {/* <div>

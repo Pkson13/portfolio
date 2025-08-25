@@ -193,7 +193,7 @@ export default function Son() {
         const deltaX = x - centerX;
         const deltaY = y - centerY;
 
-        const maxMove = 7;
+        const maxMove = 9;
         const distance = Math.sqrt(deltaX ** 2 + deltaY ** 2);
         const angle = Math.atan2(deltaY, deltaX);
 

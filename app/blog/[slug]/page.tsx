@@ -1,6 +1,8 @@
 import { titles } from "@/lib/blog"
 import { marked } from "marked"
+
 import { notFound } from "next/navigation"
+
 import { readFileSync } from "node:fs"
 import path from "node:path"
 
@@ -24,6 +26,7 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
 
     notFound()
   }
+
   const html = marked.parse(res)
 
   console.log(html)

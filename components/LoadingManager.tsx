@@ -2,16 +2,18 @@
 
 import gsap from "gsap";
 import Image from "next/image";
-import { ReactNode, useEffect, useRef } from "react";
+import { ReactNode, useContext, useEffect, useRef } from "react";
 import { DefaultLoadingManager } from "three";
 import { Button } from "./ui/button";
 import { SplitText } from "gsap/SplitText";
+import { ScrollSmotherContext } from "./ClientWrapper";
 
 const LoadingManager = ({ children }: { children: ReactNode }) => {
   const progressDisplay = useRef<HTMLDivElement | null>(null);
   const loadingScreen = useRef<HTMLDivElement | null>(null);
   const reveal = useRef<HTMLDivElement | null>(null);
   const startButtonref = useRef<HTMLButtonElement | null>(null);
+  const scrollSmother = useContext(ScrollSmotherContext);
 
   useEffect(() => {
     const loadingDots = gsap.to(".loading-dot", {
@@ -26,6 +28,9 @@ const LoadingManager = ({ children }: { children: ReactNode }) => {
     });
 
     DefaultLoadingManager.onLoad = function () {
+      if (scrollSmother && scrollSmother.current) {
+        scrollSmother.current.scrollTo("#hero", true, "top 15%");
+      }
       console.log("Loading Complete!");
       loadingDots.revert();
       loadingDots.kill();
@@ -148,7 +153,7 @@ const LoadingManager = ({ children }: { children: ReactNode }) => {
             duration: 1.5,
             ease: "none",
           },
-          "<15%",
+          "<",
         )
         .to("#logo", {
           duration: 2,
@@ -175,10 +180,6 @@ const LoadingManager = ({ children }: { children: ReactNode }) => {
       >
         {/* <div className="text-4xl text-white">Hi, i'm Peterson</div> */}
         <div className="relative flex items-end justify-center">
-          <div
-            className="absolute z-10 h-full w-full mix-blend-color"
-            id=""
-          ></div>
           <div className="flex flex-col items-center justify-center">
             <div className="relative flex h-1/2 w-fit items-end sm:h-3/5">
               <div className="absolute bottom-0 left-0 h-fit w-full -rotate-90 font-(family-name:--font-bebas-neue) text-6xl tracking-wide text-gray-400">
@@ -201,6 +202,7 @@ const LoadingManager = ({ children }: { children: ReactNode }) => {
             <Image
               src={"/loading_central_cee.png"}
               alt="loading"
+              priority
               className="size-full contrast-100 grayscale"
               width={200}
               height={600}

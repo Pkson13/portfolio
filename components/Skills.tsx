@@ -1,28 +1,21 @@
 "use client";
-import React, {
-  createContext,
-  RefObject,
-  useContext,
-  useRef,
-  useState,
-} from "react";
+import React, { createContext, RefObject, useContext, useRef } from "react";
 import Root3d from "./threejs/Root3d";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { Poppins } from "next/font/google";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmotherContext } from "./ClientWrapper";
-import { DefaultLoadingManager } from "three";
 import Contact from "./Contact";
 
 export const buttonrefctx =
-  createContext<RefObject<HTMLButtonElement | null> | null>(null);
+  createContext<RefObject<HTMLDivElement | null> | null>(null);
 
-const poppins = Poppins({ weight: "600" });
+const poppins = Poppins({ weight: "600", preload: false });
 
 const Skills = () => {
   const Enter3dButtonref = useRef<HTMLButtonElement | null>(null);
-  // const scrollSmother = useContext(ScrollSmotherContext);
+  const scrollSmother = useContext(ScrollSmotherContext);
   useGSAP(() => {
     // const skillstl = gsap.timeline();
     // skillstl.to("#scene-wrapper", {
@@ -85,20 +78,25 @@ const Skills = () => {
     //   },
     // });
     let offsetTop;
+    let offsetfooterTop;
     let offsetLeft;
 
     const sceneWrapper = document.getElementById("scene-wrapper");
     const parent = document.getElementById("to-pin");
+    const footer = document.getElementById("fotter");
 
     if (sceneWrapper && parent) {
       const sceneRect = sceneWrapper.getBoundingClientRect();
       const parentRect = parent.getBoundingClientRect();
+      const footerrec = footer.getBoundingClientRect();
 
       offsetTop = sceneRect.top - parentRect.top;
+      offsetfooterTop = footerrec.top - parentRect.top;
       offsetLeft = sceneRect.left - parentRect.left;
 
       console.log("Top distance to parent:", offsetTop);
       console.log("Left distance to parent:", offsetLeft);
+      console.log("footer distance to parent:", offsetfooterTop);
     }
     const skillstl = gsap.timeline({
       paused: true,
@@ -131,7 +129,7 @@ const Skills = () => {
       .to(
         ".cliprectangle",
         {
-          width: "105vw",
+          width: "100vw",
           height: "105vh",
           // scale: 0.5,
           // position: "absolute",
@@ -139,6 +137,7 @@ const Skills = () => {
           // left: 0,
           ease: "power3.out",
           duration: 2,
+          padding: 0,
           // rotateZ: -5,
           // clipPath: "polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%)",
         },
@@ -173,7 +172,132 @@ const Skills = () => {
       //   },
       //   // ">", // run after previous animation
       // )
+      .to("#fotter", {
+        // top: 0,
+        // left: 0,
+        // padding: 0,
+        yPercent: -150,
+        ease: "none",
 
+        scrollTrigger: {
+          trigger: "#test",
+          // trigger: "#footer",
+          // pinSpacing: false,
+
+          // pinType: "fixed",
+          // trigger: "#fotter",
+          start: "bottom -30%",
+          // pin: "#fotter",
+          // pinReparent: true,
+          // anticipatePin: 3,
+          // start: `bottom bottom`,
+          id: "fotter",
+          // pinReparent: true,
+          // markers: true,
+          // endTrigger: "#fotter",
+          scrub: 2,
+          end: "bottom -130%",
+          // end: "top bottom",
+          // pinnedContainer: "#to-pin",
+          // markers: true,
+          onUpdate: (self) => {
+            // self.refresh();
+          },
+        },
+
+        // preventOverlaps: "true",
+        // },
+      })
+      // .to(
+      //   {},
+      //   {
+      //     scrollTrigger: {
+      //       trigger: "#fotter",
+      //       // trigger: "#footer",
+      //       // pinSpacing: false,
+
+      //       // pinType: "fixed",
+      //       // trigger: "#fotter",
+      //       start: "bottom bottom",
+      //       // onEnter: () => {
+      //       //   if (scrollSmother && scrollSmother.current) {
+      //       //     console.log(scrollSmother.current.paused(), "why");
+      //       //     scrollSmother.current.paused(true);
+      //       //     console.log(scrollSmother.current.paused());
+      //       //   }
+      //       //   console.log("onenter");
+      //       //   console.log("fotter at boottom");
+      //       // },
+      //       // pin: true,
+      //       // onEnterBack: () => {
+      //       //   if (scrollSmother && scrollSmother.current) {
+      //       //     console.log(scrollSmother.current.paused(), "why");
+      //       //     scrollSmother.current.paused(false);
+      //       //     console.log(scrollSmother.current.paused());
+      //       //   }
+      //       // },
+
+      //       // start: `bottom bottom`,
+      //       id: "fotter-wrapper",
+      //       // pinReparent: true,
+      //       // markers: true,
+      //       // endTrigger: "#fotter",
+      //       scrub: true,
+      //       end: "bottom -30%",
+      //       // pinnedContainer: "#to-pin",
+      //       markers: true,
+      //       onUpdate: (self) => {
+      //         self.refresh();
+      //       },
+      //     },
+
+      //     // preventOverlaps: "true",
+      //     // },
+      //   },
+      // )
+      .to(
+        {},
+        {
+          //worked on this for almost 7 hours. i'm so pissed rn
+          // top: 0,
+          // left: 0,
+          // padding: 0,
+          // yPercent: -100,
+          ease: "none",
+
+          scrollTrigger: {
+            trigger: "#fotter-container",
+            // pin: "#to-pin",
+            // pin: "#fotter-container",
+            pin: true,
+
+            // pinSpacing: false,
+            // pinType: "fixed",
+            // start: `top+=${offsetTop}px 40%`,
+            start: "bottom bottom",
+            preventOverlaps: true,
+            onEnter: () => {
+              console.log("test enter");
+              // footer?.
+            },
+
+            // start: `top bottom`,
+            end: "bottom -50%",
+            id: "test",
+            pinReparent: true,
+            scrub: 1,
+            // markers: true,
+            // pinnedContainer: "#to-pin",
+            onUpdate: (self) => {
+              self.refresh();
+            },
+            anticipatePin: 4,
+            pinSpacing: false,
+
+            // preventOverlaps: "true",
+          },
+        },
+      )
       .to("#skill-container", {
         // top: 0,
         // left: 0,
@@ -185,11 +309,18 @@ const Skills = () => {
           anticipatePin: 3,
           // pinSpacing: false,
           // pinType: "fixed",
+          // start: `top+=${offsetTop}px 10%`,
           start: `top+=${offsetTop}px 10%`,
           // start: `top top`,
           id: "pin",
           // endTrigger: "#footer",
-          end: "bottom -900%",
+          end: "bottom -1000%",
+          onLeaveBack: () => {
+            // gsap.to("#enter3d", {
+            //   autoAlpha: 0,
+            //   duration: 1,
+            // });
+          },
 
           // end: "bottom top",
 
@@ -205,68 +336,11 @@ const Skills = () => {
 
           // pinReparent: true,
           // scrub: true,
-          markers: true,
-          // preventOverlaps: "true",
-        },
-      })
-      .to("#fotter", {
-        //worked on this for almost 7 hours. i'm so pissed rn
-        // top: 0,
-        // left: 0,
-        // padding: 0,
-        // yPercent: -100,
-        ease: "none",
-
-        scrollTrigger: {
-          trigger: "#skill-container",
-          // pin: "#to-pin",
-          // pin: true,
-          // pinSpacing: false,
-          // pinType: "fixed",
-          start: `top+=${offsetTop}px 40%`,
-
-          // start: `top bottom`,
-          end: "bottom top",
-          // id: "fotter",
-          // pinReparent: true,
-          scrub: 3,
-          markers: true,
-          // pinnedContainer: "#to-pin",
-          // onUpdate: (self) => {
-          //   self.refresh();
-          // },
-
-          // preventOverlaps: "true",
-        },
-      })
-      .to("#footer", {
-        // top: 0,
-        // left: 0,
-        // padding: 0,
-        yPercent: -100,
-        // ease: "none",
-
-        scrollTrigger: {
-          // trigger: "#to-pin",
-          // trigger: "#footer",
-          // pinSpacing: false,
-          // pinType: "fixed",
-          trigger: "#fotter",
-          pin: true,
-          anticipatePin: 3,
-          start: `bottom bottom`,
-          // id: "fotter",
-          // pinReparent: true,
-          scrub: 2,
-          end: "bottom -100%",
           // markers: true,
-          onUpdate: (self) => {
-            self.refresh();
-          },
-
           // preventOverlaps: "true",
         },
       });
+
     // .to(
     //   {},
     //   {
@@ -308,7 +382,7 @@ const Skills = () => {
     });
     wordstl
       .to(
-        "#scene-words",
+        "#docker-words",
         {
           y: 0,
           // rotate: 360,
@@ -320,7 +394,7 @@ const Skills = () => {
         // ">", // run after previous animation
       )
       .to(
-        "#scene-words",
+        "#docker-words",
         {
           y: 100,
           // rotate: 360,
@@ -349,7 +423,7 @@ const Skills = () => {
         // delay: 0.2, // wait 0.2 seconds from the last scroll event before doing the snapping
         ease: "none", // the ease of the snap animation ("power3" by default)
       },
-      markers: true,
+      // markers: true,
       // toggleClass: "sticky",
       scrub: true, // this makes scrollProgress update smoothly
       //  onEnter: () => skillstl.play(),
@@ -434,7 +508,7 @@ const Skills = () => {
   }, []);
   return (
     <buttonrefctx.Provider value={Enter3dButtonref}>
-      <div className="relative w-screen bg-background">
+      <div id="test" className="relative w-screen bg-background">
         <div id="to-pin" className="">
           <div
             className="origin-centre px-4 py-20 sm:px-6 lg:px-8"
@@ -448,7 +522,7 @@ const Skills = () => {
               className="mb-5 flex flex-col-reverse gap-12 overflow-visible bg-transparent sm:gap-16 md:grid md:grid-cols-2 md:items-center"
               id="scale"
             >
-              <div className="cliprectangle col-span-1 origin-center">
+              <div className="cliprectangle col-span-1 origin-center md:p-4">
                 <div
                   className="z-100 aspect-square size-full overflow-hidden rounded-lg md:aspect-video"
                   id="scene-wrapper"
@@ -468,18 +542,17 @@ const Skills = () => {
                 <p
                   className={`mt-2 max-w-[25rem] leading-7 text-balance text-gray-800 dark:text-gray-100`}
                 >
-                  Docker, a powerful containerization tool that allows me to
-                  package applications and their dependencies into lightweight,
-                  portable containers, ensuring consistency across development,
-                  testing, and production environments, eliminating the “it
-                  works on my machine” problem.
+                  Three.js, a powerful WebGL-based JavaScript library I use to
+                  build interactive 3D experiences directly in the browser,
+                  enabling immersive visuals, real-time animations, and dynamic
+                  environments across platforms.
                 </p>
               </div>
             </div>
           </div>
+          <Contact />
         </div>
       </div>
-      <Contact />
     </buttonrefctx.Provider>
   );
 };

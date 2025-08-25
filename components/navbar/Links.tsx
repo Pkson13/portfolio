@@ -26,7 +26,7 @@ const Links = () => {
     };
   }, []);
   return (
-    <div className="ml-auto hidden items-center gap-8 hover:cursor-pointer sm:flex">
+    <div className=" hidden items-center gap-8 hover:cursor-pointer sm:flex">
       <Button ref={contact}>Contact me</Button>
     </div>
   );

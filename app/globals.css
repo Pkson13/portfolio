@@ -143,8 +143,8 @@ nav {
   @apply font-(family-name:--font-bebas-neue) text-2xl font-bold tracking-wide text-gray-900 dark:text-white;
 }
 
-.bebas-header{
-  @apply font-(family-name:--font-bebas-neue)
+.bebas-header {
+  @apply font-(family-name:--font-bebas-neue);
 }
 
 .bw-img {
@@ -164,9 +164,9 @@ nav {
   /* mix-blend-mode: lighten; */
   /* background-color: white; */
 }
-#markdown h1{
+/* #markdown h1{
   @apply text-2xl
 }
 #markdown strong{
-  @apply text-green-800
-}
+  @apply text-green-800 */
+/* } */

@@ -9,7 +9,7 @@ const page = () => {
         {
           titles.map((title, key) => {
             return (
-              <div key={key} className="flex prose dark:prose-invert justify-between">
+              <div key={key} className="flex flex-col md:flex-row prose dark:prose-invert justify-between">
                 <Link href={`blog/${title.file}`}>{title.title}</Link>
 
                 <span className="text-sm">{title.date}</span>

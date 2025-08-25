@@ -18,8 +18,17 @@ const Navbar = () => {
         <Son />
       </span>
       {/* <Face></Face> */}
+
+      <Link
+        href={"/blog"}
+        target="_blank"
+        className="p-0 font-medium sm:mr-1  tracking-wide ml-auto"
+      >
+        blog
+      </Link>
       <Links />
-      <div className="ml-auto flex items-center gap-1 sm:ml-1 sm:gap-2">
+
+      <div className=" flex items-center gap-1 sm:ml-1 sm:gap-2">
         <Button asChild variant={"ghost"} className="p-0">
           <Link
             href={"https://github.com/pkson13"}

@@ -19,7 +19,7 @@
 After years of using VSCode, I finally made the switch to Neovim (nvim) and haven't looked back. Neovim has a ton of benefits that i'm going to talk about, but one of the most important is the longer battery life and performance boost. Now, i have quite a decent laptop, but i started to experience bottlenecks when i tried to run Vscode along with docker or a minikube cluster.
 
 My battery life of about 8 hrs would reduce to 4-5 hrs at most and that's when i realized i need a change.
-Setting up nvim and learning vim motions hasn't been walk in the park, it has a steep learning curve but once you do it you are hooked. it kinda feels like escaping the matrix. Using neovim elevates you to a higher point of consciousness where you can look down upon the poor lost souls using tools like vscode and intelliJ and emacs😂.
+Setting up nvim and learning vim motions hasn't been walk in the park, it has a steep learning curve but once you do it you are hooked. it kinda feels like escaping the matrix. Using neovim elevates you to a higher point of consciousness where you can look down upon the poor lost souls using tools like vscode, intelliJ and emacs😂.
 
 ## Key Benefits of Neovim
 

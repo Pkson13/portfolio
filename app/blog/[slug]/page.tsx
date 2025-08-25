@@ -1,5 +1,8 @@
 import { titles } from "@/lib/blog"
 import { marked } from "marked"
+
+import { notFound } from "next/navigation"
+
 import { readFileSync } from "node:fs"
 import path from "node:path"
 
@@ -13,8 +16,17 @@ import path from "node:path"
 const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
   const slug = await params
   console.log(process.cwd())
-  const filePath = path.join(process.cwd(), 'README.md');
-  const res = readFileSync(filePath, "utf8")
+  const filePath = path.join(process.cwd(), 'blogs', `${slug.slug}.md`);
+  let res
+  try {
+    res = readFileSync(filePath, "utf8")
+
+
+  } catch (err) {
+
+    notFound()
+  }
+
   const html = marked.parse(res)
 
   console.log(html)

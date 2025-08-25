@@ -4,8 +4,8 @@ import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import ThemeColorMeta from "@/components/ThemeColorMeta";
 import "@/lib/gsap_setup";
-import ClientWrapper from "@/components/ClientWrapper";
-import CursorFollower from "@/components/cursor_follower/CursorFollower";
+// import ClientWrapper from "@/components/ClientWrapper";
+import CusorFollower from "@/components/cursor_follower/CursorFollower";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,13 +45,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${bebasNeue.variable} mx-auto w-screen max-w-7xl overflow-x-hidden antialiased`}
       >
         <ThemeProvider attribute="class" enableColorScheme>
-          <ClientWrapper>
-            <ThemeColorMeta />
-            {/* <Morpsvg /> */}
-            <CursorFollower />
+          <ThemeColorMeta />
+          {/* <Morpsvg /> */}
 
-            {children}
-          </ClientWrapper>
+          {children}
         </ThemeProvider>
       </body>
     </html>

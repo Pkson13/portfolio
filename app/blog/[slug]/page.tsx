@@ -1,4 +1,5 @@
 import { titles } from "@/lib/blog"
+import { marked } from "marked"
 import { readFileSync } from "node:fs"
 import path from "node:path"
 
@@ -14,12 +15,17 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
   console.log(process.cwd())
   const filePath = path.join(process.cwd(), 'README.md');
   const res = readFileSync(filePath, "utf8")
+  const html = marked.parse(res)
 
+  console.log(html)
   console.log(filePath)
   return (
-    <div className="max-w-2xl mx-auto px-4 w-3/5"
-      id="mardown"
-    >{slug.slug}{res}</div>
+    <article className="max-w-2xl mx-auto px-4 w-3/5 prose dark:prose-invert"
+      id="markdown"
+    >
+      {/* {slug.slug} */}
+      <div dangerouslySetInnerHTML={{ __html: html }}></div>
+    </article>
   )
 }
 

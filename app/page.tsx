@@ -41,7 +41,7 @@ export default function Home() {
 
       <ClientWrapper>
         <LoadingManager>
-          <Navbar />
+          {/* <Navbar /> */}
           <CursorFollower />
 
           <div id="smooth-wrapper" className="max-w-screen">

@@ -13,7 +13,7 @@ import {
   // Fog,
   Mesh,
   MeshBasicMaterial,
-  MeshStandardMaterial,
+  // MeshStandardMaterial,
   Object3D,
   Object3DEventMap,
   PlaneGeometry,
@@ -22,7 +22,7 @@ import {
   Scene,
   Sprite,
   SpriteMaterial,
-  Texture,
+  // Texture,
   TextureLoader,
   Vector3,
   WebGLRenderer,
@@ -36,14 +36,14 @@ import {
   TextGeometry,
   Water,
 } from "three/examples/jsm/Addons.js";
-import GUI from "three/examples/jsm/libs/lil-gui.module.min.js";
+// import GUI from "three/examples/jsm/libs/lil-gui.module.min.js";
 import { LoadAutumnForest, loaderFuncProps, loadIsland } from "./threeTypes";
 import gsap from "gsap";
-import { Meh } from "lucide-react";
+// import { Meh } from "lucide-react";
 import { degToRad, radToDeg } from "three/src/math/MathUtils.js";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useContext } from "react";
-import { buttonrefctx } from "@/components/Skills";
+// import { ScrollTrigger } from "gsap/ScrollTrigger";
+// import { useContext } from "react";
+// import { buttonrefctx } from "@/components/Skills";
 import { SplitText } from "gsap/SplitText";
 
 type changesceneFuncProps = Scene;
@@ -208,6 +208,8 @@ export const setupSkyAndWater = (
   const sky = new Sky();
   sky.scale.setScalar(450000);
   scene.add(sky);
+  sky.name = "sky"
+  // console.warn("sky", sky, scene)
 
   const sun = new Vector3();
 
@@ -215,7 +217,7 @@ export const setupSkyAndWater = (
 
   const effectController = {
     turbidity: 0,
-    rayleigh: 3, //- light/dark - 0.085
+    rayleigh: 3, //- light- 3/dark - 0.085
     mieCoefficient: 0.005,
     mieDirectionalG: 0.7,
     elevation: 2,

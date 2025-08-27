@@ -7,7 +7,7 @@ import {
   loadmushroom_suspended_island,
   setupSkyAndWater,
 } from "@/lib/three_setup";
-// import { useTheme } from "next-themes";
+import { useTheme } from "next-themes";
 import React, {
   createContext,
   Dispatch,
@@ -41,6 +41,7 @@ export const Dockermodelctx = createContext<Group<Object3DEventMap> | null>(
 );
 export type global3dctxtypes = {
   camera: Camera | null;
+  scene: Scene | null
   controls: OrbitControls | null;
   animationsDone: {
     state: boolean;
@@ -60,7 +61,9 @@ const Root3d = () => {
 
   // const Enter3dButtonref = useContext(buttonrefctx);
 
-  const sceneref = useRef<HTMLDivElement | null>(null);
+  const sceneELementref = useRef<HTMLDivElement | null>(null);
+  const sceneref = useRef<Scene | null>(null);
+
   const getworldpositionref = useRef<HTMLButtonElement | null>(null);
   const lookatref = useRef<HTMLButtonElement | null>(null);
   const cameraref = useRef<Camera | null>(null);
@@ -69,7 +72,7 @@ const Root3d = () => {
     useState<Group<Object3DEventMap> | null>(null);
   const [animationDone, setanimationDone] = useState<boolean>(false);
 
-  // const { theme } = useTheme();
+  const { theme } = useTheme();
 
   useEffect(() => {
     async function init() {
@@ -118,8 +121,8 @@ const Root3d = () => {
       // scene.rotation.z = MathUtils.degToRad(7);
 
       // handlescenetheme(scene, theme);
-      if (!sceneref.current?.clientWidth) return;
-      const sceneELement = sceneref.current;
+      if (!sceneELementref.current?.clientWidth) return;
+      const sceneELement = sceneELementref.current;
       const camera = new PerspectiveCamera(
         75,
         sceneELement?.clientWidth / sceneELement.clientHeight,
@@ -185,6 +188,9 @@ const Root3d = () => {
       const stats = new Stats();
       // document.body.appendChild(stats.dom);
       renderer.setSize(sceneELement?.clientWidth, sceneELement.clientHeight);
+      sceneref.current = scene
+      // console.warn("sceneref.currnt", sceneref.current)
+
       // const handleResize = (e: UIEvent) => {
       //   console.log(e);
       // };
@@ -389,6 +395,7 @@ const Root3d = () => {
     <global3dctx.Provider
       value={{
         camera: cameraref.current,
+        scene: sceneref.current,
         controls: contrlosref.current,
         animationsDone: {
           state: animationDone,
@@ -406,7 +413,7 @@ const Root3d = () => {
 
           <div id="inner-scene-wrapper" className="size-full">
             <div
-              ref={sceneref}
+              ref={sceneELementref}
               className="relative m-0 mx-auto h-full w-full overflow-visible rounded-lg p-0"
             >
               {/* <div

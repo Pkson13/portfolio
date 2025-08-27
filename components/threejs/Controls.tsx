@@ -3,6 +3,7 @@ import { useContext, useEffect, useRef } from "react";
 import { Dockermodelctx, global3dctx } from "./Root3d";
 import { degToRad } from "three/src/math/MathUtils.js";
 import { JoystickManager } from "nipplejs";
+import useSceneSkyChange from "./SceneSkyChange";
 // import nipplejs from "nipplejs";
 
 const ControlsComponent = () => {
@@ -11,6 +12,7 @@ const ControlsComponent = () => {
   const globalcontext = useContext(global3dctx);
   const joystickmanager = useRef<JoystickManager | null>(null);
   const animationRef = useRef<number | null>(null);
+  useSceneSkyChange()
 
   useEffect(() => {
     if (
